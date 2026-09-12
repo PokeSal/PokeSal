@@ -1,0 +1,2 @@
+=== REGISTRO DE PROMPTS DE IA - PROJETO POKESAL ===
+[2026-09-11] Inicialização da estrutura base do projeto Maven e verificação sintática de arquivos de configuração.
