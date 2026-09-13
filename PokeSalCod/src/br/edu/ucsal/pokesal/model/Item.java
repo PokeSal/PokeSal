@@ -1,0 +1,11 @@
+package br.edu.ucsal.pokesal.model;
+
+public class Item {
+
+	private final String nomePocao = "Poção";
+	private final String nomeSuperPocao = "Super Poção";
+	private final String nomeCuraQueimadura = "Cura Queimadura";
+	
+	
+	
+}

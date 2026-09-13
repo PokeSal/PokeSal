@@ -1,0 +1,5 @@
+package br.edu.ucsal.pokesal.model;
+
+public enum Terreno {
+ASFALTO_QUENTE, POCA_CHUVA, CANTEIRO_CENTRAL;
+}
