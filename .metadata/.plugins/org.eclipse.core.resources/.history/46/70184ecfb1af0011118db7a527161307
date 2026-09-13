@@ -4,8 +4,8 @@ package br.edu.ucsal.pokesal.model;
  */
 public class Item {
 
-	private final String nome;
-	private final int pontosCura;
+	public final String nome;
+	public final int pontosCura;
 	public Item(String nome, int pontosCura) {
 		super();
 		this.nome = nome;
@@ -17,6 +17,5 @@ public class Item {
 	public int getPontosCura() {
 		return pontosCura;
 	}
-	
 	
 }
