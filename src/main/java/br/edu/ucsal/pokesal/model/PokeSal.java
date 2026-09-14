@@ -1,5 +1,7 @@
 package br.edu.ucsal.pokesal.model;
 
+import br.edu.ucsal.pokesal.util.ConstantesJogo;
+
 /**
  * Define o construtor para a selecionar e nomear o PokeSal, criação dos metodos
  * de verificação de estado(Vivo ou Morto) e recebimento de dano.
@@ -14,6 +16,7 @@ public class PokeSal {
 	private int def;
 	private int spd;
 	private TipoElemental tipo;
+	private boolean passivaDefesaAtivada;
 
 	public PokeSal(TipoPokesal tipo) {
 		this.nome = tipo.getNome();
@@ -23,6 +26,7 @@ public class PokeSal {
 		this.def = tipo.getDefBase();
 		this.spd = tipo.getSpdBase();
 		this.tipo = tipo.getTipo();
+		this.passivaDefesaAtivada = false;
 	}
 
 	/**
@@ -44,13 +48,16 @@ public class PokeSal {
 	 * @param quantidadeDano
 	 */
 	public void receberDano(int quantidadeDano) {
-		this.hpAtual = this.hpAtual - quantidadeDano;
+		this.hpAtual -= quantidadeDano;
 
 		if (this.hpAtual < 0) {
 			this.hpAtual = 0;
-
 		}
 
+		if (this.hpAtual > 0 && !passivaDefesaAtivada && this.hpAtual <= (hpMaximo * ConstantesJogo.LIMITAR_PASSIVA_DEFESA)) {
+			this.def = (int) Math.round(this.def * ConstantesJogo.MULTIPLICADOR_PASSIVA_DEFESA);
+			this.passivaDefesaAtivada = true;
+		}
 	}
 
 	public String getNome() {
