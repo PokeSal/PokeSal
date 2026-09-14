@@ -1,5 +1,9 @@
 package br.edu.ucsal.pokesal.model;
 
+/**
+ * Importa os itens da classe Item e define o contador para controle do uso de itens na batalha.
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 
