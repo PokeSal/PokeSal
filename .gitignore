@@ -4,3 +4,5 @@ target/
 .project
 *.class
 .DS_Store
+.metadata/
+bin/
