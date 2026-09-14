@@ -15,29 +15,34 @@ public class PokeSal {
 	private int spd;
 	private TipoElemental tipo;
 
-	public PokeSal(TipoPokesal fichaTipo, String nomeEscolhido) {
-		this.nome = nomeEscolhido;
-		this.hpMaximo = fichaTipo.getHpBase();
+	public PokeSal(TipoPokesal tipo) {
+		this.nome = tipo.getNome();
+		this.hpMaximo = tipo.getHpBase();
 		this.hpAtual = hpMaximo;
-		this.atk = fichaTipo.getAtkBase();
-		this.def = fichaTipo.getDefBase();
-		this.spd = fichaTipo.getSpdBase();
-		this.tipo = fichaTipo.getTipo();
+		this.atk = tipo.getAtkBase();
+		this.def = tipo.getDefBase();
+		this.spd = tipo.getSpdBase();
+		this.tipo = tipo.getTipo();
 	}
-/**
- * 
- * @return Verifica se a vida atual do pokesal é maior que zero para definir se está vivo ou não
- */
+
+	/**
+	 * 
+	 * @return Verifica se a vida atual do pokesal é maior que zero para definir se
+	 *         está vivo ou não
+	 */
 	public boolean isVivo() {
 		if (hpAtual > 0) {
 			return true;
 		}
 		return false;
 	}
-/**
- * Subtrai o dano recebido da vida atual do pokesal e garante que não terão valores negativos de vida.
- * @param quantidadeDano
- */
+
+	/**
+	 * Subtrai o dano recebido da vida atual do pokesal e garante que não terão
+	 * valores negativos de vida.
+	 * 
+	 * @param quantidadeDano
+	 */
 	public void receberDano(int quantidadeDano) {
 		this.hpAtual = this.hpAtual - quantidadeDano;
 

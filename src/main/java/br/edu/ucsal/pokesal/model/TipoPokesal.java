@@ -5,17 +5,22 @@ package br.edu.ucsal.pokesal.model;
  */
 
 public enum TipoPokesal {
-	BULBASAL(45, 57, 57, 45, TipoElemental.PLANTA), CHARSAL(39, 56, 47, 65, TipoElemental.FOGO),
-	SQUIRTSAL(44, 49, 65, 43, TipoElemental.AGUA), CHIKOSAL(45, 49, 65, 45, TipoElemental.PLANTA),
-	CYNDASAL(39, 56, 47, 65, TipoElemental.FOGO), TOTOSAL(50, 55, 56, 43, TipoElemental.AGUA);
+	BULBASAL("BulbaSal", 45, 57, 57, 45, TipoElemental.PLANTA), 
+	CHARSAL("CharSal", 39, 56, 47, 65, TipoElemental.FOGO),
+	SQUIRTSAL("SquirtSal", 44, 49, 65, 43, TipoElemental.AGUA),
+	CHIKOSAL("ChikoSal", 45, 49, 65, 45, TipoElemental.PLANTA),
+	CYNDASAL("CyndaSal", 39, 56, 47, 65, TipoElemental.FOGO), 
+	TOTOSAL("TotoSal", 50, 55, 56, 43, TipoElemental.AGUA);
 
+	private final String nome;
 	private final int hpBase;
 	private final int atkBase;
 	private final int defBase;
 	private final int spdBase;
 	private final TipoElemental tipo;
 
-	private TipoPokesal(int hpBase, int atkBase, int defBase, int spdBase, TipoElemental tipo) {
+	private TipoPokesal(String nome, int hpBase, int atkBase, int defBase, int spdBase, TipoElemental tipo) {
+		this.nome = nome;
 		this.hpBase = hpBase;
 		this.atkBase = atkBase;
 		this.defBase = defBase;
@@ -41,6 +46,10 @@ public enum TipoPokesal {
 
 	public TipoElemental getTipo() {
 		return tipo;
+	}
+	
+	public String getNome() {
+		return nome;
 	}
 
 }

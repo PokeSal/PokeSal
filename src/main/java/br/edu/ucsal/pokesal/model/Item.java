@@ -9,7 +9,6 @@ public class Item {
 	private final int pontosCura;
 
 	public Item(String nome, int pontosCura) {
-		super();
 		this.nome = nome;
 		this.pontosCura = pontosCura;
 	}
