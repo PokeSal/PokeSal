@@ -60,6 +60,13 @@ public class PokeSal {
 		}
 	}
 
+	public void curar(int quantidadeCura) {
+    	this.hpAtual += quantidadeCura;
+    	if (this.hpAtual > this.hpMaximo) {
+        	this.hpAtual = this.hpMaximo;
+    	}
+    }
+
 	public String getNome() {
 		return nome;
 	}
