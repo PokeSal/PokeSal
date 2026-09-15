@@ -42,6 +42,25 @@ public class GerenciadorDeBatalha {
 		}
 	}
 
+	public void aplicarCuraCanteiroCentral() {
+
+		if (this.terreno == Terreno.CANTEIRO_CENTRAL) {
+			if (pokesal1.isVivo() && pokesal1.getTipo() == TipoElemental.PLANTA) {
+				int curaCanteiro = (int) Math.round(pokesal1.getHpMaximo() * ConstantesJogo.BONUS_CANTEIRO_CENTRAL);
+				pokesal1.curar(curaCanteiro);
+				System.out.println("\n[TERRENO] O Canteiro Central restaurou " + curaCanteiro + " de HP de "
+						+ pokesal1.getNome() + "!");
+			}
+
+			if (pokesal2.isVivo() && pokesal2.getTipo() == TipoElemental.PLANTA) {
+				int curaCanteiro = (int) Math.round(pokesal2.getHpMaximo() * ConstantesJogo.BONUS_CANTEIRO_CENTRAL);
+				pokesal2.curar(curaCanteiro);
+				System.out.println("\n[TERRENO] O Canteiro Central restaurou " + curaCanteiro + " de HP de "
+						+ pokesal2.getNome() + "!");
+			}
+		}
+	}
+
 	public void executarRodada() {
 		definirOrdemAtuacao();
 
@@ -70,6 +89,9 @@ public class GerenciadorDeBatalha {
 		this.contadorTurno++;
 
 		aplicarDanoRecuo();
+		if (this.terreno == Terreno.CANTEIRO_CENTRAL) {
+			aplicarCuraCanteiroCentral();
+		}
 
 		if (!this.ultimoAtacante.isVivo()) {
 			verificarVencedor();
@@ -95,11 +117,8 @@ public class GerenciadorDeBatalha {
 		return primeiroAtacante;
 	}
 
-
 	public PokeSal getSegundoAtacante() {
 		return segundoAtacante;
 	}
 
-	
-	
 }

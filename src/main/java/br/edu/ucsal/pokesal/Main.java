@@ -128,6 +128,7 @@ public class Main {
 				break;
 			}
 			if (acaoConcluida) {
+				batalha.aplicarCuraCanteiroCentral();
 				vezDoTreinador1 = !vezDoTreinador1;
 			}
 		}
