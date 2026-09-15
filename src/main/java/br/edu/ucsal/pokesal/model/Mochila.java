@@ -1,8 +1,8 @@
 package br.edu.ucsal.pokesal.model;
 
+import br.edu.ucsal.pokesal.util.ConstantesJogo;
 import java.util.ArrayList;
 import java.util.List;
-import br.edu.ucsal.pokesal.util.ConstantesJogo;
 
 public class Mochila {
 	private List<Item> itens;
@@ -12,8 +12,8 @@ public class Mochila {
 		this.itens = new ArrayList<>();
 		this.itensUsados = 0;
 
-		this.itens.add(new Item("Água do Bebedouro da UCSal (+20 HP)", 20));
-		this.itens.add(new Item("Água da Torneira da UCSal (+40 HP)", 40));
+		this.itens.add(new Item("Poção (+20 HP)", 20));
+		this.itens.add(new Item("Super Poção (+40 HP)", 40));
 	}
 
 	public List<Item> getItens() {
