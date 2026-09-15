@@ -15,11 +15,11 @@ public class CalculadoraDano {
 		double critico = calcularAcertoCritico(efetividade);
 
 		danoBase *= efetividade * danoTerreno * critico;
-		
+
 		int danoArredondado = (int) Math.round(danoBase);
-		
+
 		int danoFinal = Math.max(1, danoArredondado);
-		
+
 		return danoFinal;
 	}
 
@@ -27,10 +27,12 @@ public class CalculadoraDano {
 		if (atacante.getTipo() == TipoElemental.FOGO && defensor.getTipo() == TipoElemental.PLANTA
 				|| atacante.getTipo() == TipoElemental.AGUA && defensor.getTipo() == TipoElemental.FOGO
 				|| atacante.getTipo() == TipoElemental.PLANTA && defensor.getTipo() == TipoElemental.AGUA) {
+			System.out.println("\n[ELEMENTAL] Ataque SUPER EFETIVO!");
 			return ConstantesJogo.MULT_SUPER_EFETIVO;
 		} else if (atacante.getTipo() == TipoElemental.FOGO && defensor.getTipo() == TipoElemental.AGUA
 				|| atacante.getTipo() == TipoElemental.AGUA && defensor.getTipo() == TipoElemental.PLANTA
 				|| atacante.getTipo() == TipoElemental.PLANTA && defensor.getTipo() == TipoElemental.FOGO) {
+			System.out.println("\n[ELEMENTAL] Ataque pouco efetivo...");
 			return ConstantesJogo.MULT_POUCO_EFETIVO;
 		} else {
 			return ConstantesJogo.MULT_NEUTRO;
@@ -40,8 +42,10 @@ public class CalculadoraDano {
 
 	public static double calcularMultiplicadorTerreno(PokeSal atacante, Terreno terreno) {
 		if (terreno == Terreno.ASFALTO_QUENTE && atacante.getTipo() == TipoElemental.FOGO) {
+			System.out.println("\n[TERRENO] O terreno ASFALTO QUENTE potencializou o ataque de fogo!");
 			return ConstantesJogo.BONUS_ASFALTO_QUENTE;
 		} else if (terreno == Terreno.POCA_CHUVA && atacante.getTipo() == TipoElemental.AGUA) {
+			System.out.println("[TERRENO] O terreno POÇA DE CHUVA potencializou o ataque de água!");
 			return ConstantesJogo.BONUS_POCA_CHUVA;
 		} else {
 			return ConstantesJogo.MULT_NEUTRO;
