@@ -56,7 +56,7 @@ public class GerenciadorDeBatalha {
                 break;
             }
 
-            int danoSegundo = CalculadoraDano.calcularDano(this.primeiroAtacante, this.segundoAtacante, this.terreno);
+            int danoSegundo = CalculadoraDano.calcularDano(this.segundoAtacante, this.primeiroAtacante, this.terreno);
 
             this.primeiroAtacante.receberDano(danoSegundo);
 
