@@ -2,11 +2,6 @@ package br.edu.ucsal.pokesal.model;
 
 import br.edu.ucsal.pokesal.util.ConstantesJogo;
 
-/**
- * Define o construtor para a selecionar e nomear o PokeSal, criação dos metodos
- * de verificação de estado(Vivo ou Morto) e recebimento de dano.
- */
-
 public class PokeSal {
 
 	private String nome;
@@ -17,6 +12,7 @@ public class PokeSal {
 	private int spd;
 	private TipoElemental tipo;
 	private boolean passivaDefesaAtivada;
+	private Mochila mochila;
 
 	public PokeSal(TipoPokesal tipo) {
 		this.nome = tipo.getNome();
@@ -27,26 +23,13 @@ public class PokeSal {
 		this.spd = tipo.getSpdBase();
 		this.tipo = tipo.getTipo();
 		this.passivaDefesaAtivada = false;
+		this.mochila = new Mochila();
 	}
 
-	/**
-	 * 
-	 * @return Verifica se a vida atual do pokesal é maior que zero para definir se
-	 *         está vivo ou não
-	 */
 	public boolean isVivo() {
-		if (hpAtual > 0) {
-			return true;
-		}
-		return false;
+		return this.hpAtual > 0;
 	}
 
-	/**
-	 * Subtrai o dano recebido da vida atual do pokesal e garante que não terão
-	 * valores negativos de vida.
-	 * 
-	 * @param quantidadeDano
-	 */
 	public void receberDano(int quantidadeDano) {
 		this.hpAtual -= quantidadeDano;
 
@@ -54,18 +37,38 @@ public class PokeSal {
 			this.hpAtual = 0;
 		}
 
-		if (this.hpAtual > 0 && !passivaDefesaAtivada && this.hpAtual <= (hpMaximo * ConstantesJogo.LIMITAR_PASSIVA_DEFESA)) {
+		if (this.hpAtual > 0 && !passivaDefesaAtivada
+				&& this.hpAtual <= (hpMaximo * ConstantesJogo.LIMITAR_PASSIVA_DEFESA)) {
 			this.def = (int) Math.round(this.def * ConstantesJogo.MULTIPLICADOR_PASSIVA_DEFESA);
 			this.passivaDefesaAtivada = true;
 		}
 	}
 
 	public void curar(int quantidadeCura) {
-    	this.hpAtual += quantidadeCura;
-    	if (this.hpAtual > this.hpMaximo) {
-        	this.hpAtual = this.hpMaximo;
-    	}
-    }
+		this.hpAtual += quantidadeCura;
+		if (this.hpAtual > this.hpMaximo) {
+			this.hpAtual = this.hpMaximo;
+		}
+	}
+
+	public boolean usarItemEspecifico(int indice) {
+		if (this.hpAtual == this.hpMaximo) {
+			return false;
+		}
+
+		Item itemUsado = this.mochila.usarItemPorIndice(indice);
+
+		if (itemUsado != null) {
+			curar(itemUsado.getPontosCura());
+			return true;
+		}
+
+		return false;
+	}
+
+	public Mochila getMochila() {
+		return mochila;
+	}
 
 	public String getNome() {
 		return nome;

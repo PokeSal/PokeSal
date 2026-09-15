@@ -1,12 +1,7 @@
 package br.edu.ucsal.pokesal.model;
 
-/**
- * Importa os itens da classe Item e define o contador para controle do uso de itens na batalha.
- */
-
 import java.util.ArrayList;
 import java.util.List;
-
 import br.edu.ucsal.pokesal.util.ConstantesJogo;
 
 public class Mochila {
@@ -16,18 +11,28 @@ public class Mochila {
 	public Mochila() {
 		this.itens = new ArrayList<>();
 		this.itensUsados = 0;
+
+		this.itens.add(new Item("Água do Bebedouro da UCSal (+20 HP)", 20));
+		this.itens.add(new Item("Água da Torneira da UCSal (+40 HP)", 40));
 	}
 
-	public void adicionarItem(Item item) {
-		itens.add(item);
+	public List<Item> getItens() {
+		return itens;
 	}
 
-	public boolean usarItem() {
-		if (itensUsados < ConstantesJogo.LIMITE_USO_ITENS) {
+	public boolean podeUsarItem() {
+		return itensUsados < ConstantesJogo.LIMITE_USO_ITENS && !itens.isEmpty();
+	}
+
+	public Item usarItemPorIndice(int indice) {
+		if (podeUsarItem() && indice >= 0 && indice < itens.size()) {
 			itensUsados++;
-			return true;
+			return itens.remove(indice);
 		}
-		return false;
+		return null;
 	}
 
+	public int getItensUsados() {
+		return itensUsados;
+	}
 }
