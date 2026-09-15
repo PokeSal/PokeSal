@@ -76,21 +76,30 @@ public class GerenciadorDeBatalha {
 			return;
 		}
 
-		
 	}
-	
-	private PokeSal verificarVencedor() {
+
+	private void verificarVencedor() {
 		if (!this.pokesal1.isVivo() || !this.pokesal2.isVivo()) {
 			if (this.pokesal1.isVivo()) {
-				return this.vencedor = this.pokesal1;
-			} else {
-				return this.vencedor = this.pokesal2;
-			}
+				this.vencedor = this.pokesal1;
+			} else
+				this.vencedor = this.pokesal2;
 		}
-		return null;
 	}
 
 	public PokeSal getVencedor() {
 		return this.vencedor;
 	}
+
+	public PokeSal getPrimeiroAtacante() {
+		return primeiroAtacante;
+	}
+
+
+	public PokeSal getSegundoAtacante() {
+		return segundoAtacante;
+	}
+
+	
+	
 }
