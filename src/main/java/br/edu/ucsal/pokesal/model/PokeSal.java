@@ -15,7 +15,7 @@ public class PokeSal {
 	private Mochila mochila;
 
 	public PokeSal(TipoPokesal tipo) {
-		this.nome = tipo.getNome();
+		this.nome = tipo.getNomeFormatado();
 		this.hpMaximo = tipo.getHpBase();
 		this.hpAtual = hpMaximo;
 		this.atk = tipo.getAtkBase();

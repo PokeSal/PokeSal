@@ -31,7 +31,7 @@ public class Main {
 		Terreno terrenoSorteado = opcoesTerreno[sorteioTerreno];
 
 		System.out.println("\n=== Terreno Sorteado para a Batalha ===");
-		System.out.println("Local: " + terrenoSorteado);
+		System.out.println("Local: " + terrenoSorteado.getNomeFormatado());
 
 		GerenciadorDeBatalha batalha = new GerenciadorDeBatalha(pokeSal1, pokeSal2, terrenoSorteado);
 
@@ -134,7 +134,7 @@ public class Main {
 		}
 
 		System.out.println("\n==================================================");
-		System.out.println(" FIM DE BATALHA NO " + terrenoSorteado + "!");
+		System.out.println(" FIM DE BATALHA NO " + terrenoSorteado.getNomeFormatado() + "!");
 		System.out.println("==================================================");
 
 		if (vencedorBatalha != null)
@@ -155,7 +155,7 @@ public class Main {
 				TipoPokesal[] opcoes = TipoPokesal.values();
 
 				for (int i = 0; i < opcoes.length; i++) {
-					System.out.println((i + 1) + " - " + opcoes[i].getNome());
+					System.out.println((i + 1) + " - " + opcoes[i].getNomeFormatado());
 				}
 
 				System.out.print("Digite o número da sua escolha: ");
