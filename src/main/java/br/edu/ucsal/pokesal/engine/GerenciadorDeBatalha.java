@@ -1,6 +1,8 @@
 package br.edu.ucsal.pokesal.engine;
 
-import br.edu.ucsal.pokesal.model.*;
+import br.edu.ucsal.pokesal.model.PokeSal;
+import br.edu.ucsal.pokesal.model.Terreno;
+import br.edu.ucsal.pokesal.model.TipoElemental;
 import br.edu.ucsal.pokesal.util.ConstantesJogo;
 
 public class GerenciadorDeBatalha {
@@ -10,6 +12,7 @@ public class GerenciadorDeBatalha {
 	private PokeSal segundoAtacante;
 	private Terreno terreno;
 	private int contadorTurno = 0;
+	private int acoesRodadaAtual = 0;
 	private PokeSal ultimoAtacante;
 	private PokeSal vencedor;
 
@@ -31,6 +34,18 @@ public class GerenciadorDeBatalha {
 
 	}
 
+	public void registrarAcao() {
+		this.acoesRodadaAtual++;
+
+		if (this.acoesRodadaAtual >= 2) {
+			this.acoesRodadaAtual = 0;
+			this.contadorTurno++;
+			
+			aplicarDanoRecuo();
+			aplicarCuraCanteiroCentral();
+		}
+	}
+
 	private void aplicarDanoRecuo() {
 		if (this.contadorTurno > 0 && this.contadorTurno % ConstantesJogo.INTERVALO_TURNO_RECUO == 0) {
 			if (this.ultimoAtacante != null && this.ultimoAtacante.isVivo()) {
@@ -38,6 +53,8 @@ public class GerenciadorDeBatalha {
 						.round(this.ultimoAtacante.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_RECUO);
 
 				this.ultimoAtacante.receberDano(danoRecuo);
+				System.out.println("\n[RECUO] Foi aplicado " + danoRecuo + " de dano de recuo em "
+						+ ultimoAtacante.getNome() + "!");
 			}
 		}
 	}
@@ -87,11 +104,6 @@ public class GerenciadorDeBatalha {
 		}
 
 		this.contadorTurno++;
-
-		aplicarDanoRecuo();
-		if (this.terreno == Terreno.CANTEIRO_CENTRAL) {
-			aplicarCuraCanteiroCentral();
-		}
 
 		if (!this.ultimoAtacante.isVivo()) {
 			verificarVencedor();
