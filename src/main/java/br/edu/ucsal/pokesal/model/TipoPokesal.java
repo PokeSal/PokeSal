@@ -18,6 +18,7 @@ public enum TipoPokesal {
 	private final int defBase;
 	private final int spdBase;
 	private final TipoElemental tipo;
+	
 
 	private TipoPokesal(String nome, int hpBase, int atkBase, int defBase, int spdBase, TipoElemental tipo) {
 		this.nome = nome;
@@ -26,6 +27,17 @@ public enum TipoPokesal {
 		this.defBase = defBase;
 		this.spdBase = spdBase;
 		this.tipo = tipo;
+		
+	}
+public String getNome() {
+		return nome;
+	}
+/**
+ * Retorna o nome amígavel do usuário para a interface do usuário.
+ * @return
+ */
+	public String getNomeFormatado() {
+		return nome;
 	}
 
 	public int getHpBase() {
@@ -48,8 +60,5 @@ public enum TipoPokesal {
 		return tipo;
 	}
 	
-	public String getNome() {
-		return nome;
-	}
 
 }
