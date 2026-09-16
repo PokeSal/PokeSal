@@ -12,9 +12,8 @@ public class CalculadoraDano {
 
 		double efetividade = calcularEfetividade(atacante, defensor);
 		double danoTerreno = calcularMultiplicadorTerreno(atacante, terreno);
-		double critico = calcularAcertoCritico(efetividade);
 
-		danoBase *= efetividade * danoTerreno * critico;
+		danoBase *= efetividade * danoTerreno;
 
 		int danoArredondado = (int) Math.round(danoBase);
 
@@ -52,19 +51,4 @@ public class CalculadoraDano {
 		}
 	}
 
-	public static double calcularAcertoCritico(double efetividade) {
-		double chanceCritico;
-
-		if (efetividade == ConstantesJogo.MULT_SUPER_EFETIVO) {
-			chanceCritico = ConstantesJogo.CHANCE_CRITICO_VANTAGEM;
-		} else {
-			chanceCritico = ConstantesJogo.CHANCE_CRITICO_PADRAO;
-		}
-
-		if (Math.random() < chanceCritico) {
-			return ConstantesJogo.MULT_CRITICO;
-		} else {
-			return ConstantesJogo.MULT_NEUTRO;
-		}
-	}
 }
