@@ -16,13 +16,11 @@ public class ConstantesJogo {
   public static final double BONUS_POCA_CHUVA = 1.10;
   public static final double BONUS_CANTEIRO_CENTRAL = 0.05;
 
-  public static final double MULT_CRITICO = 1.5;
-  public static final double CHANCE_CRITICO_VANTAGEM = 0.25;
-  public static final double CHANCE_CRITICO_PADRAO = 0.10;
-
   public static final double LIMITAR_PASSIVA_DEFESA = 0.20;
   public static final double MULTIPLICADOR_PASSIVA_DEFESA = 1.20;
 
   public static final int INTERVALO_TURNO_RECUO = 2;
   public static final double PERCENTUAL_DANO_RECUO = 0.05;
+
+  public static final double MUDANCA_TERRENO_TURNO = 3;
 }

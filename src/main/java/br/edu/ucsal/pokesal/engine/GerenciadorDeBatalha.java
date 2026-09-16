@@ -1,5 +1,7 @@
 package br.edu.ucsal.pokesal.engine;
 
+import java.util.Random;
+
 import br.edu.ucsal.pokesal.model.PokeSal;
 import br.edu.ucsal.pokesal.model.Terreno;
 import br.edu.ucsal.pokesal.model.TipoElemental;
@@ -35,15 +37,16 @@ public class GerenciadorDeBatalha {
 	}
 
 	public void registrarAcao(PokeSal atacante) {
-        this.ultimoAtacante = atacante;
+		this.ultimoAtacante = atacante;
 		this.acoesRodadaAtual++;
 
 		if (this.acoesRodadaAtual >= 2) {
 			this.acoesRodadaAtual = 0;
 			this.contadorTurno++;
-			
+
 			aplicarDanoRecuo();
 			aplicarCuraCanteiroCentral();
+			mudarTerreno();
 		}
 	}
 
@@ -77,6 +80,20 @@ public class GerenciadorDeBatalha {
 						+ pokesal2.getNome() + "!");
 			}
 		}
+	}
+
+	public void mudarTerreno() {
+		if (this.contadorTurno > 0 && this.contadorTurno % ConstantesJogo.MUDANCA_TERRENO_TURNO == 0) {
+			Random rand = new Random();
+			Terreno[] opcoesTerreno = Terreno.values();
+			int sorteioTerreno = rand.nextInt(opcoesTerreno.length);
+			Terreno terrenoSorteado = opcoesTerreno[sorteioTerreno];
+			this.terreno = terrenoSorteado;
+
+			System.out.println("\n[NOVO TERRENO]");
+			System.out.println("Local: " + terrenoSorteado.getNomeFormatado());
+		}
+
 	}
 
 	public void executarRodada() {
@@ -132,6 +149,10 @@ public class GerenciadorDeBatalha {
 
 	public PokeSal getSegundoAtacante() {
 		return segundoAtacante;
+	}
+
+	public Terreno getTerreno() {
+		return this.terreno;
 	}
 
 }

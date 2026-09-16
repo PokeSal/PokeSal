@@ -69,7 +69,7 @@ public class Main {
 
 				switch (acaoEscolhida) {
 					case 1:
-						int dano = CalculadoraDano.calcularDano(atacante, defensor, terrenoSorteado);
+						int dano = CalculadoraDano.calcularDano(atacante, defensor, batalha.getTerreno());
 						defensor.receberDano(dano);
 						System.out.println(
 								"\n[AÇÃO] " + atacante.getNome() + " atacou " + defensor.getNome() + " causando "
@@ -135,7 +135,7 @@ public class Main {
 		}
 
 		System.out.println("\n==================================================");
-		System.out.println(" FIM DE BATALHA NO " + terrenoSorteado.getNomeFormatado() + "!");
+		System.out.println(" FIM DE BATALHA NO " + batalha.getTerreno().getNomeFormatado() + "!");
 		System.out.println("==================================================");
 
 		if (vencedorBatalha != null)
