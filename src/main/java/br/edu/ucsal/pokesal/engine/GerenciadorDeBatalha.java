@@ -34,7 +34,8 @@ public class GerenciadorDeBatalha {
 
 	}
 
-	public void registrarAcao() {
+	public void registrarAcao(PokeSal atacante) {
+        this.ultimoAtacante = atacante;
 		this.acoesRodadaAtual++;
 
 		if (this.acoesRodadaAtual >= 2) {
