@@ -41,6 +41,7 @@ public class PokeSal {
 				&& this.hpAtual <= (hpMaximo * ConstantesJogo.LIMITAR_PASSIVA_DEFESA)) {
 			this.def = (int) Math.round(this.def * ConstantesJogo.MULTIPLICADOR_PASSIVA_DEFESA);
 			this.passivaDefesaAtivada = true;
+			System.out.println("\n[PASSIVA] Passiva de defesa ativada!");
 		}
 	}
 

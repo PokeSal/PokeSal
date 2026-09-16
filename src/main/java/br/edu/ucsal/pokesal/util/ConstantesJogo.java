@@ -14,6 +14,7 @@ public class ConstantesJogo {
 
   public static final double BONUS_ASFALTO_QUENTE = 1.15;
   public static final double BONUS_POCA_CHUVA = 1.10;
+  public static final double BONUS_CANTEIRO_CENTRAL = 0.05;
 
   public static final double MULT_CRITICO = 1.5;
   public static final double CHANCE_CRITICO_VANTAGEM = 0.25;
