@@ -5,12 +5,12 @@ package br.edu.ucsal.pokesal.model;
  */
 
 public enum TipoPokesal {
-	BULBASAL("BulbaSal", 45, 57, 57, 45, TipoElemental.PLANTA), 
-	CHARSAL("CharSal", 39, 56, 47, 65, TipoElemental.FOGO),
-	SQUIRTSAL("SquirtSal", 44, 49, 65, 43, TipoElemental.AGUA),
-	CHIKOSAL("ChikoSal", 45, 49, 65, 45, TipoElemental.PLANTA),
-	CYNDASAL("CyndaSal", 39, 56, 47, 65, TipoElemental.FOGO), 
-	TOTOSAL("TotoSal", 50, 55, 56, 43, TipoElemental.AGUA);
+	BULBASAL("BulbaSal", 95, 57, 67, 45, TipoElemental.PLANTA), 
+	CHARSAL("CharSal", 99, 56, 67, 65, TipoElemental.FOGO),
+	SQUIRTSAL("SquirtSal", 94, 49, 65, 43, TipoElemental.AGUA),
+	CHIKOSAL("ChikoSal", 95, 49, 65, 45, TipoElemental.PLANTA),
+	CYNDASAL("CyndaSal", 89, 56, 67, 65, TipoElemental.FOGO), 
+	TOTOSAL("TotoSal", 90, 55, 66, 43, TipoElemental.AGUA);
 
 	private final String nome;
 	private final int hpBase;

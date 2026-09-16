@@ -129,7 +129,7 @@ public class Main {
 				break;
 			}
 			if (acaoConcluida) {
-				batalha.aplicarCuraCanteiroCentral();
+				batalha.registrarAcao(atacante);
 				vezDoTreinador1 = !vezDoTreinador1;
 			}
 		}
