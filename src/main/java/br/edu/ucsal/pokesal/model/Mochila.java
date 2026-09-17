@@ -1,8 +1,9 @@
 package br.edu.ucsal.pokesal.model;
 
-import br.edu.ucsal.pokesal.util.ConstantesJogo;
 import java.util.ArrayList;
 import java.util.List;
+
+import br.edu.ucsal.pokesal.util.ConstantesJogo;
 
 /**
  * Representa a mochila de itens consumíveis pertencente a um Pokésal.
@@ -21,7 +22,7 @@ public class Mochila {
 
     this.itens.add(new Item("Poção (+20 HP)", 20, "NENHUM"));
     this.itens.add(new Item("Super Poção (+40 HP)", 40, "NENHUM"));
-    this.itens.add(new Item("Antídoto (Cura Status)", 0, "TODOS"));
+    this.itens.add(new Item("Cura Total (Cura Status)", 0, "TODOS"));
   }
 
   /**
