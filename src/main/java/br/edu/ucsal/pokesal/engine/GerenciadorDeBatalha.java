@@ -2,6 +2,7 @@ package br.edu.ucsal.pokesal.engine;
 
 import java.util.Random;
 
+import br.edu.ucsal.pokesal.model.EfeitoStatus;
 import br.edu.ucsal.pokesal.model.PokeSal;
 import br.edu.ucsal.pokesal.model.Terreno;
 import br.edu.ucsal.pokesal.model.TipoElemental;
@@ -43,10 +44,14 @@ public class GerenciadorDeBatalha {
 		if (this.acoesRodadaAtual >= 2) {
 			this.acoesRodadaAtual = 0;
 			this.contadorTurno++;
+			
 
 			aplicarDanoRecuo();
+			aplicarDanoStatusFimDeTurno();
 			aplicarCuraCanteiroCentral();
 			mudarTerreno();
+			verificarVencedor();
+			
 		}
 	}
 
@@ -94,6 +99,28 @@ public class GerenciadorDeBatalha {
 			System.out.println("Local: " + terrenoSorteado.getNomeFormatado());
 		}
 
+	}
+
+	public void aplicarDanoStatusFimDeTurno() {
+		if (!this.pokesal1.isVivo() || !this.pokesal2.isVivo()) {
+			return;
+		}
+
+		if (this.pokesal1.getStatusAtual() == EfeitoStatus.QUEIMADO
+				|| this.pokesal1.getStatusAtual() == EfeitoStatus.ENVENENADO) {
+			int danoStatus = (int) Math.round(this.pokesal1.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_STATUS);
+			this.pokesal1.receberDano(danoStatus);
+			System.out.println("\n[STATUS] " + this.pokesal1.getNome() + " sofreu " + danoStatus + " de dano por estar "
+					+ this.pokesal1.getStatusAtual() + "!");
+		}
+
+		if (this.pokesal2.getStatusAtual() == EfeitoStatus.QUEIMADO
+				|| this.pokesal2.getStatusAtual() == EfeitoStatus.ENVENENADO) {
+			int danoStatus = (int) Math.round(this.pokesal2.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_STATUS);
+			this.pokesal2.receberDano(danoStatus);
+			System.out.println("\n[STATUS] " + this.pokesal2.getNome() + " sofreu " + danoStatus + " de dano por estar "
+					+ this.pokesal2.getStatusAtual() + "!");
+		}
 	}
 
 	public void executarRodada() {

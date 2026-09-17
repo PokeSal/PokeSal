@@ -23,4 +23,8 @@ public class ConstantesJogo {
   public static final double PERCENTUAL_DANO_RECUO = 0.05;
 
   public static final double MUDANCA_TERRENO_TURNO = 3;
+  
+  public static final double CHANCE_EFEITO_STATUS = 0.15; 
+  
+  public static final double PERCENTUAL_DANO_STATUS = 0.05;
 }

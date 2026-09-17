@@ -7,10 +7,12 @@ public class Item {
 
 	private final String nome;
 	private final int pontosCura;
+	private final String curaStatus;
 
-	public Item(String nome, int pontosCura) {
+	public Item(String nome, int pontosCura, String curaStatus) {
 		this.nome = nome;
 		this.pontosCura = pontosCura;
+		this.curaStatus = curaStatus;
 	}
 
 	public String getNome() {
@@ -19,6 +21,10 @@ public class Item {
 
 	public int getPontosCura() {
 		return pontosCura;
+	}
+
+	public String getCuraStatus() {
+		return curaStatus;
 	}
 
 }
