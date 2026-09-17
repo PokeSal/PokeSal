@@ -1,2 +1,62 @@
-=== REGISTRO DE PROMPTS DE IA - PROJETO POKESAL ===
-[2026-09-11] Inicialização da estrutura base do projeto Maven e verificação sintática de arquivos de configuração.
+Projeto: PokeSal
+Disciplina: Testes e Qualidade de Software - UCSal
+
+--------------------------------------------------------------------------------
+1. REGISTRO DE PROMPTS - CAUÃ LOPES
+--------------------------------------------------------------------------------
+
+[Prompt 01 - Revisão de Documentação]
+"Vê se tem algum erro de escrita nos textos dos nossos relatório 
+de Análise Estática de Requisitos e no documento de Requisitos Autorais. Também veja se a formatação .md tá boa e se as palavras que estamos usando cabem pro contexto acadêmico do projeto."
+
+[Prompt 02 - Erro Sintático / Tipagem]
+"Estou tentando comparar o TipoElemental com uma String usando == mas tá dando um erro de tipagem. O que pode estar acontecendo e como eu resolveria?"
+
+[Prompt 03 - Erro de Compilação/Sintaxe]
+"Tá estourando aqui 'non-static method cannot be referenced from a static context' 
+no main quando chamo CalculadoraDano. Por que isso tá acontecendo e como resolvo?"
+
+[Prompt 04 - Formatação Visual de Console]
+"Como posso formatar os textos do System.out.println pra ficarem alinhados 
+tipo [AÇÃO], [STATUS] e [RECUO] e ainda identificar o nome do treinador do Pokésal pra caso eles tenham selecionado o mesmo, não ficar confuso?"
+
+[Prompt 05 - Depuração de Exceção Sintática]
+"O Scanner.nextInt() está estourando a exceção InputMismatchException quando 
+tô digitando letra em vez do número. Qual a melhor maneira de tratar isso??"
+
+
+--------------------------------------------------------------------------------
+2. REGISTRO DE INTERAÇÕES - ARIVALDO TEIXEIRA
+--------------------------------------------------------------------------------
+
+[Prompt 06 - Ajuste de Linha de Impressão]
+"Tenho uma linha muito longa de System.out.println no console, como faço eu quebro ela sem perder o que escrevi em várias linhas mantendo a sintaxe correta?"
+
+[Prompt 07 - Formatação de Mensagens de Interface]
+"Me dê sugestões de textos curtos para exibir quando o Pokésal usar um item de cura 
+na mochila para ficar com cara de log de jogo clássico de RPG."
+
+[Prompt 08 - Sintaxe Básica de Herança/Enums]
+"Como faço para acessar o nome formatado de um Enum dentro de uma classe sem dar erro de compilação?"
+
+[Prompt 09 - Revisão de Texto]
+"Revise se não tem algum erro nas mensagens que escrevi no menu de escolha do Pokésal no console."
+
+
+--------------------------------------------------------------------------------
+3. REGISTRO DE INTERAÇÕES - RYAN ABADE
+--------------------------------------------------------------------------------
+
+[Prompt 10 - Depuração de Comportamento Inesperado]
+"Quando chega no turno do segundo jogador na batalha, o Pokésal do jogador 1 tá atacando novamente, é como se o Pokésal 2 nunca atacasse, mesmo que eu selecione o ataque como o treinador do Pokésal2 o dano ainda vem pra ele. O que tem de errado nesse método que tá gerando isso?"
+
+[Prompt 11 - Entendimento de Erro (NullPointerException)]
+"Ao tentar usar um item da mochila no menu da Main, tá dando NullPointerException. O que tá acontecendo?"
+
+[Prompt 12 - Revisão Ortográfica de Documentação]
+"Pode revisar a ortografia e os tópicos do nosso documento de Análise Estática de Requisitos? Verifica também se a formatação .md está boa."
+
+[Prompt 13 - Ajuste de Formatação no Console]
+"Como faço para exibir no console uma mensagem dizendo se o Pokésal está Paralisado sem embolar com o status de HP (Sem as mensagens ficarem todas grudadas)?"
+
+================================================================================
