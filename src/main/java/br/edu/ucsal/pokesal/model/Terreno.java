@@ -6,13 +6,13 @@ package br.edu.ucsal.pokesal.model;
 public enum Terreno {
 
   /** Aumenta o dano de golpes do tipo Fogo em 15%. */
-  ASFALTO_QUENTE("Asfalto Quente"),
+  ASFALTO_QUENTE("ASFALTO QUENTE"),
 
   /** Aumenta o dano de golpes do tipo Água em 10%. */
-  POCA_CHUVA("Poça de Chuva"),
+  POCA_CHUVA("POÇA DE CHUVA"),
 
   /** Regenera 5% do HP máximo de Pokésais do tipo Planta a cada turno. */
-  CANTEIRO_CENTRAL("Canteiro Central");
+  CANTEIRO_CENTRAL("CANTEIRO CENTRAL");
 
   private final String nomeFormatado;
 
