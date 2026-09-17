@@ -48,7 +48,7 @@ na mochila para ficar com cara de log de jogo clássico de RPG."
 --------------------------------------------------------------------------------
 
 [Prompt 10 - Depuração de Comportamento Inesperado]
-"Quando chega no turno do segundo jogador na batalha, o Pokésal do jogador 1 tá atacando novamente, é como se o Pokésal 2 nunca atacasse, mesmo que eu selecione o ataque como o treinador do Pokésal2 o dano ainda vem pra ele. O que tem de errado nesse método que tá gerando isso?"
+"O dano de recuo a cada 3 turnos e o evento de mudança de terreno não estão aparecendo nos logs do console durante a partida. Como posso analisar o fluxo do contadorTurno no GerenciadorDeBatalha para descobrir por que os gatilhos não estão sendo acionados no final da rodada?"
 
 [Prompt 11 - Entendimento de Erro (NullPointerException)]
 "Ao tentar usar um item da mochila no menu da Main, tá dando NullPointerException. O que tá acontecendo?"
