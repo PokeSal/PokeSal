@@ -26,7 +26,7 @@ tô digitando letra em vez do número. Qual a melhor maneira de tratar isso??"
 
 
 --------------------------------------------------------------------------------
-2. REGISTRO DE INTERAÇÕES - ARIVALDO TEIXEIRA
+2. REGISTRO DE PROMPTS - ARIVALDO TEIXEIRA
 --------------------------------------------------------------------------------
 
 [Prompt 06 - Ajuste de Linha de Impressão]
@@ -44,7 +44,7 @@ na mochila para ficar com cara de log de jogo clássico de RPG."
 
 
 --------------------------------------------------------------------------------
-3. REGISTRO DE INTERAÇÕES - RYAN ABADE
+3. REGISTRO DE PROMPTS - RYAN ABADE
 --------------------------------------------------------------------------------
 
 [Prompt 10 - Depuração de Comportamento Inesperado]
