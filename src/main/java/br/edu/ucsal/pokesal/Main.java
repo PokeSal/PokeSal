@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import br.edu.ucsal.pokesal.engine.CalculadoraDano;
 import br.edu.ucsal.pokesal.engine.GerenciadorDeBatalha;
+import br.edu.ucsal.pokesal.model.EfeitoStatus;
 import br.edu.ucsal.pokesal.model.Item;
 import br.edu.ucsal.pokesal.model.Mochila;
 import br.edu.ucsal.pokesal.model.PokeSal;
@@ -47,6 +48,17 @@ public class Main {
 		while (pokeSal1.isVivo() && pokeSal2.isVivo()) {
 
 			PokeSal atacante = vezDoTreinador1 ? pokeSal1 : pokeSal2;
+			if (atacante.getStatusAtual() == EfeitoStatus.PARALISADO) {
+				System.out.println("\n[STATUS] " + atacante.getNome() + " está PARALISADO e perdeu a vez!");
+				atacante.setStatusAtual(EfeitoStatus.NENHUM);
+				batalha.registrarAcao(atacante);
+				if (batalha.getVencedor() != null) {
+					vencedorBatalha = batalha.getVencedor();
+					break;
+				}
+				vezDoTreinador1 = !vezDoTreinador1;
+				continue;
+			}
 			PokeSal defensor = vezDoTreinador1 ? pokeSal2 : pokeSal1;
 			String nomeTreinadorDaVez = vezDoTreinador1 ? nomeT1 : nomeT2;
 
@@ -68,52 +80,52 @@ public class Main {
 				acaoEscolhida = scan.nextInt();
 
 				switch (acaoEscolhida) {
-					case 1:
-						int dano = CalculadoraDano.calcularDano(atacante, defensor, batalha.getTerreno());
-						defensor.receberDano(dano);
+				case 1:
+					int dano = CalculadoraDano.calcularDano(atacante, defensor, batalha.getTerreno());
+					defensor.receberDano(dano);
+					CalculadoraDano.aplicarEfeitoStatus(atacante, defensor);
+					System.out.println("\n[AÇÃO] " + atacante.getNome() + " atacou " + defensor.getNome() + " causando "
+							+ dano + " de dano!");
+
+					if (!defensor.isVivo()) {
+						vencedorBatalha = atacante;
+					}
+					acaoConcluida = true;
+					break;
+
+				case 2:
+					Mochila mochilaAtacante = atacante.getMochila();
+					if (!mochilaAtacante.podeUsarItem()) {
 						System.out.println(
-								"\n[AÇÃO] " + atacante.getNome() + " atacou " + defensor.getNome() + " causando "
-										+ dano + " de dano!");
+								"\n[MOCHILA] Você não possui itens disponíveis ou já atingiu o limite de uso!");
+						break;
+					}
 
-						if (!defensor.isVivo()) {
-							vencedorBatalha = atacante;
-						}
+					System.out.println("\n=== ITENS NA MOCHILA DE " + atacante.getNome() + " ===");
+					List<Item> itens = mochilaAtacante.getItens();
+					for (int i = 0; i < itens.size(); i++) {
+						System.out.println((i + 1) + " - " + itens.get(i).getNome());
+					}
+
+					System.out.print("Escolha o item: ");
+					int opcaoItem = scan.nextInt();
+
+					if (atacante.usarItemEspecifico(opcaoItem - 1)) {
+						System.out.println("\n[MOCHILA] Item utilizado com sucesso!");
 						acaoConcluida = true;
-						break;
+					} else {
+						System.out.println("\n[MOCHILA] Escolha inválida ou HP já está cheio!");
+					}
+					break;
 
-					case 2:
-						Mochila mochilaAtacante = atacante.getMochila();
-						if (!mochilaAtacante.podeUsarItem()) {
-							System.out.println(
-									"\n[MOCHILA] Você não possui itens disponíveis ou já atingiu o limite de uso!");
-							break;
-						}
+				case 3:
+					System.out.println("\nBatalha interrompida por " + nomeTreinadorDaVez + "!");
+					vencedorBatalha = defensor; // O adversário vence por desistência
+					break;
 
-						System.out.println("\n=== ITENS NA MOCHILA DE " + atacante.getNome() + " ===");
-						List<Item> itens = mochilaAtacante.getItens();
-						for (int i = 0; i < itens.size(); i++) {
-							System.out.println((i + 1) + " - " + itens.get(i).getNome());
-						}
-
-						System.out.print("Escolha o item: ");
-						int opcaoItem = scan.nextInt();
-
-						if (atacante.usarItemEspecifico(opcaoItem - 1)) {
-							System.out.println("\n[MOCHILA] Item utilizado com sucesso!");
-							acaoConcluida = true;
-						} else {
-							System.out.println("\n[MOCHILA] Escolha inválida ou HP já está cheio!");
-						}
-						break;
-
-					case 3:
-						System.out.println("\nBatalha interrompida por " + nomeTreinadorDaVez + "!");
-						vencedorBatalha = defensor; // O adversário vence por desistência
-						break;
-
-					default:
-						System.out.println("\nOpção inválida! Tente novamente.");
-						break;
+				default:
+					System.out.println("\nOpção inválida! Tente novamente.");
+					break;
 				}
 			} catch (InputMismatchException e) {
 				System.out.println("Entrada inválida. Digite apenas números");
@@ -130,6 +142,10 @@ public class Main {
 			}
 			if (acaoConcluida) {
 				batalha.registrarAcao(atacante);
+				if (batalha.getVencedor() != null) {
+					vencedorBatalha = batalha.getVencedor();
+					break;
+				}
 				vezDoTreinador1 = !vezDoTreinador1;
 			}
 		}
@@ -138,9 +154,7 @@ public class Main {
 		System.out.println(" FIM DE BATALHA NO " + batalha.getTerreno().getNomeFormatado() + "!");
 		System.out.println("==================================================");
 
-		if (vencedorBatalha != null)
-
-		{
+		if (vencedorBatalha != null) {
 			System.out.println(" O GRANDE VENCEDOR É: " + vencedorBatalha.getNome().toUpperCase() + "!");
 		} else {
 			System.out.println(" A batalha foi interrompida ou empatou!");

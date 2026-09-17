@@ -13,6 +13,7 @@ public class PokeSal {
 	private TipoElemental tipo;
 	private boolean passivaDefesaAtivada;
 	private Mochila mochila;
+	private EfeitoStatus statusAtual = EfeitoStatus.NENHUM;
 
 	public PokeSal(TipoPokesal tipo) {
 		this.nome = tipo.getNomeFormatado();
@@ -53,14 +54,29 @@ public class PokeSal {
 	}
 
 	public boolean usarItemEspecifico(int indice) {
-		if (this.hpAtual == this.hpMaximo) {
+
+		if (indice < 0 || indice >= this.mochila.getItens().size()) {
+			return false;
+		}
+
+		Item itemConsultado = this.mochila.getItens().get(indice);
+
+		boolean precisaCuraHp = (itemConsultado.getPontosCura() > 0 && this.hpAtual < this.hpMaximo);
+		boolean precisaCuraStatus = (itemConsultado.getCuraStatus().equalsIgnoreCase("TODOS")
+				&& this.statusAtual != EfeitoStatus.NENHUM);
+
+		if (!precisaCuraHp && !precisaCuraStatus) {
 			return false;
 		}
 
 		Item itemUsado = this.mochila.usarItemPorIndice(indice);
-
 		if (itemUsado != null) {
-			curar(itemUsado.getPontosCura());
+			if (itemUsado.getPontosCura() > 0) {
+				curar(itemUsado.getPontosCura());
+			}
+			if (itemUsado.getCuraStatus().equalsIgnoreCase("TODOS")) {
+				this.statusAtual = EfeitoStatus.NENHUM;
+			}
 			return true;
 		}
 
@@ -98,4 +114,13 @@ public class PokeSal {
 	public TipoElemental getTipo() {
 		return tipo;
 	}
+
+	public EfeitoStatus getStatusAtual() {
+		return statusAtual;
+	}
+
+	public void setStatusAtual(EfeitoStatus statusAtual) {
+		this.statusAtual = statusAtual;
+	}
+
 }

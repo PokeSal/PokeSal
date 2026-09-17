@@ -1,5 +1,8 @@
 package br.edu.ucsal.pokesal.engine;
 
+import java.util.Random;
+
+import br.edu.ucsal.pokesal.model.EfeitoStatus;
 import br.edu.ucsal.pokesal.model.PokeSal;
 import br.edu.ucsal.pokesal.model.Terreno;
 import br.edu.ucsal.pokesal.model.TipoElemental;
@@ -44,10 +47,38 @@ public class CalculadoraDano {
 			System.out.println("\n[TERRENO] O terreno ASFALTO QUENTE potencializou o ataque de fogo!");
 			return ConstantesJogo.BONUS_ASFALTO_QUENTE;
 		} else if (terreno == Terreno.POCA_CHUVA && atacante.getTipo() == TipoElemental.AGUA) {
-			System.out.println("[TERRENO] O terreno POÇA DE CHUVA potencializou o ataque de água!");
+			System.out.println("\n[TERRENO] O terreno POÇA DE CHUVA potencializou o ataque de água!");
 			return ConstantesJogo.BONUS_POCA_CHUVA;
 		} else {
 			return ConstantesJogo.MULT_NEUTRO;
+		}
+	}
+
+	public static void aplicarEfeitoStatus(PokeSal atacante, PokeSal defensor) {
+		Random rand = new Random();
+		boolean aplicarEfeito = false;
+
+		if (defensor.getStatusAtual() != EfeitoStatus.NENHUM) {
+			return;
+		}
+
+		double chanceAplicarEfeito = rand.nextDouble(0, 1);
+
+		if (chanceAplicarEfeito < ConstantesJogo.CHANCE_EFEITO_STATUS) {
+			aplicarEfeito = true;
+		}
+
+		if (aplicarEfeito && atacante.getTipo() == TipoElemental.FOGO && defensor.getTipo() != TipoElemental.FOGO) {
+			defensor.setStatusAtual(EfeitoStatus.QUEIMADO);
+			System.out.println("\n[STATUS] " + defensor.getNome() + " ficou QUEIMADO pelo ataque!");
+		} else if (aplicarEfeito && atacante.getTipo() == TipoElemental.AGUA
+				&& defensor.getTipo() != TipoElemental.AGUA) {
+			defensor.setStatusAtual(EfeitoStatus.PARALISADO);
+			System.out.println("\n[STATUS] " + defensor.getNome() + " ficou PARALISADO pelo ataque!");
+		} else if (aplicarEfeito && atacante.getTipo() == TipoElemental.PLANTA
+				&& defensor.getTipo() != TipoElemental.PLANTA) {
+			defensor.setStatusAtual(EfeitoStatus.ENVENENADO);
+			System.out.println("\n[STATUS] " + defensor.getNome() + " ficou ENVENENADO pelo ataque!");
 		}
 	}
 
