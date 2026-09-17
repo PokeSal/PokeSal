@@ -39,33 +39,51 @@ public class Main {
 
 		batalha.definirOrdemAtuacao();
 		System.out.println("\n>>> ORDEM DE INICIATIVA DA BATALHA <<<");
-		System.out.println("1º a agir (Mais rápido): " + batalha.getPrimeiroAtacante().getNome());
-		System.out.println("2º a agir: " + batalha.getSegundoAtacante().getNome());
+
+		String treinadorPrimeiro = (batalha.getPrimeiroAtacante() == pokeSal1) ? nomeT1 : nomeT2;
+		String treinadorSegundo = (batalha.getSegundoAtacante() == pokeSal1) ? nomeT1 : nomeT2;
+
+		if (batalha.isVelocidadeIgual()) {
+			System.out.println("1º a agir (Empate de SPD - Sorteado): "
+					+ batalha.getPrimeiroAtacante().getNome() + " [" + treinadorPrimeiro + "]");
+		} else {
+			System.out.println("1º a agir (Mais rápido): " + batalha.getPrimeiroAtacante().getNome() + " ["
+					+ treinadorPrimeiro + "]");
+		}
+
+		System.out.println("2º a agir: " + batalha.getSegundoAtacante().getNome() + " [" + treinadorSegundo + "]");
 
 		boolean vezDoTreinador1 = (batalha.getPrimeiroAtacante() == pokeSal1);
 		PokeSal vencedorBatalha = null;
+		String treinadorVencedor = null;
 
 		while (pokeSal1.isVivo() && pokeSal2.isVivo()) {
 
 			PokeSal atacante = vezDoTreinador1 ? pokeSal1 : pokeSal2;
+			PokeSal defensor = vezDoTreinador1 ? pokeSal2 : pokeSal1;
+			String nomeTreinadorDaVez = vezDoTreinador1 ? nomeT1 : nomeT2;
+			String nomeTreinadorAdversario = vezDoTreinador1 ? nomeT2 : nomeT1;
+
 			if (atacante.getStatusAtual() == EfeitoStatus.PARALISADO) {
-				System.out.println("\n[STATUS] " + atacante.getNome() + " está PARALISADO e perdeu a vez!");
+				System.out.println("\n[STATUS] " + atacante.getNome() + " [" + nomeTreinadorDaVez
+						+ "] está PARALISADO e perdeu a vez!");
 				atacante.setStatusAtual(EfeitoStatus.NENHUM);
 				batalha.registrarAcao(atacante);
 				if (batalha.getVencedor() != null) {
 					vencedorBatalha = batalha.getVencedor();
+					treinadorVencedor = (vencedorBatalha == pokeSal1) ? nomeT1 : nomeT2;
 					break;
 				}
 				vezDoTreinador1 = !vezDoTreinador1;
 				continue;
 			}
-			PokeSal defensor = vezDoTreinador1 ? pokeSal2 : pokeSal1;
-			String nomeTreinadorDaVez = vezDoTreinador1 ? nomeT1 : nomeT2;
 
 			System.out.println("\n--------------------------------------------------");
 			System.out.println("STATUS DA BATALHA:");
-			System.out.println(pokeSal1.getNome() + " -> HP: " + pokeSal1.getHpAtual() + "/" + pokeSal1.getHpMaximo());
-			System.out.println(pokeSal2.getNome() + " -> HP: " + pokeSal2.getHpAtual() + "/" + pokeSal2.getHpMaximo());
+			System.out.println(pokeSal1.getNome() + " [" + nomeT1 + "] -> HP: " + pokeSal1.getHpAtual() + "/"
+					+ pokeSal1.getHpMaximo());
+			System.out.println(pokeSal2.getNome() + " [" + nomeT2 + "] -> HP: " + pokeSal2.getHpAtual() + "/"
+					+ pokeSal2.getHpMaximo());
 			System.out.println("--------------------------------------------------");
 
 			System.out.println(
@@ -84,11 +102,17 @@ public class Main {
 					int dano = CalculadoraDano.calcularDano(atacante, defensor, batalha.getTerreno());
 					defensor.receberDano(dano);
 					CalculadoraDano.aplicarEfeitoStatus(atacante, defensor);
-					System.out.println("\n[AÇÃO] " + atacante.getNome() + " atacou " + defensor.getNome() + " causando "
-							+ dano + " de dano!");
+					System.out.println("\n[AÇÃO] " + atacante.getNome() + " [" + nomeTreinadorDaVez + "] atacou "
+							+ defensor.getNome() + " [" + nomeTreinadorAdversario + "] causando " + dano + " de dano!");
+
+					batalha.processarRecuoPorAtaque(atacante);
 
 					if (!defensor.isVivo()) {
 						vencedorBatalha = atacante;
+						treinadorVencedor = nomeTreinadorDaVez;
+					} else if (!atacante.isVivo()) {
+						vencedorBatalha = defensor;
+						treinadorVencedor = nomeTreinadorAdversario;
 					}
 					acaoConcluida = true;
 					break;
@@ -101,7 +125,8 @@ public class Main {
 						break;
 					}
 
-					System.out.println("\n=== ITENS NA MOCHILA DE " + atacante.getNome() + " ===");
+					System.out.println(
+							"\n=== ITENS NA MOCHILA DE " + atacante.getNome() + " [" + nomeTreinadorDaVez + "] ===");
 					List<Item> itens = mochilaAtacante.getItens();
 					for (int i = 0; i < itens.size(); i++) {
 						System.out.println((i + 1) + " - " + itens.get(i).getNome());
@@ -120,7 +145,8 @@ public class Main {
 
 				case 3:
 					System.out.println("\nBatalha interrompida por " + nomeTreinadorDaVez + "!");
-					vencedorBatalha = defensor; // O adversário vence por desistência
+					vencedorBatalha = defensor;
+					treinadorVencedor = nomeTreinadorAdversario;
 					break;
 
 				default:
@@ -144,6 +170,7 @@ public class Main {
 				batalha.registrarAcao(atacante);
 				if (batalha.getVencedor() != null) {
 					vencedorBatalha = batalha.getVencedor();
+					treinadorVencedor = (vencedorBatalha == pokeSal1) ? nomeT1 : nomeT2;
 					break;
 				}
 				vezDoTreinador1 = !vezDoTreinador1;
@@ -155,7 +182,8 @@ public class Main {
 		System.out.println("==================================================");
 
 		if (vencedorBatalha != null) {
-			System.out.println(" O GRANDE VENCEDOR É: " + vencedorBatalha.getNome().toUpperCase() + "!");
+			System.out.println(" O GRANDE VENCEDOR É O TREINADOR: " + treinadorVencedor.toUpperCase() + " COM SEU "
+					+ vencedorBatalha.getNome().toUpperCase() + "!");
 		} else {
 			System.out.println(" A batalha foi interrompida ou empatou!");
 		}

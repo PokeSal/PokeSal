@@ -19,7 +19,7 @@ public class ConstantesJogo {
   public static final double LIMITAR_PASSIVA_DEFESA = 0.20;
   public static final double MULTIPLICADOR_PASSIVA_DEFESA = 1.20;
 
-  public static final int INTERVALO_TURNO_RECUO = 2;
+  public static final int INTERVALO_TURNO_RECUO = 4; 
   public static final double PERCENTUAL_DANO_RECUO = 0.05;
 
   public static final double MUDANCA_TERRENO_TURNO = 3;

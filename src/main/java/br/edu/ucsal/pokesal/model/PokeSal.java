@@ -14,6 +14,7 @@ public class PokeSal {
 	private boolean passivaDefesaAtivada;
 	private Mochila mochila;
 	private EfeitoStatus statusAtual = EfeitoStatus.NENHUM;
+	private int contadorAtaquesConsecutivos = 0; 
 
 	public PokeSal(TipoPokesal tipo) {
 		this.nome = tipo.getNomeFormatado();
@@ -77,10 +78,25 @@ public class PokeSal {
 			if (itemUsado.getCuraStatus().equalsIgnoreCase("TODOS")) {
 				this.statusAtual = EfeitoStatus.NENHUM;
 			}
+			
+			zerarAtaquesConsecutivos(); 
 			return true;
 		}
 
 		return false;
+	}
+
+	public int incrementarAtaquesConsecutivos() {
+		this.contadorAtaquesConsecutivos++;
+		return this.contadorAtaquesConsecutivos;
+	}
+
+	public void zerarAtaquesConsecutivos() {
+		this.contadorAtaquesConsecutivos = 0;
+	}
+
+	public int getContadorAtaquesConsecutivos() {
+		return contadorAtaquesConsecutivos;
 	}
 
 	public Mochila getMochila() {

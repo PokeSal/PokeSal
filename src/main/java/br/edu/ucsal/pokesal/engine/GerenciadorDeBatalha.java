@@ -27,14 +27,22 @@ public class GerenciadorDeBatalha {
 	}
 
 	public void definirOrdemAtuacao() {
-		if (pokesal1.getSpd() >= pokesal2.getSpd()) {
+		if (pokesal1.getSpd() > pokesal2.getSpd()) {
 			this.primeiroAtacante = pokesal1;
 			this.segundoAtacante = pokesal2;
-		} else {
+		} else if (pokesal2.getSpd() > pokesal1.getSpd()) {
 			this.primeiroAtacante = pokesal2;
 			this.segundoAtacante = pokesal1;
+		} else {
+			Random rand = new Random();
+			if (rand.nextBoolean()) {
+				this.primeiroAtacante = pokesal1;
+				this.segundoAtacante = pokesal2;
+			} else {
+				this.primeiroAtacante = pokesal2;
+				this.segundoAtacante = pokesal1;
+			}
 		}
-
 	}
 
 	public void registrarAcao(PokeSal atacante) {
@@ -44,26 +52,23 @@ public class GerenciadorDeBatalha {
 		if (this.acoesRodadaAtual >= 2) {
 			this.acoesRodadaAtual = 0;
 			this.contadorTurno++;
-			
 
-			aplicarDanoRecuo();
 			aplicarDanoStatusFimDeTurno();
 			aplicarCuraCanteiroCentral();
 			mudarTerreno();
 			verificarVencedor();
-			
 		}
 	}
 
-	private void aplicarDanoRecuo() {
-		if (this.contadorTurno > 0 && this.contadorTurno % ConstantesJogo.INTERVALO_TURNO_RECUO == 0) {
-			if (this.ultimoAtacante != null && this.ultimoAtacante.isVivo()) {
-				int danoRecuo = (int) Math
-						.round(this.ultimoAtacante.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_RECUO);
+	public void processarRecuoPorAtaque(PokeSal atacante) {
+		if (atacante != null && atacante.isVivo()) {
+			int ataques = atacante.incrementarAtaquesConsecutivos();
 
-				this.ultimoAtacante.receberDano(danoRecuo);
-				System.out.println("\n[RECUO] Foi aplicado " + danoRecuo + " de dano de recuo em "
-						+ ultimoAtacante.getNome() + "!");
+			if (ataques > 0 && ataques % ConstantesJogo.INTERVALO_TURNO_RECUO == 0) {
+				int danoRecuo = (int) Math.round(atacante.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_RECUO);
+				atacante.receberDano(danoRecuo);
+				System.out.println("\n[RECUO] " + atacante.getNome() + " sofreu " + danoRecuo
+						+ " de dano de recuo por realizar " + ataques + " ataques seguidos sem usar item!");
 			}
 		}
 	}
@@ -95,8 +100,8 @@ public class GerenciadorDeBatalha {
 			Terreno terrenoSorteado = opcoesTerreno[sorteioTerreno];
 			this.terreno = terrenoSorteado;
 
-			System.out.println("\n[NOVO TERRENO]");
-			System.out.println("Local: " + terrenoSorteado.getNomeFormatado());
+			System.out.println(
+					"\n[TERRENO] O ambiente da batalha mudou para: " + terrenoSorteado.getNomeFormatado() + "!");
 		}
 
 	}
@@ -164,6 +169,10 @@ public class GerenciadorDeBatalha {
 			} else
 				this.vencedor = this.pokesal2;
 		}
+	}
+
+	public boolean isVelocidadeIgual() {
+		return pokesal1.getSpd() == pokesal2.getSpd();
 	}
 
 	public PokeSal getVencedor() {
