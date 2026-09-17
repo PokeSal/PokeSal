@@ -19,7 +19,7 @@ A análise estática inicial via plugin do Checkstyle no Eclipse apontou um tota
 
 ![Checkstyle Antes - Parte 1](../checkstyle/relatoriocheckstyke1.png)
 
-![Checkstyle Antes - Parte 2](../checkstyle/relatorio_checkstyle2.png)
+![Checkstyle Antes - Parte 2](../checkstyle/relatoriocheckstyle2.png)
 
 ---
 
