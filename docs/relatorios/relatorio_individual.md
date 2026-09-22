@@ -57,7 +57,7 @@
 
 ### 2. Requisitos autorais
 - Implementação do aumento de 20% na DEF quando o HP fica abaixo de 20%.
-- Implementação do dano de recuo de 5% a cada 3 turnos.
+- Implementação do dano de recuo de 10% a cada 3 turnos.
 - Implementação da rotação dinâmica dos terrenos durante a batalha, com alteração do terreno após o intervalo de turnos definido.
 - Criação e utilização das constantes relacionadas aos requisitos autorais.
 - Correção e validação das mecânicas durante os testes.
