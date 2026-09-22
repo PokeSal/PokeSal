@@ -20,9 +20,9 @@ public class Mochila {
     this.itens = new ArrayList<>();
     this.itensUsados = 0;
 
-    this.itens.add(new Item("Poção (+20 HP)", 20, "NENHUM"));
-    this.itens.add(new Item("Super Poção (+40 HP)", 40, "NENHUM"));
-    this.itens.add(new Item("Cura Total (Cura Status)", 0, "TODOS"));
+    this.itens.add(new Item("Poção (+20 HP)", 20, ConstantesJogo.STATUS_NENHUM));
+    this.itens.add(new Item("Super Poção (+40 HP)", 40, ConstantesJogo.STATUS_NENHUM));
+    this.itens.add(new Item("Cura Total (Cura Status)", 0, ConstantesJogo.STATUS_TODOS));
   }
 
   /**

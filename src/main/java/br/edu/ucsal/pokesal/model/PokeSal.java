@@ -91,7 +91,7 @@ public class PokeSal {
     Item itemConsultado = this.mochila.getItens().get(indice);
 
     boolean precisaCuraHp = (itemConsultado.getPontosCura() > 0 && this.hpAtual < this.hpMaximo);
-    boolean precisaCuraStatus = (itemConsultado.getCuraStatus().equalsIgnoreCase("TODOS")
+    boolean precisaCuraStatus = (itemConsultado.getCuraStatus().equalsIgnoreCase(ConstantesJogo.STATUS_TODOS)
         && this.statusAtual != EfeitoStatus.NENHUM);
 
     if (!precisaCuraHp && !precisaCuraStatus) {
@@ -103,7 +103,7 @@ public class PokeSal {
       if (itemUsado.getPontosCura() > 0) {
         curar(itemUsado.getPontosCura());
       }
-      if (itemUsado.getCuraStatus().equalsIgnoreCase("TODOS")) {
+      if (itemUsado.getCuraStatus().equalsIgnoreCase(ConstantesJogo.STATUS_TODOS)) {
         this.statusAtual = EfeitoStatus.NENHUM;
       }
 
