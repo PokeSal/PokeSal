@@ -22,7 +22,7 @@ Este documento formaliza a especificação, justificativa e regras de negócio d
 ## 🎯 Requisito Autoral 01: Dano de Recuo por Desgaste Contínuo
 
 ### 1.1. Descrição e Regra de Negócio
-A cada **4 ataques consecutivos** realizados sem o uso de itens da mochila, o Pokésal sofre um dano direto de **5% do seu HP Máximo** como penalidade de recuo por esforço físico contínuo. Caso o treinador utilize um item da mochila, a contagem de ataques do Pokésal é zerada imediatamente.
+A cada **4 ataques consecutivos** realizados sem o uso de itens da mochila, o Pokésal sofre um dano direto de **10% do seu HP Máximo** como penalidade de recuo por esforço físico contínuo. Caso o treinador utilize um item da mochila, a contagem de ataques do Pokésal é zerada imediatamente.
 
 ### 1.2. Justificativa e Motivação
 A mecânica de recuo foi pensada para impedir que um jogador fique apenas atacando sem parar para vencer a luta facilmente sem gerenciar os recursos da mochila. Esse desgaste obriga o treinador a pausar a sequência ofensiva e usar itens de cura estrategicamente para compensar o dano acumulado.
