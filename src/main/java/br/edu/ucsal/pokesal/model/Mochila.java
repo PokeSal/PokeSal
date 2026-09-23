@@ -2,7 +2,6 @@ package br.edu.ucsal.pokesal.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import br.edu.ucsal.pokesal.util.ConstantesJogo;
 
 /**

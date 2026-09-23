@@ -1,5 +1,9 @@
 package br.edu.ucsal.pokesal;
 
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
 import br.edu.ucsal.pokesal.engine.CalculadoraDano;
 import br.edu.ucsal.pokesal.engine.GerenciadorDeBatalha;
 import br.edu.ucsal.pokesal.model.EfeitoStatus;
@@ -8,10 +12,6 @@ import br.edu.ucsal.pokesal.model.Mochila;
 import br.edu.ucsal.pokesal.model.PokeSal;
 import br.edu.ucsal.pokesal.model.Terreno;
 import br.edu.ucsal.pokesal.model.TipoPokesal;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
 
 /**
  * Classe principal responsável por executar o loop interativo da batalha do PokeSal via console.

@@ -1,11 +1,11 @@
 package br.edu.ucsal.pokesal.engine;
 
+import java.util.Random;
 import br.edu.ucsal.pokesal.model.EfeitoStatus;
 import br.edu.ucsal.pokesal.model.PokeSal;
 import br.edu.ucsal.pokesal.model.Terreno;
 import br.edu.ucsal.pokesal.model.TipoElemental;
 import br.edu.ucsal.pokesal.util.ConstantesJogo;
-import java.util.Random;
 
 /**
  * Gerencia a mecânica de combate, controle de turnos, alteração de terrenos e
