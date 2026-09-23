@@ -16,13 +16,13 @@ public class Mochila {
    * Construtor padrão da Mochila que inicializa os itens consumíveis disponíveis.
    */
   public Mochila() {
-    this.itens = new ArrayList<>();
-    this.itensUsados = 0;
+  this.itens = new ArrayList<>();
+  this.itensUsados = 0;
 
-    this.itens.add(new Item("Poção (+20 HP)", 20, ConstantesJogo.STATUS_NENHUM));
-    this.itens.add(new Item("Super Poção (+40 HP)", 40, ConstantesJogo.STATUS_NENHUM));
-    this.itens.add(new Item("Cura Total (Cura Status)", 0, ConstantesJogo.STATUS_TODOS));
-  }
+  this.itens.add(new Item(ConstantesJogo.NOME_POCAO, ConstantesJogo.CURA_POCAO, ConstantesJogo.STATUS_NENHUM));
+  this.itens.add(new Item(ConstantesJogo.NOME_SUPER_POCAO, ConstantesJogo.CURA_SUPER_POCAO, ConstantesJogo.STATUS_NENHUM));
+  this.itens.add(new Item(ConstantesJogo.NOME_CURA_TOTAL, ConstantesJogo.CURA_NENHUMA, ConstantesJogo.STATUS_TODOS));
+}
 
   /**
    * Obtém a lista de itens atualmente presentes na mochila.

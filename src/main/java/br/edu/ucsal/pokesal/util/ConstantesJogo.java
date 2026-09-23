@@ -30,4 +30,13 @@ public class ConstantesJogo {
 
   public static final String STATUS_NENHUM = "NENHUM";
   public static final String STATUS_TODOS = "TODOS";
+  
+  public static final String NOME_POCAO = "Poção (+20 HP)";
+  public static final String NOME_SUPER_POCAO = "Super Poção (+40 HP)";
+  public static final String NOME_CURA_TOTAL = "Cura Total (Cura Status)";
+
+  public static final int CURA_POCAO = 20;
+  public static final int CURA_SUPER_POCAO = 40;
+  public static final int CURA_NENHUMA = 0;
+
 }
