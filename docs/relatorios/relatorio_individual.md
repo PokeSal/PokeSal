@@ -71,3 +71,16 @@
 ### 4. Tratamento de entradas e testes
 - Implementação do tratamento de entradas inválidas no terminal, evitando o encerramento da aplicação por valores não numéricos.
 - Realização de testes das mecânicas de batalha e correção de problemas identificados durante a execução.
+
+---
+
+## Pedro Luiz de Barros Pereira
+
+### 1. Modelagem UML e diagramas
+- Elaboração do Diagrama de Casos de Uso, mapeando as interações dos treinadores com o simulador (seleção de iniciais, ações de combate, uso de mochila e desistência).
+- Criação do Diagrama de Classes, modelando as entidades do domínio (`PokeSal`, `Item`, `Mochila`), os enums (`TipoElemental`, `Terreno`, `TipoPokesal`, `EfeitoStatus`) e as classes da camada engine (`GerenciadorDeBatalha`, `CalculadoraDano`).
+- Revisão das visibilidades, multiplicidades e relacionamentos entre as classes (associações e dependências) para garantir o alinhamento entre a modelagem e a implementação Java.
+
+### 2. Análise estática e revisão de arquitetura
+- Participação na análise estática de requisitos, auxiliando na identificação de lacunas e ambiguidades do edital.
+- Mapeamento das divergências entre o código-fonte e a modelagem UML durante a revisão da Fase 01.
