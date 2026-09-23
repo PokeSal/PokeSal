@@ -1,15 +1,15 @@
 package br.edu.ucsal.pokesal.engine;
 
-import java.util.Random;
 import br.edu.ucsal.pokesal.model.EfeitoStatus;
 import br.edu.ucsal.pokesal.model.PokeSal;
 import br.edu.ucsal.pokesal.model.Terreno;
 import br.edu.ucsal.pokesal.model.TipoElemental;
 import br.edu.ucsal.pokesal.util.ConstantesJogo;
+import java.util.Random;
 
 /**
- * Gerencia a mecânica de combate, controle de turnos, alteração de terrenos e
- * verificação de condições de vitória entre dois Pokésais.
+ * Gerencia a mecânica de combate, controle de turnos, alteração de terrenos e verificação de
+ * condições de vitória entre dois Pokésais.
  */
 public class GerenciadorDeBatalha {
 
@@ -38,8 +38,8 @@ public class GerenciadorDeBatalha {
   }
 
   /**
-   * Define a ordem de atuação do turno com base na velocidade (SPD) dos Pokésais.
-   * Em caso de empate de velocidade, realiza um sorteio aleatório para a prioridade.
+   * Define a ordem de atuação do turno com base na velocidade (SPD) dos Pokésais. Em caso de empate
+   * de velocidade, realiza um sorteio aleatório para a prioridade.
    */
   public void definirOrdemAtuacao() {
     if (pokesal1.getSpd() > pokesal2.getSpd()) {
@@ -61,8 +61,8 @@ public class GerenciadorDeBatalha {
   }
 
   /**
-   * Registra a ação realizada por um Pokésal e avança os turnos do combate quando
-   * ambos realizam suas ações, acionando os efeitos de fim de turno.
+   * Registra a ação realizada por um Pokésal e avança os turnos do combate quando ambos realizam
+   * suas ações, acionando os efeitos de fim de turno.
    *
    * @param atacante O Pokésal que executou a ação no turno atual.
    */
@@ -82,8 +82,8 @@ public class GerenciadorDeBatalha {
   }
 
   /**
-   * Processa a penalidade de dano por recuo em Pokésais que realizaram sequências
-   * de ataques sem utilizar itens para descanso.
+   * Processa a penalidade de dano por recuo em Pokésais que realizaram sequências de ataques sem
+   * utilizar itens para descanso.
    *
    * @param atacante O Pokésal que realizou o ataque.
    */

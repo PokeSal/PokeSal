@@ -1,9 +1,5 @@
 package br.edu.ucsal.pokesal;
 
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
 import br.edu.ucsal.pokesal.engine.CalculadoraDano;
 import br.edu.ucsal.pokesal.engine.GerenciadorDeBatalha;
 import br.edu.ucsal.pokesal.model.EfeitoStatus;
@@ -12,6 +8,10 @@ import br.edu.ucsal.pokesal.model.Mochila;
 import br.edu.ucsal.pokesal.model.PokeSal;
 import br.edu.ucsal.pokesal.model.Terreno;
 import br.edu.ucsal.pokesal.model.TipoPokesal;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
 
 /**
  * Classe principal responsável por executar o loop interativo da batalha do PokeSal via console.
@@ -42,8 +42,7 @@ public class Main {
     System.out.println("\n=== Terreno Sorteado para a Batalha ===");
     System.out.println("Local: " + terrenoSorteado.getNomeFormatado());
 
-    GerenciadorDeBatalha batalha =
-        new GerenciadorDeBatalha(pokeSal1, pokeSal2, terrenoSorteado);
+    GerenciadorDeBatalha batalha = new GerenciadorDeBatalha(pokeSal1, pokeSal2, terrenoSorteado);
 
     batalha.definirOrdemAtuacao();
     System.out.println("\n>>> ORDEM DE INICIATIVA DA BATALHA <<<");

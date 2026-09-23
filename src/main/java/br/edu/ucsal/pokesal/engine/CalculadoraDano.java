@@ -1,11 +1,11 @@
 package br.edu.ucsal.pokesal.engine;
 
-import java.util.Random;
 import br.edu.ucsal.pokesal.model.EfeitoStatus;
 import br.edu.ucsal.pokesal.model.PokeSal;
 import br.edu.ucsal.pokesal.model.Terreno;
 import br.edu.ucsal.pokesal.model.TipoElemental;
 import br.edu.ucsal.pokesal.util.ConstantesJogo;
+import java.util.Random;
 
 /**
  * Utilitário responsável pelo cálculo de dano dos ataques e aplicação de efeitos de status em
@@ -17,8 +17,8 @@ public class CalculadoraDano {
   private CalculadoraDano() {}
 
   /**
-   * Calcula o dano final de um ataque considerando os atributos do atacante e defensor,
-   * efetividade elemental e modificadores do terreno.
+   * Calcula o dano final de um ataque considerando os atributos do atacante e defensor, efetividade
+   * elemental e modificadores do terreno.
    *
    * @param atacante O Pokésal que está realizando o ataque.
    * @param defensor O Pokésal que está recebendo o ataque.
@@ -26,8 +26,7 @@ public class CalculadoraDano {
    * @return O valor inteiro do dano final causado (mínimo de 1).
    */
   public static int calcularDano(PokeSal atacante, PokeSal defensor, Terreno terreno) {
-    double danoBase =
-        ((double) atacante.getAtk() / defensor.getDef()) * ConstantesJogo.DANO_BASE;
+    double danoBase = ((double) atacante.getAtk() / defensor.getDef()) * ConstantesJogo.DANO_BASE;
 
     double efetividade = calcularEfetividade(atacante, defensor);
     double danoTerreno = calcularMultiplicadorTerreno(atacante, terreno);
@@ -47,19 +46,15 @@ public class CalculadoraDano {
    * @return O multiplicador de vantagem elemental (Super Efetivo, Pouco Efetivo ou Neutro).
    */
   public static double calcularEfetividade(PokeSal atacante, PokeSal defensor) {
-    boolean ehSuperEfetivo =
-        (atacante.getTipo() == TipoElemental.FOGO && defensor.getTipo() == TipoElemental.PLANTA)
-            || (atacante.getTipo() == TipoElemental.AGUA
-                && defensor.getTipo() == TipoElemental.FOGO)
-            || (atacante.getTipo() == TipoElemental.PLANTA
-                && defensor.getTipo() == TipoElemental.AGUA);
+    boolean ehSuperEfetivo = (atacante.getTipo() == TipoElemental.FOGO
+        && defensor.getTipo() == TipoElemental.PLANTA)
+        || (atacante.getTipo() == TipoElemental.AGUA && defensor.getTipo() == TipoElemental.FOGO)
+        || (atacante.getTipo() == TipoElemental.PLANTA && defensor.getTipo() == TipoElemental.AGUA);
 
-    boolean ehPoucoEfetivo =
-        (atacante.getTipo() == TipoElemental.FOGO && defensor.getTipo() == TipoElemental.AGUA)
-            || (atacante.getTipo() == TipoElemental.AGUA
-                && defensor.getTipo() == TipoElemental.PLANTA)
-            || (atacante.getTipo() == TipoElemental.PLANTA
-                && defensor.getTipo() == TipoElemental.FOGO);
+    boolean ehPoucoEfetivo = (atacante.getTipo() == TipoElemental.FOGO
+        && defensor.getTipo() == TipoElemental.AGUA)
+        || (atacante.getTipo() == TipoElemental.AGUA && defensor.getTipo() == TipoElemental.PLANTA)
+        || (atacante.getTipo() == TipoElemental.PLANTA && defensor.getTipo() == TipoElemental.FOGO);
 
     if (ehSuperEfetivo) {
       System.out.println("\n[ELEMENTAL] Ataque SUPER EFETIVO!");
@@ -81,12 +76,10 @@ public class CalculadoraDano {
    */
   public static double calcularMultiplicadorTerreno(PokeSal atacante, Terreno terreno) {
     if (terreno == Terreno.ASFALTO_QUENTE && atacante.getTipo() == TipoElemental.FOGO) {
-      System.out.println(
-          "\n[TERRENO] O terreno ASFALTO QUENTE potencializou o ataque de fogo!");
+      System.out.println("\n[TERRENO] O terreno ASFALTO QUENTE potencializou o ataque de fogo!");
       return ConstantesJogo.BONUS_ASFALTO_QUENTE;
     } else if (terreno == Terreno.POCA_CHUVA && atacante.getTipo() == TipoElemental.AGUA) {
-      System.out.println(
-          "\n[TERRENO] O terreno POÇA DE CHUVA potencializou o ataque de água!");
+      System.out.println("\n[TERRENO] O terreno POÇA DE CHUVA potencializou o ataque de água!");
       return ConstantesJogo.BONUS_POCA_CHUVA;
     } else {
       return ConstantesJogo.MULT_NEUTRO;
@@ -108,21 +101,17 @@ public class CalculadoraDano {
     double chanceAplicarEfeito = rand.nextDouble();
 
     if (chanceAplicarEfeito < ConstantesJogo.CHANCE_EFEITO_STATUS) {
-      if (atacante.getTipo() == TipoElemental.FOGO
-          && defensor.getTipo() != TipoElemental.FOGO) {
+      if (atacante.getTipo() == TipoElemental.FOGO && defensor.getTipo() != TipoElemental.FOGO) {
         defensor.setStatusAtual(EfeitoStatus.QUEIMADO);
-        System.out.println(
-            "\n[STATUS] " + defensor.getNome() + " ficou QUEIMADO pelo ataque!");
+        System.out.println("\n[STATUS] " + defensor.getNome() + " ficou QUEIMADO pelo ataque!");
       } else if (atacante.getTipo() == TipoElemental.AGUA
           && defensor.getTipo() != TipoElemental.AGUA) {
         defensor.setStatusAtual(EfeitoStatus.PARALISADO);
-        System.out.println(
-            "\n[STATUS] " + defensor.getNome() + " ficou PARALISADO pelo ataque!");
+        System.out.println("\n[STATUS] " + defensor.getNome() + " ficou PARALISADO pelo ataque!");
       } else if (atacante.getTipo() == TipoElemental.PLANTA
           && defensor.getTipo() != TipoElemental.PLANTA) {
         defensor.setStatusAtual(EfeitoStatus.ENVENENADO);
-        System.out.println(
-            "\n[STATUS] " + defensor.getNome() + " ficou ENVENENADO pelo ataque!");
+        System.out.println("\n[STATUS] " + defensor.getNome() + " ficou ENVENENADO pelo ataque!");
       }
     }
   }
