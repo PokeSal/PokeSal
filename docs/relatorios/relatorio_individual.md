@@ -12,9 +12,10 @@
 - Criação de `TipoPokesal` com os atributos base dos seis Pokésais.
 - Implementação das classes `PokeSal`, `Item` e `Mochila`, incluindo o controle de estado e o limite de itens por batalha.
 
-### 2. Organização do código
+### 2. Organização do código e documentação
 - Criação da classe `ConstantesJogo.java` para centralizar valores utilizados nas regras do jogo.
 - Organização de multiplicadores elementais, bônus de terreno, chances e demais constantes do projeto.
+- Elaboração e organização dos Arquivos de Documentação da Fase 2.
 
 ### 3. Interface do terminal
 - Implementação de nomes de exibição amigáveis para os enums `Terreno` e `TipoPokesal`.
@@ -24,11 +25,12 @@
 
 ## Cauã de Oliveira Lopes
 
-### 1. Estrutura e documentação
+### 1. Estrutura, qualidade e documentação
 - Configuração da estrutura inicial do repositório e do `.gitignore`.
 - Criação da estrutura de documentação, incluindo `docs/atas/`.
 - Participação na análise estática do edital e na documentação dos requisitos autorais.
 - Elaboração da documentação referente ao uso de Inteligência Artificial no projeto.
+- Execução e acompanhamento do CheckList Estático do código.
 
 ### 2. Cálculo de dano e combate
 - Implementação das vantagens e desvantagens elementais e dos bônus de terreno.
@@ -57,7 +59,7 @@
 
 ### 2. Requisitos autorais
 - Implementação do aumento de 20% na DEF quando o HP fica abaixo de 20%.
-- Implementação do dano de recuo de 10% a cada 3 turnos.
+- Implementação do dano de recuo de 5% a cada 3 turnos.
 - Implementação da rotação dinâmica dos terrenos durante a batalha, com alteração do terreno após o intervalo de turnos definido.
 - Criação e utilização das constantes relacionadas aos requisitos autorais.
 - Correção e validação das mecânicas durante os testes.
@@ -68,9 +70,10 @@
 - Exibição dos bônus de terreno durante o combate.
 - Adição de mensagens para informar a ativação da passiva de defesa.
 
-### 4. Tratamento de entradas e testes
+### 4. Tratamento de entradas, testes e qualidade
 - Implementação do tratamento de entradas inválidas no terminal, evitando o encerramento da aplicação por valores não numéricos.
-- Realização de testes das mecânicas de batalha e correção de problemas identificados durante a execução.
+- Realização e condução da Execução dos Testes com JUnit e SonarQube.
+- Testes das mecânicas de batalha e correção de problemas identificados durante a execução.
 
 ---
 
@@ -84,3 +87,9 @@
 ### 2. Análise estática e revisão de arquitetura
 - Participação na análise estática de requisitos, auxiliando na identificação de lacunas e ambiguidades do edital.
 - Mapeamento das divergências entre o código-fonte e a modelagem UML durante a revisão da Fase 01.
+
+### 3. Testes e documentação
+- Implementação da suíte de testes de regras de negócio base.
+- Implementação da suíte de testes dos Requisitos Autorais.
+- Execução do Checklist de Teste Estático de Código.
+- Elaboração do Documento de Testes e Matriz de Rastreabilidade.
