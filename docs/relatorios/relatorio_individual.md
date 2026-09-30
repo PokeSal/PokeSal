@@ -1,95 +1,55 @@
 # Relatório de Contribuição Individual
 
-*Elaborado de acordo com as atividades registradas no GitHub Projects.*
+*Elaborado de acordo com as atividades executadas na Fase 01 e Fase 02 do projeto PokeSal.*
 
 ---
 
 ## Arivaldo Teixeira Moraes Neto
 
-### 1. Análise e modelagem
-- Participação na análise estática do edital, identificando ambiguidades e lacunas nas regras de negócio.
-- Implementação dos enums `TipoElemental` e `Terreno`.
-- Criação de `TipoPokesal` com os atributos base dos seis Pokésais.
-- Implementação das classes `PokeSal`, `Item` e `Mochila`, incluindo o controle de estado e o limite de itens por batalha.
+### Fase 01
+- **Análise e Modelagem:** Participação na análise estática do edital, identificando ambiguidades e lacunas nas regras de negócio. Implementação dos enums `TipoElemental` e `Terreno`, além do `TipoPokesal` com os atributos base dos seis Pokésais.
+- **Domínio de Negócio:** Implementação das classes `PokeSal`, `Item` e `Mochila`, incluindo o controle de estado e o limite de itens por batalha.
+- **Centralização de Constantes:** Criação da classe `ConstantesJogo.java` para padronizar multiplicadores elementais, bônus de terreno, chances e taxas do sistema.
+- **Interface e Mensagens:** Implementação de nomes de exibição amigáveis para os enums e atualização das mensagens de console na `Main.java`.
 
-### 2. Organização do código e documentação
-- Criação da classe `ConstantesJogo.java` para centralizar valores utilizados nas regras do jogo.
-- Organização de multiplicadores elementais, bônus de terreno, chances e demais constantes do projeto.
-- Elaboração e organização dos Arquivos de Documentação da Fase 2.
-
-### 3. Interface do terminal
-- Implementação de nomes de exibição amigáveis para os enums `Terreno` e `TipoPokesal`.
-- Atualização das mensagens da `Main.java`, tornando a interface do terminal mais clara e legível.
+### Fase 02
+- **Gestão de Atas e Documentação:** Elaboração, organização e acompanhamento da coleta de assinaturas digitais da **Ata de Reunião Nº 02** (`Ata_de_Reuniao_02.pdf`) para acompanhamento e encerramento dos entregáveis do grupo.
 
 ---
 
 ## Cauã de Oliveira Lopes
 
-### 1. Estrutura, qualidade e documentação
-- Configuração da estrutura inicial do repositório e do `.gitignore`.
-- Criação da estrutura de documentação, incluindo `docs/atas/`.
-- Participação na análise estática do edital e na documentação dos requisitos autorais.
-- Elaboração da documentação referente ao uso de Inteligência Artificial no projeto.
-- Execução e acompanhamento do CheckList Estático do código.
+### Fase 01
+- **Estrutura e Arquitetura:** Configuração da estrutura inicial do repositório, `.gitignore`, documentação Javadoc e suporte à modelagem dos requisitos autorais.
+- **Combate e Dano:** Implementação das vantagens/desvantagens elementais e bônus de terreno em `CalculadoraDano.java`.
+- **Fluxo de Aplicação:** Desenvolvimento da seleção de Pokésais, definição de iniciativa (SPD), controle do fluxo de turnos, K.O., desistência e vitória por W.O. no terminal.
+- **Itens e Status:** Integração da Mochila ao combate, recuperação de HP e suporte aos efeitos de status (QUEIMADO, ENVENENADO, PARALISADO).
 
-### 2. Cálculo de dano e combate
-- Implementação das vantagens e desvantagens elementais e dos bônus de terreno.
-- Inclusão e padronização de documentação Javadoc nas classes e métodos públicos.
-- Refatoração do requisito 01 do dano de recuo.
-
-### 3. Interface e fluxo de batalha
-- Implementação da interação com os treinadores e seleção dos Pokésais pelo terminal.
-- Implementação da definição de iniciativa com base no atributo SPD.
-- Desenvolvimento do fluxo de turnos, incluindo K.O. e desistência.
-- Implementação da vitória por W.O.
-
-### 4. Itens e efeitos de status
-- Integração da Mochila ao PokeSal e implementação do uso de itens durante a batalha.
-- Validação do uso de itens e recuperação de HP.
-- Participação na implementação dos efeitos de status QUEIMADO, ENVENENADO e PARALISADO.
+### Fase 02
+- **Qualidade e Refatoração:** Execução do **CheckList de Teste Estático (Revisão Manual)**, com foco na remoção de métodos obsoletos e código morto (`relatorio_teste_estatico.md`).
+- **Análise SonarQube:** Execução do SonarScanner local e resolução dos **3 Bugs de Confiabilidade (Reliability)**, padronizando o reuso de geradores aleatórios (`Random`/`SecureRandom`) e adequação às regras do Checkstyle[cite: 7].
+- **Rastreabilidade e IA:** Elaboração da **Matriz de Rastreabilidade, Documento de Testes e Registro de Bugs** (`relatorio_testes_matriz_rastreabilidade.md`), além dos relatórios de transparência do uso de Inteligência Artificial (`AI_DECLARATION.md` e `prompts_ia.txt`).
 
 ---
 
 ## Ryan Abade Oliveira
 
-### 1. Gerenciamento da batalha
-- Criação da classe `GerenciadorDeBatalha`, responsável pelo controle do fluxo da batalha.
-- Implementação da ordem de atuação com base no atributo SPD.
-- Controle dos turnos e encerramento da batalha quando um Pokesal chega a 0 HP.
+### Fase 01
+- **Gerenciamento de Batalha:** Criação da classe `GerenciadorDeBatalha.java`, controle da iniciativa por SPD, gestão de turnos e encerramento do combate.
+- **Mecânicas Autorais e Terreno:** Implementação do bônus defensivo com HP baixo, dano de recuo por ataques consecutivos, rotação dinâmica de terrenos e regeneração no Canteiro Central.
+- **Tratamento de Exceções:** Implementação da validação e tratamento de entradas no terminal para prevenir erros de execução.
 
-### 2. Requisitos autorais
-- Implementação do aumento de 20% na DEF quando o HP fica abaixo de 20%.
-- Implementação do dano de recuo de 5% a cada 3 turnos.
-- Implementação da rotação dinâmica dos terrenos durante a batalha, com alteração do terreno após o intervalo de turnos definido.
-- Criação e utilização das constantes relacionadas aos requisitos autorais.
-- Correção e validação das mecânicas durante os testes.
-
-### 3. Mecânicas de terreno e combate
-- Implementação da cura do Canteiro Central ao final do turno.
-- Adição de logs para ataques super efetivos e pouco efetivos.
-- Exibição dos bônus de terreno durante o combate.
-- Adição de mensagens para informar a ativação da passiva de defesa.
-
-### 4. Tratamento de entradas, testes e qualidade
-- Implementação do tratamento de entradas inválidas no terminal, evitando o encerramento da aplicação por valores não numéricos.
-- Realização e condução da Execução dos Testes com JUnit e SonarQube.
-- Testes das mecânicas de batalha e correção de problemas identificados durante a execução.
+### Fase 02
+- **Suíte de Testes Automatizados (JUnit 5):** Desenvolvimento e validação da suíte de testes unitários (`CalculadoraDanoTest.java`), cobrindo as mecânicas de combate, vantagens elementais, efeitos de terreno, limite de mochila com exceção (`IllegalStateException`) e requisitos autorais (100% de aprovação)[cite: 8].
+- **Análise Estática Dinâmica:** Suporte na execução e validação das suítes automatizadas e verificação de comportamento dos testes no ambiente de análise contínua[cite: 8].
 
 ---
 
 ## Pedro Luiz de Barros Pereira
 
-### 1. Modelagem UML e diagramas
-- Elaboração do Diagrama de Casos de Uso, mapeando as interações dos treinadores com o simulador (seleção de iniciais, ações de combate, uso de mochila e desistência).
-- Criação do Diagrama de Classes, modelando as entidades do domínio (`PokeSal`, `Item`, `Mochila`), os enums (`TipoElemental`, `Terreno`, `TipoPokesal`, `EfeitoStatus`) e as classes da camada engine (`GerenciadorDeBatalha`, `CalculadoraDano`).
-- Revisão das visibilidades, multiplicidades e relacionamentos entre as classes (associações e dependências) para garantir o alinhamento entre a modelagem e a implementação Java.
+### Fase 01
+- **Modelagem UML:** Elaboração do Diagrama de Casos de Uso (interações do treinador, combate, mochila e desistência) e do Diagrama de Classes (`PokeSal`, `Item`, `Mochila`, enums e camada engine).
+- **Consistência de Arquitetura:** Mapeamento de divergências entre os diagramas UML e a implementação do código Java, garantindo conformidade entre a especificação visual e o modelo orientado a objetos.
 
-### 2. Análise estática e revisão de arquitetura
-- Participação na análise estática de requisitos, auxiliando na identificação de lacunas e ambiguidades do edital.
-- Mapeamento das divergências entre o código-fonte e a modelagem UML durante a revisão da Fase 01.
-
-### 3. Testes e documentação
-- Implementação da suíte de testes de regras de negócio base.
-- Implementação da suíte de testes dos Requisitos Autorais.
-- Execução do Checklist de Teste Estático de Código.
-- Elaboração do Documento de Testes e Matriz de Rastreabilidade.
+### Fase 02
+- **Acompanhamento e Revisão:** Acompanhamento da validação dos entregáveis de documentação da equipe e revisão da conformidade do projeto com o edital da Fase 02.
