@@ -1,11 +1,12 @@
 package br.edu.ucsal.pokesal.engine;
 
+import java.util.Random;
+
 import br.edu.ucsal.pokesal.model.EfeitoStatus;
 import br.edu.ucsal.pokesal.model.PokeSal;
 import br.edu.ucsal.pokesal.model.Terreno;
 import br.edu.ucsal.pokesal.model.TipoElemental;
 import br.edu.ucsal.pokesal.util.ConstantesJogo;
-import java.util.Random;
 
 /**
  * Utilitário responsável pelo cálculo de dano dos ataques e aplicação de efeitos de status em
@@ -63,6 +64,7 @@ public class CalculadoraDano {
       System.out.println("\n[ELEMENTAL] Ataque pouco efetivo...");
       return ConstantesJogo.MULT_POUCO_EFETIVO;
     } else {
+      System.out.println("\n[ELEMENTAL] Ataque Neutro");
       return ConstantesJogo.MULT_NEUTRO;
     }
   }
