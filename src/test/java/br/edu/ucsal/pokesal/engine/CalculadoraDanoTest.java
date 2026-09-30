@@ -5,17 +5,18 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import br.edu.ucsal.pokesal.model.Mochila;
 import br.edu.ucsal.pokesal.model.PokeSal;
 import br.edu.ucsal.pokesal.model.Terreno;
 import br.edu.ucsal.pokesal.model.TipoPokesal;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 
 /**
- * Suíte de testes unitários automatizados para o motor de combate e regras do PokeSal.
+ * Suíte de testes unitários automatizados para o motor de combate e regras do
+ * PokeSal.
  */
 public class CalculadoraDanoTest {
 
@@ -50,8 +51,7 @@ public class CalculadoraDanoTest {
     planta.receberDano(20);
     int hpAntes = planta.getHpAtual();
 
-    GerenciadorDeBatalha gerenciador =
-        new GerenciadorDeBatalha(planta, fogo, Terreno.CANTEIRO_CENTRAL);
+    GerenciadorDeBatalha gerenciador = new GerenciadorDeBatalha(planta, fogo, Terreno.CANTEIRO_CENTRAL);
     gerenciador.aplicarCuraCanteiroCentral();
 
     assertEquals(hpAntes + 5, planta.getHpAtual());
@@ -60,8 +60,7 @@ public class CalculadoraDanoTest {
   @Test
   @DisplayName("Validar ordem de iniciativa do turno com base no atributo SPD")
   public void testOrdemDeAtaquePorVelocidade() {
-    GerenciadorDeBatalha gerenciador =
-        new GerenciadorDeBatalha(planta, agua, Terreno.CANTEIRO_CENTRAL);
+    GerenciadorDeBatalha gerenciador = new GerenciadorDeBatalha(planta, agua, Terreno.CANTEIRO_CENTRAL);
     gerenciador.definirOrdemAtuacao();
 
     assertEquals(planta, gerenciador.getPrimeiroAtacante());
@@ -92,6 +91,9 @@ public class CalculadoraDanoTest {
     PokeSal defensorPlanta = new PokeSal(TipoPokesal.CHIKOSAL);
     int danoAtkMax = CalculadoraDano.calcularDano(planta, defensorPlanta, Terreno.CANTEIRO_CENTRAL);
     assertEquals(9, danoAtkMax);
+
+    int danoComAtkMinDefMax = CalculadoraDano.calcularDano(defensorPlanta, planta, Terreno.CANTEIRO_CENTRAL);
+    assertEquals(7, danoComAtkMinDefMax);
 
     planta.receberDano(9999);
     assertEquals(0, planta.getHpAtual());
