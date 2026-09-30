@@ -52,12 +52,15 @@ public class Mochila {
    * @return O objeto Item utilizado ou null caso a ação seja inválida.
    */
   public Item usarItemPorIndice(int indice) {
-    if (podeUsarItem() && indice >= 0 && indice < itens.size()) {
-      itensUsados++;
-      return itens.remove(indice);
-    }
-    return null;
+  if (!podeUsarItem()) {
+    throw new IllegalStateException("Limite de uso de itens na batalha atingido ou mochila vazia.");
   }
+  if (indice < 0 || indice >= itens.size()) {
+    throw new IndexOutOfBoundsException("Índice de item inválido na mochila.");
+  }
+  itensUsados++;
+  return itens.remove(indice);
+}
 
   /**
    * Obtém a quantidade de itens que já foram consumidos durante a batalha.

@@ -167,44 +167,6 @@ public class GerenciadorDeBatalha {
     }
   }
 
-  /**
-   * Executa a sequência padrão de uma rodada completa de combate com troca de ataques.
-   */
-  public void executarRodada() {
-    definirOrdemAtuacao();
-
-    int danoPrimeiro =
-        CalculadoraDano.calcularDano(this.primeiroAtacante, this.segundoAtacante, this.terreno);
-
-    this.segundoAtacante.receberDano(danoPrimeiro);
-
-    this.ultimoAtacante = this.primeiroAtacante;
-
-    if (!this.segundoAtacante.isVivo()) {
-      verificarVencedor();
-      return;
-    }
-
-    int danoSegundo =
-        CalculadoraDano.calcularDano(this.segundoAtacante, this.primeiroAtacante, this.terreno);
-
-    this.primeiroAtacante.receberDano(danoSegundo);
-
-    this.ultimoAtacante = this.segundoAtacante;
-
-    if (!this.primeiroAtacante.isVivo()) {
-      verificarVencedor();
-      return;
-    }
-
-    this.contadorTurno++;
-
-    if (!this.ultimoAtacante.isVivo()) {
-      verificarVencedor();
-      return;
-    }
-  }
-
   private void verificarVencedor() {
     if (!this.pokesal1.isVivo() || !this.pokesal2.isVivo()) {
       if (this.pokesal1.isVivo()) {
