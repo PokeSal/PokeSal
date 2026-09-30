@@ -20,7 +20,6 @@ public class GerenciadorDeBatalha {
   private Terreno terreno;
   private int contadorTurno = 0;
   private int acoesRodadaAtual = 0;
-  private PokeSal ultimoAtacante;
   private PokeSal vencedor;
 
   /**
@@ -67,7 +66,6 @@ public class GerenciadorDeBatalha {
    * @param atacante O Pokésal que executou a ação no turno atual.
    */
   public void registrarAcao(PokeSal atacante) {
-    this.ultimoAtacante = atacante;
     this.acoesRodadaAtual++;
 
     if (this.acoesRodadaAtual >= 2) {
