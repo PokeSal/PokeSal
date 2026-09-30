@@ -13,6 +13,7 @@ import java.util.Random;
  */
 public class GerenciadorDeBatalha {
 
+  private final Random random = new Random();
   private PokeSal pokesal1;
   private PokeSal pokesal2;
   private PokeSal primeiroAtacante;
@@ -48,8 +49,7 @@ public class GerenciadorDeBatalha {
       this.primeiroAtacante = pokesal2;
       this.segundoAtacante = pokesal1;
     } else {
-      Random rand = new Random();
-      if (rand.nextBoolean()) {
+      if (this.random.nextBoolean()) {
         this.primeiroAtacante = pokesal1;
         this.segundoAtacante = pokesal2;
       } else {
@@ -127,9 +127,8 @@ public class GerenciadorDeBatalha {
    */
   public void mudarTerreno() {
     if (this.contadorTurno > 0 && this.contadorTurno % ConstantesJogo.MUDANCA_TERRENO_TURNO == 0) {
-      Random rand = new Random();
       Terreno[] opcoesTerreno = Terreno.values();
-      int sorteioTerreno = rand.nextInt(opcoesTerreno.length);
+      int sorteioTerreno = this.random.nextInt(opcoesTerreno.length);
       Terreno terrenoSorteado = opcoesTerreno[sorteioTerreno];
       this.terreno = terrenoSorteado;
 

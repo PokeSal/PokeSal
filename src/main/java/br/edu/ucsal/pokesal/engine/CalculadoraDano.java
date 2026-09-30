@@ -13,6 +13,8 @@ import java.util.Random;
  */
 public class CalculadoraDano {
 
+  private static final Random RANDOM = new Random();
+
   /** Construtor privado para evitar a instanciação de uma classe utilitária. */
   private CalculadoraDano() {}
 
@@ -49,7 +51,8 @@ public class CalculadoraDano {
     boolean ehSuperEfetivo = (atacante.getTipo() == TipoElemental.FOGO
         && defensor.getTipo() == TipoElemental.PLANTA)
         || (atacante.getTipo() == TipoElemental.AGUA && defensor.getTipo() == TipoElemental.FOGO)
-        || (atacante.getTipo() == TipoElemental.PLANTA && defensor.getTipo() == TipoElemental.AGUA);
+        || (atacante.getTipo() == TipoElemental.PLANTA
+            && defensor.getTipo() == TipoElemental.AGUA);
 
     boolean ehPoucoEfetivo = (atacante.getTipo() == TipoElemental.FOGO
         && defensor.getTipo() == TipoElemental.AGUA)
@@ -98,8 +101,7 @@ public class CalculadoraDano {
       return;
     }
 
-    Random rand = new Random();
-    double chanceAplicarEfeito = rand.nextDouble();
+    double chanceAplicarEfeito = RANDOM.nextDouble();
 
     if (chanceAplicarEfeito < ConstantesJogo.CHANCE_EFEITO_STATUS) {
       if (atacante.getTipo() == TipoElemental.FOGO && defensor.getTipo() != TipoElemental.FOGO) {
