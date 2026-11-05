@@ -1,10 +1,10 @@
 package br.edu.ucsal.pokesal;
 
-import br.edu.ucsal.pokesal.engine.GerenciadorDeBatalha;
-import br.edu.ucsal.pokesal.model.EfeitoStatus;
-import br.edu.ucsal.pokesal.model.Item;
+import br.edu.ucsal.pokesal.engine.GerenciadorTorneio;
+import br.edu.ucsal.pokesal.engine.GerenciadorTorneio.ResultadoPartida;
 import br.edu.ucsal.pokesal.model.PokeSal;
 import br.edu.ucsal.pokesal.model.TipoPokesal;
+import br.edu.ucsal.pokesal.repository.RepositorioResultadosMemoria;
 import br.edu.ucsal.pokesal.service.GeradorAleatorio;
 import br.edu.ucsal.pokesal.service.GeradorAleatorioImpl;
 import br.edu.ucsal.pokesal.service.RegistroBatalha;
@@ -13,180 +13,74 @@ import br.edu.ucsal.pokesal.service.ServicoTerreno;
 import br.edu.ucsal.pokesal.service.ServicoTerrenoImpl;
 import java.time.Clock;
 import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
 /**
- * Ponto de entrada do sistema PokeSal no console com Inversão de Dependência.
+ * Ponto de entrada principal do Torneio PokéSal no Estacionamento da UCSal.
  */
 public class Main {
 
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
 
+		// Injeção de Dependências
 		GeradorAleatorio gerador = new GeradorAleatorioImpl(new Random());
 		Clock clock = Clock.systemDefaultZone();
 		ServicoTerreno servicoTerreno = new ServicoTerrenoImpl();
 		RegistroBatalha registroBatalha = new RegistroBatalhaConsoleImpl();
+		RepositorioResultadosMemoria repositorio = new RepositorioResultadosMemoria();
 
-		System.out.print("Digite o nome do Treinador 1: ");
+		GerenciadorTorneio torneio = new GerenciadorTorneio(repositorio, gerador, servicoTerreno, clock,
+				registroBatalha);
+
+		System.out.println("==================================================");
+		System.out.println("   BEM-VINDO AO TORNEIO POKÉSAL DA UCSAL PITUAÇU  ");
+		System.out.println("==================================================");
+
+		// Cadastro dos 4 Treinadores
+		System.out.print("\nDigite o nome do Treinador 1 (Semifinal 1): ");
 		String nomeT1 = scan.next();
 		PokeSal pokeSal1 = escolherPokeSal(scan, nomeT1);
 
-		System.out.print("Digite o nome do Treinador 2: ");
+		System.out.print("\nDigite o nome do Treinador 2 (Semifinal 1): ");
 		String nomeT2 = scan.next();
 		PokeSal pokeSal2 = escolherPokeSal(scan, nomeT2);
 
-		GerenciadorDeBatalha batalha = new GerenciadorDeBatalha(pokeSal1, pokeSal2, gerador, servicoTerreno, clock,
-				registroBatalha);
+		System.out.print("\nDigite o nome do Treinador 3 (Semifinal 2): ");
+		String nomeT3 = scan.next();
+		PokeSal pokeSal3 = escolherPokeSal(scan, nomeT3);
 
-		batalha.definirOrdemAtuacao();
-		System.out.println("\n>>> ORDEM DE INICIATIVA DA BATALHA <<<");
+		System.out.print("\nDigite o nome do Treinador 4 (Semifinal 2): ");
+		String nomeT4 = scan.next();
+		PokeSal pokeSal4 = escolherPokeSal(scan, nomeT4);
 
-		String treinadorPrimeiro = (batalha.getPrimeiroAtacante() == pokeSal1) ? nomeT1 : nomeT2;
-		String treinadorSegundo = (batalha.getSegundoAtacante() == pokeSal1) ? nomeT1 : nomeT2;
+		// SEMIFINAL 1
+		ResultadoPartida resSemifinal1 = torneio.executarPartida(nomeT1, pokeSal1, nomeT2, pokeSal2, scan,
+				"Semifinal 1");
 
-		if (batalha.isVelocidadeIgual()) {
-			System.out.println("1º a agir (Empate de SPD - Sorteado): " + batalha.getPrimeiroAtacante().getNome() + " ["
-					+ treinadorPrimeiro + "]");
-		} else {
-			System.out.println("1º a agir (Mais rápido): " + batalha.getPrimeiroAtacante().getNome() + " ["
-					+ treinadorPrimeiro + "]");
-		}
-
-		System.out.println("2º a agir: " + batalha.getSegundoAtacante().getNome() + " [" + treinadorSegundo + "]");
-
-		boolean vezDoTreinador1 = (batalha.getPrimeiroAtacante() == pokeSal1);
-		PokeSal vencedorBatalha = null;
-		String treinadorVencedor = null;
-
-		while (pokeSal1.isVivo() && pokeSal2.isVivo()) {
-			PokeSal atacante = vezDoTreinador1 ? pokeSal1 : pokeSal2;
-			PokeSal defensor = vezDoTreinador1 ? pokeSal2 : pokeSal1;
-			String nomeTreinadorDaVez = vezDoTreinador1 ? nomeT1 : nomeT2;
-			String nomeTreinadorAdversario = vezDoTreinador1 ? nomeT2 : nomeT1;
-
-			if (atacante.getStatusAtual() == EfeitoStatus.PARALISADO) {
-				System.out.println("\n[STATUS] " + atacante.getNome() + " [" + nomeTreinadorDaVez
-						+ "] está PARALISADO e perdeu a vez!");
-				atacante.setStatusAtual(EfeitoStatus.NENHUM);
-				batalha.registrarAcao(atacante);
-				if (batalha.getVencedor() != null) {
-					vencedorBatalha = batalha.getVencedor();
-					treinadorVencedor = (vencedorBatalha == pokeSal1) ? nomeT1 : nomeT2;
-					break;
-				}
-				vezDoTreinador1 = !vezDoTreinador1;
-				continue;
-			}
-
-			System.out.println("\n--------------------------------------------------");
-			System.out.println("STATUS DA BATALHA:");
-			System.out.println(pokeSal1.getNome() + " [" + nomeT1 + "] -> HP: " + pokeSal1.getHpAtual() + "/"
-					+ pokeSal1.getHpMaximo());
-			System.out.println(pokeSal2.getNome() + " [" + nomeT2 + "] -> HP: " + pokeSal2.getHpAtual() + "/"
-					+ pokeSal2.getHpMaximo());
-			System.out.println("TERRENO ATIVO: " + batalha.getTerreno().getNomeFormatado());
-			System.out.println("--------------------------------------------------");
-
-			System.out.println(
-					"\n>>> TURNO DE " + nomeTreinadorDaVez.toUpperCase() + " (" + atacante.getNome() + ") <<<");
-			System.out.println("1 - Atacar");
-			System.out.println("2 - Usar Mochila (Item de Cura)");
-			System.out.println("3 - Desistir da Batalha");
-
-			boolean acaoConcluida = false;
-			int acaoEscolhida = 0;
-
-			try {
-				System.out.print("Digite a opção desejada: ");
-				acaoEscolhida = scan.nextInt();
-
-				switch (acaoEscolhida) {
-				case 1:
-					batalha.executarTurnoAtaque(atacante, defensor);
-
-					if (!defensor.isVivo()) {
-						vencedorBatalha = atacante;
-						treinadorVencedor = nomeTreinadorDaVez;
-					} else if (!atacante.isVivo()) {
-						vencedorBatalha = defensor;
-						treinadorVencedor = nomeTreinadorAdversario;
-					}
-					acaoConcluida = true;
-					break;
-
-				case 2:
-					if (!atacante.getMochila().podeUsarItem()) {
-						System.out.println(
-								"\n[MOCHILA] Você não possui itens disponíveis ou já atingiu o limite de uso!");
-						break;
-					}
-
-					System.out.println(
-							"\n=== ITENS NA MOCHILA DE " + atacante.getNome() + " [" + nomeTreinadorDaVez + "] ===");
-					List<Item> itens = atacante.getMochila().getItens();
-					for (int i = 0; i < itens.size(); i++) {
-						System.out.println((i + 1) + " - " + itens.get(i).getNome());
-					}
-
-					System.out.print("Escolha o item: ");
-					int opcaoItem = scan.nextInt();
-
-					if (opcaoItem >= 1 && opcaoItem <= itens.size()) {
-						if (batalha.executarTurnoItem(atacante, nomeTreinadorDaVez, opcaoItem - 1)) {
-							acaoConcluida = true;
-						} else {
-							System.out.println("\n[MOCHILA] HP já está cheio ou escolha inválida!");
-						}
-					} else {
-						System.out.println("\n[MOCHILA] Opção inválida!");
-					}
-					break;
-
-				case 3:
-					System.out.println("\nBatalha interrompida por " + nomeTreinadorDaVez + "!");
-					vencedorBatalha = defensor;
-					treinadorVencedor = nomeTreinadorAdversario;
-					break;
-
-				default:
-					System.out.println("\nOpção inválida! Tente novamente.");
-					break;
-				}
-			} catch (InputMismatchException e) {
-				System.out.println("Entrada inválida. Digite apenas números");
-				scan.nextLine();
-				continue;
-			}
-
-			if (acaoEscolhida == 3 || vencedorBatalha != null) {
-				break;
-			}
-
-			if (acaoConcluida) {
-				if (batalha.getVencedor() != null) {
-					vencedorBatalha = batalha.getVencedor();
-					treinadorVencedor = (vencedorBatalha == pokeSal1) ? nomeT1 : nomeT2;
-					break;
-				}
-				vezDoTreinador1 = !vezDoTreinador1;
-			}
-		}
+		// SEMIFINAL 2
+		ResultadoPartida resSemifinal2 = torneio.executarPartida(nomeT3, pokeSal3, nomeT4, pokeSal4, scan,
+				"Semifinal 2");
 
 		System.out.println("\n==================================================");
-		System.out.println(" FIM DE BATALHA NO " + batalha.getTerreno().getNomeFormatado() + "!");
+		System.out.println("   CLASSIFICADOS PARA A GRANDE FINAL!");
+		System.out.println("   Finalista 1: " + resSemifinal1.nomeTreinador() + " com "
+				+ resSemifinal1.pokesal().getNome() + " [HP Restante: " + resSemifinal1.pokesal().getHpAtual() + "]");
+		System.out.println("   Finalista 2: " + resSemifinal2.nomeTreinador() + " com "
+				+ resSemifinal2.pokesal().getNome() + " [HP Restante: " + resSemifinal2.pokesal().getHpAtual() + "]");
 		System.out.println("==================================================");
 
-		if (vencedorBatalha != null) {
-			System.out.println(" O GRANDE VENCEDOR É O TREINADOR: " + treinadorVencedor.toUpperCase() + " COM SEU "
-					+ vencedorBatalha.getNome().toUpperCase() + "!");
-		} else {
-			System.out.println(" A batalha foi interrompida ou empatou!");
-		}
+		// GRANDE FINAL (Sem restaurar HP!)
+		ResultadoPartida resFinal = torneio.executarPartida(resSemifinal1.nomeTreinador(), resSemifinal1.pokesal(),
+				resSemifinal2.nomeTreinador(), resSemifinal2.pokesal(), scan, "Grande Final");
 
-		System.out.println("==================================================");
+		// DECLARAÇÃO DO CAMPEÃO GERAL
+		System.out.println("\n🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆");
+		System.out.println(" O GRANDE CAMPEÃO GERAL DO ESTACIONAMENTO DA UCSAL É: ");
+		System.out.println(" TREINADOR: " + resFinal.nomeTreinador().toUpperCase());
+		System.out.println(" COM SEU VALENTE: " + resFinal.pokesal().getNome().toUpperCase());
+		System.out.println("🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆\n");
 	}
 
 	private static PokeSal escolherPokeSal(Scanner scan, String nomeTreinador) {
@@ -205,7 +99,7 @@ public class Main {
 				TipoPokesal tipoEscolhido = opcoes[opcaoEscolhida - 1];
 				return new PokeSal(tipoEscolhido);
 			} catch (InputMismatchException e) {
-				System.out.println("Entrada inválida. Digite apenas números");
+				System.out.println("Entrada inválida. Digite apenas números.");
 				scan.nextLine();
 			}
 		}
