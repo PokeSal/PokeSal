@@ -1,10 +1,8 @@
 package br.edu.ucsal.pokesal;
 
-import br.edu.ucsal.pokesal.engine.CalculadoraDano;
 import br.edu.ucsal.pokesal.engine.GerenciadorDeBatalha;
 import br.edu.ucsal.pokesal.model.EfeitoStatus;
 import br.edu.ucsal.pokesal.model.Item;
-import br.edu.ucsal.pokesal.model.Mochila;
 import br.edu.ucsal.pokesal.model.PokeSal;
 import br.edu.ucsal.pokesal.model.TipoPokesal;
 import br.edu.ucsal.pokesal.service.GeradorAleatorio;
@@ -27,7 +25,6 @@ public class Main {
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
 
-		// Instanciação dos colaboradores externos (Injeção de Dependências)
 		GeradorAleatorio gerador = new GeradorAleatorioImpl(new Random());
 		Clock clock = Clock.systemDefaultZone();
 		ServicoTerreno servicoTerreno = new ServicoTerrenoImpl();
@@ -63,7 +60,6 @@ public class Main {
 		boolean vezDoTreinador1 = (batalha.getPrimeiroAtacante() == pokeSal1);
 		PokeSal vencedorBatalha = null;
 		String treinadorVencedor = null;
-		CalculadoraDano calculadoraDano = batalha.getCalculadoraDano();
 
 		while (pokeSal1.isVivo() && pokeSal2.isVivo()) {
 			PokeSal atacante = vezDoTreinador1 ? pokeSal1 : pokeSal2;
@@ -109,19 +105,7 @@ public class Main {
 
 				switch (acaoEscolhida) {
 				case 1:
-					registroBatalha.registrarAtaque(atacante.getNome(), defensor.getNome());
-
-					int dano = calculadoraDano.calcularDano(atacante, defensor, clock);
-					boolean errou = (dano == 0);
-					boolean critico = (dano > 0
-							&& dano >= Math.round(((double) atacante.getAtk() / defensor.getDef()) * 10.0 * 1.5 * 0.5 // Estimativa
-							));
-
-					defensor.receberDano(dano);
-					registroBatalha.registrarDano(defensor.getNome(), dano, critico, errou);
-
-					calculadoraDano.aplicarEfeitoStatus(atacante, defensor);
-					batalha.processarRecuoPorAtaque(atacante);
+					batalha.executarTurnoAtaque(atacante, defensor);
 
 					if (!defensor.isVivo()) {
 						vencedorBatalha = atacante;
@@ -134,8 +118,7 @@ public class Main {
 					break;
 
 				case 2:
-					Mochila mochilaAtacante = atacante.getMochila();
-					if (!mochilaAtacante.podeUsarItem()) {
+					if (!atacante.getMochila().podeUsarItem()) {
 						System.out.println(
 								"\n[MOCHILA] Você não possui itens disponíveis ou já atingiu o limite de uso!");
 						break;
@@ -143,7 +126,7 @@ public class Main {
 
 					System.out.println(
 							"\n=== ITENS NA MOCHILA DE " + atacante.getNome() + " [" + nomeTreinadorDaVez + "] ===");
-					List<Item> itens = mochilaAtacante.getItens();
+					List<Item> itens = atacante.getMochila().getItens();
 					for (int i = 0; i < itens.size(); i++) {
 						System.out.println((i + 1) + " - " + itens.get(i).getNome());
 					}
@@ -152,12 +135,10 @@ public class Main {
 					int opcaoItem = scan.nextInt();
 
 					if (opcaoItem >= 1 && opcaoItem <= itens.size()) {
-						Item itemSelecionado = itens.get(opcaoItem - 1);
-						if (atacante.usarItemEspecifico(opcaoItem - 1)) {
-							registroBatalha.registrarUsoItem(nomeTreinadorDaVez, itemSelecionado.getNome());
+						if (batalha.executarTurnoItem(atacante, nomeTreinadorDaVez, opcaoItem - 1)) {
 							acaoConcluida = true;
 						} else {
-							System.out.println("\n[MOCHILA] HP já está cheio ou item inválido!");
+							System.out.println("\n[MOCHILA] HP já está cheio ou escolha inválida!");
 						}
 					} else {
 						System.out.println("\n[MOCHILA] Opção inválida!");
@@ -185,7 +166,6 @@ public class Main {
 			}
 
 			if (acaoConcluida) {
-				batalha.registrarAcao(atacante);
 				if (batalha.getVencedor() != null) {
 					vencedorBatalha = batalha.getVencedor();
 					treinadorVencedor = (vencedorBatalha == pokeSal1) ? nomeT1 : nomeT2;

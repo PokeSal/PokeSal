@@ -1,6 +1,7 @@
 package br.edu.ucsal.pokesal.engine;
 
 import br.edu.ucsal.pokesal.model.EfeitoStatus;
+import br.edu.ucsal.pokesal.model.Item;
 import br.edu.ucsal.pokesal.model.PokeSal;
 import br.edu.ucsal.pokesal.model.Terreno;
 import br.edu.ucsal.pokesal.model.TipoElemental;
@@ -11,7 +12,8 @@ import br.edu.ucsal.pokesal.util.ConstantesJogo;
 import java.time.Clock;
 
 /**
- * Gerencia o fluxo da batalha, ordens de turno, efeitos ambientais e registros.
+ * Gerencia a mecânica de combate, controle de turnos, alteração de terrenos e
+ * auditoria de eventos.
  */
 public class GerenciadorDeBatalha {
 
@@ -30,12 +32,12 @@ public class GerenciadorDeBatalha {
 	private PokeSal vencedor;
 
 	/**
-	 * Construtor completo com injeção de dependências.
+	 * Construtor com injeção de dependências.
 	 *
 	 * @param pokesal1        Pokésal do primeiro treinador.
 	 * @param pokesal2        Pokésal do segundo treinador.
 	 * @param gerador         Provedor de números aleatórios.
-	 * @param servicoTerreno  Provedor do terreno ativo.
+	 * @param servicoTerreno  Provedor das condições do terreno.
 	 * @param clock           Provedor do horário do sistema.
 	 * @param registroBatalha Auditor de eventos do combate.
 	 */
@@ -69,9 +71,76 @@ public class GerenciadorDeBatalha {
 		}
 	}
 
-	public void registrarAcao(PokeSal atacante) {
-		this.acoesRodadaAtual++;
+	/**
+	 * Executa a ação de ataque de um turno, notificando o registro na ordem
+	 * estrita: 1. registrarAtaque 2. registrarDano 3. registrarEfeitoStatus 4.
+	 * registrarEfeitoTerreno (se fim de rodada)
+	 */
+	public boolean executarTurnoAtaque(PokeSal atacante, PokeSal defensor) {
+		if (verificarParalisiaEPerdaDeTurno(atacante)) {
+			return true;
+		}
 
+		registroBatalha.registrarAtaque(atacante.getNome(), defensor.getNome());
+
+		int dano = calculadoraDano.calcularDano(atacante, defensor, clock);
+		boolean errou = (dano == ConstantesJogo.DANO_ERRO);
+		boolean critico = !errou && (dano > (int) Math.round(((double) atacante.getAtk() / defensor.getDef())
+				* ConstantesJogo.DANO_BASE * calculadoraDano.calcularEfetividade(atacante, defensor)
+				* calculadoraDano.calcularMultiplicadorTerreno(atacante, servicoTerreno.obterTerrenoAtual(clock))));
+
+		defensor.receberDano(dano);
+		registroBatalha.registrarDano(defensor.getNome(), dano, critico, errou);
+
+		EfeitoStatus statusAntes = defensor.getStatusAtual();
+		calculadoraDano.aplicarEfeitoStatus(atacante, defensor);
+		if (defensor.getStatusAtual() != statusAntes) {
+			registroBatalha.registrarEfeitoStatus(defensor.getNome(), defensor.getStatusAtual());
+		}
+
+		processarRecuoPorAtaque(atacante);
+		verificarVencedor();
+		avancarAcaoRodada();
+		return true;
+	}
+
+	/**
+	 * Executa o uso de um item de cura na mochila, notificando o registro na ordem:
+	 * 1. registrarEfeitoTerreno (se fim de rodada) 2. registrarUsoItem
+	 */
+	public boolean executarTurnoItem(PokeSal atacante, String nomeTreinador, int indiceItem) {
+		if (verificarParalisiaEPerdaDeTurno(atacante)) {
+			return true;
+		}
+
+		if (!atacante.getMochila().podeUsarItem()) {
+			return false;
+		}
+
+		Item itemConsultado = atacante.getMochila().getItens().get(indiceItem);
+		boolean usouComSucesso = atacante.usarItemEspecifico(indiceItem);
+
+		if (usouComSucesso) {
+			registroBatalha.registrarUsoItem(nomeTreinador, itemConsultado.getNome());
+			avancarAcaoRodada();
+			return true;
+		}
+		return false;
+	}
+
+	private boolean verificarParalisiaEPerdaDeTurno(PokeSal atacante) {
+		if (atacante.getStatusAtual() == EfeitoStatus.PARALISADO) {
+			registroBatalha.registrarEfeitoStatus(atacante.getNome() + " está PARALISADO e perdeu a vez",
+					EfeitoStatus.PARALISADO);
+			atacante.setStatusAtual(EfeitoStatus.NENHUM);
+			avancarAcaoRodada();
+			return true;
+		}
+		return false;
+	}
+
+	private void avancarAcaoRodada() {
+		this.acoesRodadaAtual++;
 		if (this.acoesRodadaAtual >= 2) {
 			this.acoesRodadaAtual = 0;
 			this.contadorTurno++;
@@ -85,7 +154,6 @@ public class GerenciadorDeBatalha {
 	public void processarRecuoPorAtaque(PokeSal atacante) {
 		if (atacante != null && atacante.isVivo()) {
 			int ataques = atacante.incrementarAtaquesConsecutivos();
-
 			if (ataques > 0 && ataques % ConstantesJogo.INTERVALO_TURNO_RECUO == 0) {
 				int danoRecuo = (int) Math.round(atacante.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_RECUO);
 				atacante.receberDano(danoRecuo);
@@ -100,14 +168,13 @@ public class GerenciadorDeBatalha {
 				int cura = (int) Math.round(pokesal1.getHpMaximo() * ConstantesJogo.BONUS_CANTEIRO_CENTRAL);
 				pokesal1.curar(cura);
 				registroBatalha
-						.registrarEfeitoTerreno("Canteiro Central curou " + cura + " HP de " + pokesal1.getNome());
+						.registrarEfeitoTerreno("Canteiro Central restaurou " + cura + " HP de " + pokesal1.getNome());
 			}
-
 			if (pokesal2.isVivo() && pokesal2.getTipo() == TipoElemental.PLANTA) {
 				int cura = (int) Math.round(pokesal2.getHpMaximo() * ConstantesJogo.BONUS_CANTEIRO_CENTRAL);
 				pokesal2.curar(cura);
 				registroBatalha
-						.registrarEfeitoTerreno("Canteiro Central curou " + cura + " HP de " + pokesal2.getNome());
+						.registrarEfeitoTerreno("Canteiro Central restaurou " + cura + " HP de " + pokesal2.getNome());
 			}
 		}
 	}
@@ -116,14 +183,12 @@ public class GerenciadorDeBatalha {
 		if (!this.pokesal1.isVivo() || !this.pokesal2.isVivo()) {
 			return;
 		}
-
 		if (this.pokesal1.getStatusAtual() == EfeitoStatus.QUEIMADO
 				|| this.pokesal1.getStatusAtual() == EfeitoStatus.ENVENENADO) {
 			int danoStatus = (int) Math.round(this.pokesal1.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_STATUS);
 			this.pokesal1.receberDano(danoStatus);
 			registroBatalha.registrarEfeitoStatus(pokesal1.getNome(), pokesal1.getStatusAtual());
 		}
-
 		if (this.pokesal2.getStatusAtual() == EfeitoStatus.QUEIMADO
 				|| this.pokesal2.getStatusAtual() == EfeitoStatus.ENVENENADO) {
 			int danoStatus = (int) Math.round(this.pokesal2.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_STATUS);
@@ -156,10 +221,6 @@ public class GerenciadorDeBatalha {
 
 	public Terreno getTerreno() {
 		return servicoTerreno.obterTerrenoAtual(clock);
-	}
-
-	public CalculadoraDano getCalculadoraDano() {
-		return calculadoraDano;
 	}
 
 	public int getContadorTurno() {
