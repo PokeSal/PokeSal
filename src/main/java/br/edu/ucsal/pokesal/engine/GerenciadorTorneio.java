@@ -1,6 +1,5 @@
 package br.edu.ucsal.pokesal.engine;
 
-import br.edu.ucsal.pokesal.model.EfeitoStatus;
 import br.edu.ucsal.pokesal.model.Item;
 import br.edu.ucsal.pokesal.model.PokeSal;
 import br.edu.ucsal.pokesal.repository.RepositorioResultados;
@@ -63,22 +62,6 @@ public class GerenciadorTorneio {
 			PokeSal defensor = vezDoTreinador1 ? pokeSal2 : pokeSal1;
 			String nomeTreinadorDaVez = vezDoTreinador1 ? nomeT1 : nomeT2;
 			String nomeTreinadorAdversario = vezDoTreinador1 ? nomeT2 : nomeT1;
-
-			if (atacante.getStatusAtual() == EfeitoStatus.PARALISADO) {
-				System.out.println("\n[STATUS] " + atacante.getNome() + " [" + nomeTreinadorDaVez
-						+ "] está PARALISADO e perdeu a vez!");
-				atacante.setStatusAtual(EfeitoStatus.NENHUM);
-				batalha.registrarAcao(atacante);
-				if (batalha.getVencedor() != null) {
-					vencedorBatalha = batalha.getVencedor();
-					treinadorVencedor = (vencedorBatalha == pokeSal1) ? nomeT1 : nomeT2;
-					treinadorPerdedor = (vencedorBatalha == pokeSal1) ? nomeT2 : nomeT1;
-					perdedorBatalha = (vencedorBatalha == pokeSal1) ? pokeSal2 : pokeSal1;
-					break;
-				}
-				vezDoTreinador1 = !vezDoTreinador1;
-				continue;
-			}
 
 			System.out.println("\n--------------------------------------------------");
 			System.out.println("STATUS DA PARTIDA:");
@@ -184,7 +167,6 @@ public class GerenciadorTorneio {
 		ResultadoBatalha resultado = new ResultadoBatalha(treinadorVencedor, treinadorPerdedor,
 				vencedorBatalha.getNome(), perdedorBatalha.getNome(), batalha.getContadorTurno());
 
-		// Salva o resultado da partida no repositório (Integrando com a Issue #89)
 		try {
 			repositorio.salvarResultado(resultado);
 		} catch (Exception e) {
@@ -194,9 +176,6 @@ public class GerenciadorTorneio {
 		return new ResultadoPartida(treinadorVencedor, vencedorBatalha);
 	}
 
-	/**
-	 * Encapsula o resultado de uma partida individual do torneio.
-	 */
 	public record ResultadoPartida(String nomeTreinador, PokeSal pokesal) {
 	}
 }
