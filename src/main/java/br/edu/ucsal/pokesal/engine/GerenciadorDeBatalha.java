@@ -4,8 +4,8 @@ import br.edu.ucsal.pokesal.model.EfeitoStatus;
 import br.edu.ucsal.pokesal.model.PokeSal;
 import br.edu.ucsal.pokesal.model.Terreno;
 import br.edu.ucsal.pokesal.model.TipoElemental;
+import br.edu.ucsal.pokesal.service.GeradorAleatorio;
 import br.edu.ucsal.pokesal.util.ConstantesJogo;
-import java.util.Random;
 
 /**
  * Gerencia a mecânica de combate, controle de turnos, alteração de terrenos e verificação de
@@ -13,7 +13,7 @@ import java.util.Random;
  */
 public class GerenciadorDeBatalha {
 
-  private final Random random = new Random();
+  private final GeradorAleatorio gerador;
   private PokeSal pokesal1;
   private PokeSal pokesal2;
   private PokeSal primeiroAtacante;
@@ -30,11 +30,12 @@ public class GerenciadorDeBatalha {
    * @param pokesal2 O Pokésal do segundo treinador.
    * @param terreno O terreno inicial sorteado para a batalha.
    */
-  public GerenciadorDeBatalha(PokeSal pokesal1, PokeSal pokesal2, Terreno terreno) {
+  public GerenciadorDeBatalha(PokeSal pokesal1, PokeSal pokesal2, Terreno terreno, GeradorAleatorio gerador) {
     this.pokesal1 = pokesal1;
     this.pokesal2 = pokesal2;
     this.terreno = terreno;
     this.vencedor = null;
+    this.gerador = gerador;
   }
 
   /**
@@ -49,7 +50,7 @@ public class GerenciadorDeBatalha {
       this.primeiroAtacante = pokesal2;
       this.segundoAtacante = pokesal1;
     } else {
-      if (this.random.nextBoolean()) {
+      if (this.gerador.testarChance(0.5)) {
         this.primeiroAtacante = pokesal1;
         this.segundoAtacante = pokesal2;
       } else {
@@ -128,7 +129,7 @@ public class GerenciadorDeBatalha {
   public void mudarTerreno() {
     if (this.contadorTurno > 0 && this.contadorTurno % ConstantesJogo.MUDANCA_TERRENO_TURNO == 0) {
       Terreno[] opcoesTerreno = Terreno.values();
-      int sorteioTerreno = this.random.nextInt(opcoesTerreno.length);
+      int sorteioTerreno = this.gerador.gerarNumero(0, opcoesTerreno.length - 1);
       Terreno terrenoSorteado = opcoesTerreno[sorteioTerreno];
       this.terreno = terrenoSorteado;
 

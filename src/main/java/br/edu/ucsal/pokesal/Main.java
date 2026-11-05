@@ -1,5 +1,10 @@
 package br.edu.ucsal.pokesal;
 
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
+
 import br.edu.ucsal.pokesal.engine.CalculadoraDano;
 import br.edu.ucsal.pokesal.engine.GerenciadorDeBatalha;
 import br.edu.ucsal.pokesal.model.EfeitoStatus;
@@ -8,10 +13,8 @@ import br.edu.ucsal.pokesal.model.Mochila;
 import br.edu.ucsal.pokesal.model.PokeSal;
 import br.edu.ucsal.pokesal.model.Terreno;
 import br.edu.ucsal.pokesal.model.TipoPokesal;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import br.edu.ucsal.pokesal.service.GeradorAleatorio;
+import br.edu.ucsal.pokesal.service.GeradorAleatorioImpl;
 
 /**
  * Classe principal responsável por executar o loop interativo da batalha do PokeSal via console.
@@ -25,7 +28,7 @@ public class Main {
    */
   public static void main(String[] args) {
     Scanner scan = new Scanner(System.in);
-    Random rand = new Random();
+    GeradorAleatorio gerador = new GeradorAleatorioImpl(new Random());
 
     System.out.print("Digite o nome do Treinador 1: ");
     String nomeT1 = scan.next();
@@ -36,13 +39,13 @@ public class Main {
     PokeSal pokeSal2 = escolherPokeSal(scan, nomeT2);
 
     Terreno[] opcoesTerreno = Terreno.values();
-    int sorteioTerreno = rand.nextInt(opcoesTerreno.length);
+    int sorteioTerreno = gerador.gerarNumero(0, opcoesTerreno.length - 1);
     Terreno terrenoSorteado = opcoesTerreno[sorteioTerreno];
 
     System.out.println("\n=== Terreno Sorteado para a Batalha ===");
     System.out.println("Local: " + terrenoSorteado.getNomeFormatado());
 
-    GerenciadorDeBatalha batalha = new GerenciadorDeBatalha(pokeSal1, pokeSal2, terrenoSorteado);
+    GerenciadorDeBatalha batalha = new GerenciadorDeBatalha(pokeSal1, pokeSal2, terrenoSorteado, gerador);
 
     batalha.definirOrdemAtuacao();
     System.out.println("\n>>> ORDEM DE INICIATIVA DA BATALHA <<<");
@@ -107,9 +110,9 @@ public class Main {
 
         switch (acaoEscolhida) {
           case 1:
-            int dano = CalculadoraDano.calcularDano(atacante, defensor, batalha.getTerreno());
+            int dano = CalculadoraDano.calcularDano(atacante, defensor, batalha.getTerreno(), gerador);
             defensor.receberDano(dano);
-            CalculadoraDano.aplicarEfeitoStatus(atacante, defensor);
+            CalculadoraDano.aplicarEfeitoStatus(atacante, defensor, gerador);
             System.out.println("\n[AÇÃO] " + atacante.getNome() + " [" + nomeTreinadorDaVez
                 + "] atacou " + defensor.getNome() + " [" + nomeTreinadorAdversario + "] causando "
                 + dano + " de dano!");

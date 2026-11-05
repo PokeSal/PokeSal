@@ -5,29 +5,41 @@ package br.edu.ucsal.pokesal.model;
  */
 public enum TipoPokesal {
 
-  BULBASAL("BulbaSal", 95, 57, 67, 45, TipoElemental.PLANTA), CHARSAL("CharSal", 99, 56, 67, 65,
-      TipoElemental.FOGO), SQUIRTSAL("SquirtSal", 94, 49, 65, 43, TipoElemental.AGUA), CHIKOSAL(
-          "ChikoSal", 95, 49, 65, 45, TipoElemental.PLANTA), CYNDASAL("CyndaSal", 89, 56, 67, 65,
-              TipoElemental.FOGO), TOTOSAL("TotoSal", 90, 55, 66, 43, TipoElemental.AGUA);
+  BULBASAL("BulbaSal", 95, 57, 67, 45, 95, TipoElemental.PLANTA), CHARSAL("CharSal", 99, 56, 67, 65, 85,
+      TipoElemental.FOGO), SQUIRTSAL("SquirtSal", 94, 49, 65, 43, 90, TipoElemental.AGUA), CHIKOSAL(
+          "ChikoSal", 95, 49, 65, 45, 95, TipoElemental.PLANTA), CYNDASAL("CyndaSal", 89, 56, 67, 65, 85,
+              TipoElemental.FOGO), TOTOSAL("TotoSal", 90, 55, 66, 43, 90, TipoElemental.AGUA);
 
   private final String nome;
   private final int hpBase;
   private final int atkBase;
   private final int defBase;
   private final int spdBase;
+  private final int precisaoBase;
   private final TipoElemental tipo;
+  
 
-  private TipoPokesal(String nome, int hpBase, int atkBase, int defBase, int spdBase,
+  private TipoPokesal(String nome, int hpBase, int atkBase, int defBase, int spdBase, int precisao,
       TipoElemental tipo) {
     this.nome = nome;
     this.hpBase = hpBase;
     this.atkBase = atkBase;
     this.defBase = defBase;
     this.spdBase = spdBase;
+    this.precisaoBase = precisao;
     this.tipo = tipo;
   }
 
   /**
+   * Obtém a precisão do Pokésal.
+   * 
+   * @return A precisão do Pokésal.
+   */
+  public int getPrecisaoBase() {
+	return precisaoBase;
+}
+
+/**
    * Obtém o nome original do Pokésal.
    *
    * @return O nome do Pokésal.

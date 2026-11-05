@@ -38,5 +38,13 @@ public class ConstantesJogo {
   public static final int CURA_POCAO = 20;
   public static final int CURA_SUPER_POCAO = 40;
   public static final int CURA_NENHUMA = 0;
+  
+
+  public static final double CHANCE_CRITICO = 0.625;
+  public static final double MULTIPLICADOR_CRITICO = 1.5;
+  public static final int DANO_ERRO = 0;
+  public static final int FAIXA_MIN_SORTEIO = 1;
+  public static final int FAIXA_MAX_SORTEIO = 100;
+  
 
 }

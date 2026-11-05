@@ -1,11 +1,13 @@
 package br.edu.ucsal.pokesal.engine;
 
+import java.util.Random;
+
 import br.edu.ucsal.pokesal.model.EfeitoStatus;
 import br.edu.ucsal.pokesal.model.PokeSal;
 import br.edu.ucsal.pokesal.model.Terreno;
 import br.edu.ucsal.pokesal.model.TipoElemental;
+import br.edu.ucsal.pokesal.service.GeradorAleatorio;
 import br.edu.ucsal.pokesal.util.ConstantesJogo;
-import java.util.Random;
 
 /**
  * Utilitário responsável pelo cálculo de dano dos ataques e aplicação de efeitos de status em
@@ -13,7 +15,6 @@ import java.util.Random;
  */
 public class CalculadoraDano {
 
-  private static final Random RANDOM = new Random();
 
   /** Construtor privado para evitar a instanciação de uma classe utilitária. */
   private CalculadoraDano() {}
@@ -27,17 +28,30 @@ public class CalculadoraDano {
    * @param terreno O ambiente onde a batalha está ocorrendo.
    * @return O valor inteiro do dano final causado (mínimo de 1).
    */
-  public static int calcularDano(PokeSal atacante, PokeSal defensor, Terreno terreno) {
-    double danoBase = ((double) atacante.getAtk() / defensor.getDef()) * ConstantesJogo.DANO_BASE;
+  public static int calcularDano(PokeSal atacante, PokeSal defensor, Terreno terreno, GeradorAleatorio gerador) {
+    
+	  int sorteioPrecisao = gerador.gerarNumero(ConstantesJogo.FAIXA_MIN_SORTEIO, ConstantesJogo.FAIXA_MAX_SORTEIO);
+	  
+	  if(sorteioPrecisao > atacante.getPrecisao()) {
+		  return ConstantesJogo.DANO_ERRO;
+	  }
+	  
+	double danoBase = ((double) atacante.getAtk() / defensor.getDef()) * ConstantesJogo.DANO_BASE;
 
     double efetividade = calcularEfetividade(atacante, defensor);
     double danoTerreno = calcularMultiplicadorTerreno(atacante, terreno);
 
     danoBase *= efetividade * danoTerreno;
-
+    
     int danoArredondado = (int) Math.round(danoBase);
+    
+    
+    if (gerador.testarChance(ConstantesJogo.CHANCE_CRITICO)) {
+    	danoArredondado = (int) Math.round(danoArredondado * ConstantesJogo.MULTIPLICADOR_CRITICO);
+    }
 
     return Math.max(1, danoArredondado);
+    
   }
 
   /**
@@ -96,14 +110,13 @@ public class CalculadoraDano {
    * @param atacante O Pokésal que executou o ataque.
    * @param defensor O Pokésal que pode receber o efeito de status.
    */
-  public static void aplicarEfeitoStatus(PokeSal atacante, PokeSal defensor) {
+  public static void aplicarEfeitoStatus(PokeSal atacante, PokeSal defensor, GeradorAleatorio gerador) {
     if (defensor.getStatusAtual() != EfeitoStatus.NENHUM) {
       return;
     }
 
-    double chanceAplicarEfeito = RANDOM.nextDouble();
 
-    if (chanceAplicarEfeito < ConstantesJogo.CHANCE_EFEITO_STATUS) {
+    if (gerador.testarChance(ConstantesJogo.CHANCE_EFEITO_STATUS)) {
       if (atacante.getTipo() == TipoElemental.FOGO && defensor.getTipo() != TipoElemental.FOGO) {
         defensor.setStatusAtual(EfeitoStatus.QUEIMADO);
         System.out.println("\n[STATUS] " + defensor.getNome() + " ficou QUEIMADO pelo ataque!");

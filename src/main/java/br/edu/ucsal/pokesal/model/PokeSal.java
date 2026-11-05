@@ -18,6 +18,7 @@ public class PokeSal {
   private Mochila mochila;
   private EfeitoStatus statusAtual = EfeitoStatus.NENHUM;
   private int contadorAtaquesConsecutivos = 0;
+  private int precisao;
 
   /**
    * Construtor que instancia um Pokésal com base no modelo do TipoPokesal fornecido.
@@ -31,12 +32,14 @@ public class PokeSal {
     this.atk = tipo.getAtkBase();
     this.def = tipo.getDefBase();
     this.spd = tipo.getSpdBase();
+    this.precisao = tipo.getPrecisaoBase();
     this.tipo = tipo.getTipo();
     this.passivaDefesaAtivada = false;
     this.mochila = new Mochila();
   }
 
-  /**
+
+/**
    * Verifica se o Pokésal possui vida maior que zero.
    *
    * @return Verdadeiro se o Pokésal estiver vivo, falso caso esteja desmaiado.
@@ -230,4 +233,13 @@ public class PokeSal {
   public void setStatusAtual(EfeitoStatus statusAtual) {
     this.statusAtual = statusAtual;
   }
+  
+  /**
+   * Obtém a precisão padrão dos pokesais.
+   * 
+   * @return O valor da precisão.
+   */
+  public int getPrecisao() {
+		return precisao;
+	}
 }
