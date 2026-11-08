@@ -16,99 +16,96 @@ import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 
-/**
- * Ponto de entrada principal do Torneio PokéSal com Requisitos Autorais 04 e 05 ativados.
- */
 public class Main {
 
-  public static void main(String[] args) {
-    Scanner scan = new Scanner(System.in);
+	public static void main(String[] args) {
+		Scanner scan = new Scanner(System.in);
 
-    GeradorAleatorio gerador = new GeradorAleatorioImpl(new Random());
-    Clock clock = Clock.systemDefaultZone();
-    ServicoTerreno servicoTerreno = new ServicoTerrenoImpl();
-    RegistroBatalha registroBatalha = new RegistroBatalhaConsoleImpl();
-    RepositorioResultadosMemoria repositorio = new RepositorioResultadosMemoria();
+		GeradorAleatorio gerador = new GeradorAleatorioImpl(new Random());
+		Clock clock = Clock.systemDefaultZone();
+		ServicoTerreno servicoTerreno = new ServicoTerrenoImpl();
+		RegistroBatalha registroBatalha = new RegistroBatalhaConsoleImpl();
+		RepositorioResultadosMemoria repositorio = new RepositorioResultadosMemoria();
 
-    GerenciadorTorneio torneio = new GerenciadorTorneio(
-        repositorio, gerador, servicoTerreno, clock, registroBatalha
-    );
+		GerenciadorTorneio torneio = new GerenciadorTorneio(repositorio, gerador, servicoTerreno, clock,
+				registroBatalha);
 
-    System.out.println("==================================================");
-    System.out.println("   BEM-VINDO AO TORNEIO POKÉSAL DA UCSAL PITUAÇU  ");
-    System.out.println("==================================================");
+		System.out.println("==================================================");
+		System.out.println("   BEM-VINDO AO TORNEIO POKÉSAL DA UCSAL PITUAÇU  ");
+		System.out.println("==================================================");
 
-    System.out.print("\nDigite o nome do Treinador 1 (Semifinal 1): ");
-    String nomeT1 = scan.next();
-    PokeSal pokeSal1 = escolherPokeSal(scan, nomeT1);
+		System.out.print("\nDigite o nome do Treinador 1 (Semifinal 1): ");
+		String nomeT1 = scan.next();
+		PokeSal pokeSal1 = escolherPokeSal(scan, nomeT1);
 
-    System.out.print("\nDigite o nome do Treinador 2 (Semifinal 1): ");
-    String nomeT2 = scan.next();
-    PokeSal pokeSal2 = escolherPokeSal(scan, nomeT2);
+		System.out.print("\nDigite o nome do Treinador 2 (Semifinal 1): ");
+		String nomeT2 = scan.next();
+		PokeSal pokeSal2 = escolherPokeSal(scan, nomeT2);
 
-    System.out.print("\nDigite o nome do Treinador 3 (Semifinal 2): ");
-    String nomeT3 = scan.next();
-    PokeSal pokeSal3 = escolherPokeSal(scan, nomeT3);
+		System.out.print("\nDigite o nome do Treinador 3 (Semifinal 2): ");
+		String nomeT3 = scan.next();
+		PokeSal pokeSal3 = escolherPokeSal(scan, nomeT3);
 
-    System.out.print("\nDigite o nome do Treinador 4 (Semifinal 2): ");
-    String nomeT4 = scan.next();
-    PokeSal pokeSal4 = escolherPokeSal(scan, nomeT4);
+		System.out.print("\nDigite o nome do Treinador 4 (Semifinal 2): ");
+		String nomeT4 = scan.next();
+		PokeSal pokeSal4 = escolherPokeSal(scan, nomeT4);
 
-    // SEMIFINAL 1
-    ResultadoPartida resSemifinal1 = torneio.executarPartida(
-        nomeT1, pokeSal1, nomeT2, pokeSal2, scan, "Semifinal 1"
-    );
-    torneio.processarRecompensaPosBatalha(resSemifinal1.pokesal()); // Requisito Autoral 05
+		// SEMIFINAL 1
+		ResultadoPartida resSemifinal1 = torneio.executarPartida(nomeT1, pokeSal1, nomeT2, pokeSal2, scan,
+				"Semifinal 1");
+		torneio.processarRecompensaPosBatalha(resSemifinal1.pokesal());
 
-    // SEMIFINAL 2
-    ResultadoPartida resSemifinal2 = torneio.executarPartida(
-        nomeT3, pokeSal3, nomeT4, pokeSal4, scan, "Semifinal 2"
-    );
-    torneio.processarRecompensaPosBatalha(resSemifinal2.pokesal()); // Requisito Autoral 05
+		// SEMIFINAL 2
+		ResultadoPartida resSemifinal2 = torneio.executarPartida(nomeT3, pokeSal3, nomeT4, pokeSal4, scan,
+				"Semifinal 2");
+		torneio.processarRecompensaPosBatalha(resSemifinal2.pokesal());
 
-    System.out.println("\n==================================================");
-    System.out.println("   CLASSIFICADOS PARA A GRANDE FINAL!");
-    System.out.println("   Finalista 1: " + resSemifinal1.nomeTreinador() + " com " + resSemifinal1.pokesal().getNome() + " [HP Restante: " + resSemifinal1.pokesal().getHpAtual() + "]");
-    System.out.println("   Finalista 2: " + resSemifinal2.nomeTreinador() + " com " + resSemifinal2.pokesal().getNome() + " [HP Restante: " + resSemifinal2.pokesal().getHpAtual() + "]");
-    System.out.println("==================================================");
+		System.out.println("\n==================================================");
+		System.out.println("   CLASSIFICADOS PARA A GRANDE FINAL!");
+		System.out.println("   Finalista 1: " + resSemifinal1.nomeTreinador() + " com "
+				+ resSemifinal1.pokesal().getNome() + " [HP Restante: " + resSemifinal1.pokesal().getHpAtual() + "]");
+		System.out.println("   Finalista 2: " + resSemifinal2.nomeTreinador() + " com "
+				+ resSemifinal2.pokesal().getNome() + " [HP Restante: " + resSemifinal2.pokesal().getHpAtual() + "]");
+		System.out.println("==================================================");
 
-    // GRANDE FINAL
-    ResultadoPartida resFinal = torneio.executarPartida(
-        resSemifinal1.nomeTreinador(), resSemifinal1.pokesal(),
-        resSemifinal2.nomeTreinador(), resSemifinal2.pokesal(),
-        scan, "Grande Final"
-    );
+		// GRANDE FINAL
+		ResultadoPartida resFinal = torneio.executarPartida(resSemifinal1.nomeTreinador(), resSemifinal1.pokesal(),
+				resSemifinal2.nomeTreinador(), resSemifinal2.pokesal(), scan, "Grande Final");
 
-    // DECLARAÇÃO DO CAMPEÃO GERAL
-    System.out.println("\n🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆");
-    System.out.println(" O GRANDE CAMPEÃO GERAL DO ESTACIONAMENTO DA UCSAL É: ");
-    System.out.println(" TREINADOR: " + resFinal.nomeTreinador().toUpperCase());
-    System.out.println(" COM SEU VALENTE: " + resFinal.pokesal().getNome().toUpperCase());
-    System.out.println("🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆\n");
+		// DECLARAÇÃO DO CAMPEÃO GERAL
+		System.out.println("\n🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆");
+		System.out.println(" O GRANDE CAMPEÃO GERAL DO ESTACIONAMENTO DA UCSAL É: ");
+		System.out.println(" TREINADOR: " + resFinal.nomeTreinador().toUpperCase());
+		System.out.println(" COM SEU VALENTE: " + resFinal.pokesal().getNome().toUpperCase());
+		System.out.println("🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆\n");
 
-    // RELATÓRIO ESTATÍSTICO DO TORNEIO (Requisito Autoral 04)
-    repositorio.emitirRelatorioEstatistico();
-  }
+		// RELATÓRIO ESTATÍSTICO DO TORNEIO (Req Autoral 04)
+		repositorio.emitirRelatorioEstatistico();
+	}
 
-  private static PokeSal escolherPokeSal(Scanner scan, String nomeTreinador) {
-    while (true) {
-      try {
-        System.out.println("\n=== Treinador " + nomeTreinador + ", escolha o seu PokeSal ===");
-        TipoPokesal[] opcoes = TipoPokesal.values();
+	private static PokeSal escolherPokeSal(Scanner scan, String nomeTreinador) {
+		while (true) {
+			try {
+				System.out.println("\n=== Treinador " + nomeTreinador + ", escolha o seu PokeSal ===");
+				TipoPokesal[] opcoes = TipoPokesal.values();
 
-        for (int i = 0; i < opcoes.length; i++) {
-          System.out.println((i + 1) + " - " + opcoes[i].getNomeFormatado());
-        }
+				for (int i = 0; i < opcoes.length; i++) {
+					System.out.println((i + 1) + " - " + opcoes[i].getNomeFormatado());
+				}
 
-        System.out.print("Digite o número da sua escolha: ");
-        int opcaoEscolhida = scan.nextInt();
+				System.out.print("Digite o número da sua escolha: ");
+				int opcaoEscolhida = scan.nextInt();
 
-        TipoPokesal tipoEscolhido = opcoes[opcaoEscolhida - 1];
-        return new PokeSal(tipoEscolhido);
-      } catch (InputMismatchException e) {
-        System.out.println("Entrada inválida. Digite apenas números.");
-        scan.nextLine();
-      }
-    }
-  }
+				if (opcaoEscolhida >= 1 && opcaoEscolhida <= opcoes.length) {
+					TipoPokesal tipoEscolhido = opcoes[opcaoEscolhida - 1];
+					return new PokeSal(tipoEscolhido);
+				} else {
+					System.out.println("Opção inválida! Escolha um número entre 1 e " + opcoes.length + ".");
+				}
+			} catch (InputMismatchException e) {
+				System.out.println("Entrada inválida. Digite apenas números.");
+				scan.nextLine();
+			}
+		}
+	}
 }

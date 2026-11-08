@@ -2,87 +2,64 @@ package br.edu.ucsal.pokesal.model;
 
 import br.edu.ucsal.pokesal.util.ConstantesJogo;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Representa a mochila de itens consumíveis pertencente a um Pokésal.
+ * Representa a mochila de itens do Pokésal com limite de capacidade e uso por
+ * batalha.
  */
 public class Mochila {
 
-  private List<Item> itens;
-  private int itensUsados;
+	private final List<Item> itens;
+	private int usosNaBatalha;
 
-  /**
-   * Construtor padrão da Mochila que inicializa os itens consumíveis disponíveis.
-   */
-  public Mochila() {
-    this.itens = new ArrayList<>();
-    this.itensUsados = 0;
+	public Mochila() {
+		this.itens = new ArrayList<>();
+		this.itens.add(new Item(ConstantesJogo.NOME_POCAO, ConstantesJogo.CURA_POCAO, ConstantesJogo.STATUS_NENHUM));
+		this.itens.add(new Item(ConstantesJogo.NOME_SUPER_POCAO, ConstantesJogo.CURA_SUPER_POCAO,
+				ConstantesJogo.STATUS_NENHUM));
+		this.itens.add(
+				new Item(ConstantesJogo.NOME_CURA_TOTAL, ConstantesJogo.CURA_NENHUMA, ConstantesJogo.STATUS_TODOS));
+		this.usosNaBatalha = 0;
+	}
 
-    this.itens.add(new Item(ConstantesJogo.NOME_POCAO, ConstantesJogo.CURA_POCAO,
-        ConstantesJogo.STATUS_NENHUM));
-    this.itens.add(new Item(ConstantesJogo.NOME_SUPER_POCAO, ConstantesJogo.CURA_SUPER_POCAO,
-        ConstantesJogo.STATUS_NENHUM));
-    this.itens.add(new Item(ConstantesJogo.NOME_CURA_TOTAL, ConstantesJogo.CURA_NENHUMA,
-        ConstantesJogo.STATUS_TODOS));
-  }
+	public boolean podeUsarItem() {
+		return this.usosNaBatalha < ConstantesJogo.LIMITE_USO_ITENS && !this.itens.isEmpty();
+	}
 
-  /**
-   * Obtém a lista de itens atualmente presentes na mochila.
-   *
-   * @return A lista de itens.
-   */
-  public List<Item> getItens() {
-    return itens;
-  }
+	public Item usarItemPorIndice(int indice) {
+		if (!podeUsarItem()) {
+			throw new IllegalStateException("Limite de uso de itens atingido nesta batalha!");
+		}
+		if (indice >= 0 && indice < this.itens.size()) {
+			this.usosNaBatalha++;
+			return this.itens.remove(indice);
+		}
+		return null;
+	}
 
-  /**
-   * Verifica se o treinador ainda pode utilizar itens respeitando o limite da batalha.
-   *
-   * @return Verdadeiro se ainda puder usar item, falso caso contrário.
-   */
-  public boolean podeUsarItem() {
-    return itensUsados < ConstantesJogo.LIMITE_USO_ITENS && !itens.isEmpty();
-  }
+	public boolean adicionarItem(Item item) {
+		if (this.itens.size() < 3) {
+			this.itens.add(item);
+			return true;
+		}
+		return false;
+	}
 
-  /**
-   * Utiliza e remove um item da mochila pelo seu índice na lista.
-   *
-   * @param indice Posição do item a ser utilizado na lista.
-   * @return O objeto Item utilizado ou null caso a ação seja inválida.
-   */
-  public Item usarItemPorIndice(int indice) {
-    if (!podeUsarItem()) {
-      throw new IllegalStateException(
-          "Limite de uso de itens na batalha atingido ou mochila vazia.");
-    }
-    if (indice < 0 || indice >= itens.size()) {
-      throw new IndexOutOfBoundsException("Índice de item inválido na mochila.");
-    }
-    itensUsados++;
-    return itens.remove(indice);
-  }
+	/**
+	 * Reseta o contador de usos para renovar a cota de 2 itens na próxima partida
+	 * do torneio.
+	 */
+	public void resetarUsosBatalha() {
+		this.usosNaBatalha = 0;
+	}
 
-  /**
-   * Obtém a quantidade de itens que já foram consumidos durante a batalha.
-   *
-   * @return A quantidade de itens usados.
-   */
-  public int getItensUsados() {
-    return itensUsados;
-  }
+	public List<Item> getItens() {
+		return Collections.unmodifiableList(itens);
+	}
 
-  /**
-   * Adiciona um novo item à mochila respeitando o limite de capacidade de itens.
-   *
-   * @param item O {@link Item} a ser adicionado.
-   * @return Verdadeiro se guardado com sucesso, falso se a mochila estiver cheia.
-   */
-  public boolean adicionarItem(Item item) {
-    if (this.itens.size() < 3) {
-      this.itens.add(item);
-      return true;
-    }
-    return false;
-  }
+	public int getUsosNaBatalha() {
+		return usosNaBatalha;
+	}
 }

@@ -11,273 +11,229 @@ import br.edu.ucsal.pokesal.service.ServicoTerreno;
 import br.edu.ucsal.pokesal.util.ConstantesJogo;
 import java.time.Clock;
 
-/**
- * Gerencia a mecânica de combate, controle de turnos, alteração de terrenos e
- * auditoria de eventos com contabilização de estatísticas do torneio.
- */
 public class GerenciadorDeBatalha {
 
-  private final PokeSal pokesal1;
-  private final PokeSal pokesal2;
-  private final GeradorAleatorio gerador;
-  private final ServicoTerreno servicoTerreno;
-  private final Clock clock;
-  private final RegistroBatalha registroBatalha;
-  private final CalculadoraDano calculadoraDano;
+	private final PokeSal pokesal1;
+	private final PokeSal pokesal2;
+	private final GeradorAleatorio gerador;
+	private final ServicoTerreno servicoTerreno;
+	private final Clock clock;
+	private final RegistroBatalha registroBatalha;
+	private final CalculadoraDano calculadoraDano;
 
-  private PokeSal primeiroAtacante;
-  private PokeSal segundoAtacante;
-  private int contadorTurno = 0;
-  private int acoesRodadaAtual = 0;
-  private PokeSal vencedor;
+	private PokeSal primeiroAtacante;
+	private PokeSal segundoAtacante;
+	private int contadorTurno = 0;
+	private int acoesRodadaAtual = 0;
+	private PokeSal vencedor;
 
-  // Acumuladores de estatísticas para o Requisito Autoral 04
-  private int danoCausadoPokesal1 = 0;
-  private int danoCausadoPokesal2 = 0;
-  private int totalItensUsadosPartida = 0;
+	private int danoCausadoPokesal1 = 0;
+	private int danoCausadoPokesal2 = 0;
+	private int totalItensUsadosPartida = 0;
 
-  /**
-   * Construtor com injeção de dependências.
-   *
-   * @param pokesal1        Pokésal do primeiro treinador.
-   * @param pokesal2        Pokésal do segundo treinador.
-   * @param gerador         Provedor de números aleatórios.
-   * @param servicoTerreno  Provedor das condições do terreno.
-   * @param clock           Provedor do horário do sistema.
-   * @param registroBatalha Auditor de eventos do combate.
-   */
-  public GerenciadorDeBatalha(
-      PokeSal pokesal1,
-      PokeSal pokesal2,
-      GeradorAleatorio gerador,
-      ServicoTerreno servicoTerreno,
-      Clock clock,
-      RegistroBatalha registroBatalha
-  ) {
-    this.pokesal1 = pokesal1;
-    this.pokesal2 = pokesal2;
-    this.gerador = gerador;
-    this.servicoTerreno = servicoTerreno;
-    this.clock = clock;
-    this.registroBatalha = registroBatalha;
-    this.calculadoraDano = new CalculadoraDano(gerador, servicoTerreno);
-    this.vencedor = null;
-  }
+	public GerenciadorDeBatalha(PokeSal pokesal1, PokeSal pokesal2, GeradorAleatorio gerador,
+			ServicoTerreno servicoTerreno, Clock clock, RegistroBatalha registroBatalha) {
+		this.pokesal1 = pokesal1;
+		this.pokesal2 = pokesal2;
+		this.gerador = gerador;
+		this.servicoTerreno = servicoTerreno;
+		this.clock = clock;
+		this.registroBatalha = registroBatalha;
+		this.calculadoraDano = new CalculadoraDano(gerador, servicoTerreno);
+		this.vencedor = null;
+	}
 
-  public void definirOrdemAtuacao() {
-    if (pokesal1.getSpd() > pokesal2.getSpd()) {
-      this.primeiroAtacante = pokesal1;
-      this.segundoAtacante = pokesal2;
-    } else if (pokesal2.getSpd() > pokesal1.getSpd()) {
-      this.primeiroAtacante = pokesal2;
-      this.segundoAtacante = pokesal1;
-    } else {
-      if (this.gerador.testarChance(0.5)) {
-        this.primeiroAtacante = pokesal1;
-        this.segundoAtacante = pokesal2;
-      } else {
-        this.primeiroAtacante = pokesal2;
-        this.segundoAtacante = pokesal1;
-      }
-    }
-  }
+	public void definirOrdemAtuacao() {
+		if (pokesal1.getSpd() > pokesal2.getSpd()) {
+			this.primeiroAtacante = pokesal1;
+			this.segundoAtacante = pokesal2;
+		} else if (pokesal2.getSpd() > pokesal1.getSpd()) {
+			this.primeiroAtacante = pokesal2;
+			this.segundoAtacante = pokesal1;
+		} else {
+			if (this.gerador.testarChance(0.5)) {
+				this.primeiroAtacante = pokesal1;
+				this.segundoAtacante = pokesal2;
+			} else {
+				this.primeiroAtacante = pokesal2;
+				this.segundoAtacante = pokesal1;
+			}
+		}
+	}
 
-  /**
-   * Executa a ação de ataque de um turno, notificando o registro na ordem estrita:
-   * 1. registrarAtaque
-   * 2. registrarDano
-   * 3. registrarEfeitoStatus
-   * 4. registrarEfeitoTerreno (se fim de rodada)
-   */
-  public boolean executarTurnoAtaque(PokeSal atacante, PokeSal defensor) {
-    if (verificarParalisiaEPerdaDeTurno(atacante)) {
-      return true;
-    }
+	public boolean executarTurnoAtaque(PokeSal atacante, PokeSal defensor) {
+		if (verificarParalisiaEPerdaDeTurno(atacante)) {
+			return true;
+		}
 
-    registroBatalha.registrarAtaque(atacante.getNome(), defensor.getNome());
+		if (defensor.isPassivaDefensivaAtiva()) {
+			registroBatalha.registrarEfeitoTerreno("Passiva de defesa ativada para " + defensor.getNome() + "!");
+		}
 
-    int dano = calculadoraDano.calcularDano(atacante, defensor, clock);
-    boolean errou = (dano == ConstantesJogo.DANO_ERRO);
-    boolean critico = !errou && (dano > (int) Math.round(
-        ((double) atacante.getAtk() / defensor.getDef())
-            * ConstantesJogo.DANO_BASE
-            * calculadoraDano.calcularEfetividade(atacante, defensor)
-            * calculadoraDano.calcularMultiplicadorTerreno(
-                atacante, servicoTerreno.obterTerrenoAtual(clock)
-            )
-    ));
+		registroBatalha.registrarAtaque(atacante.getNome(), defensor.getNome());
 
-    defensor.receberDano(dano);
+		int dano = calculadoraDano.calcularDano(atacante, defensor, clock);
+		boolean errou = (dano == ConstantesJogo.DANO_ERRO);
+		boolean critico = !errou && (dano > (int) Math.round(((double) atacante.getAtk() / defensor.getDef())
+				* ConstantesJogo.DANO_BASE * calculadoraDano.calcularEfetividade(atacante, defensor)
+				* calculadoraDano.calcularMultiplicadorTerreno(atacante, servicoTerreno.obterTerrenoAtual(clock))));
 
-    // Contabiliza o dano infligido para o relatório de estatísticas (Req Autoral 04)
-    if (atacante == pokesal1) {
-      this.danoCausadoPokesal1 += dano;
-    } else {
-      this.danoCausadoPokesal2 += dano;
-    }
+		defensor.receberDano(dano);
 
-    registroBatalha.registrarDano(defensor.getNome(), dano, critico, errou);
+		if (atacante == pokesal1) {
+			this.danoCausadoPokesal1 += dano;
+		} else {
+			this.danoCausadoPokesal2 += dano;
+		}
 
-    EfeitoStatus statusAntes = defensor.getStatusAtual();
-    calculadoraDano.aplicarEfeitoStatus(atacante, defensor);
-    if (defensor.getStatusAtual() != statusAntes) {
-      registroBatalha.registrarEfeitoStatus(defensor.getNome(), defensor.getStatusAtual());
-    }
+		registroBatalha.registrarDano(defensor.getNome(), dano, critico, errou);
 
-    processarRecuoPorAtaque(atacante);
-    verificarVencedor();
-    avancarAcaoRodada();
-    return true;
-  }
+		if (!errou) {
+			EfeitoStatus statusAntes = defensor.getStatusAtual();
+			calculadoraDano.aplicarEfeitoStatus(atacante, defensor);
+			if (defensor.getStatusAtual() != statusAntes) {
+				registroBatalha.registrarEfeitoStatus(defensor.getNome(), defensor.getStatusAtual());
+			}
+		}
 
-  /**
-   * Executa o uso de um item de cura na mochila, notificando o registro na ordem:
-   * 1. registrarEfeitoTerreno (se fim de rodada)
-   * 2. registrarUsoItem
-   */
-  public boolean executarTurnoItem(PokeSal atacante, String nomeTreinador, int indiceItem) {
-    if (verificarParalisiaEPerdaDeTurno(atacante)) {
-      return true;
-    }
+		processarRecuoPorAtaque(atacante);
+		verificarVencedor();
+		avancarAcaoRodada();
+		return true;
+	}
 
-    if (!atacante.getMochila().podeUsarItem()) {
-      return false;
-    }
+	public boolean executarTurnoItem(PokeSal atacante, String nomeTreinador, int indiceItem) {
+		if (verificarParalisiaEPerdaDeTurno(atacante)) {
+			return true;
+		}
 
-    Item itemConsultado = atacante.getMochila().getItens().get(indiceItem);
-    boolean usouComSucesso = atacante.usarItemEspecifico(indiceItem);
+		if (!atacante.getMochila().podeUsarItem()) {
+			return false;
+		}
 
-    if (usouComSucesso) {
-      this.totalItensUsadosPartida++;
-      registroBatalha.registrarUsoItem(nomeTreinador, itemConsultado.getNome());
-      avancarAcaoRodada();
-      return true;
-    }
-    return false;
-  }
+		Item itemConsultado = atacante.getMochila().getItens().get(indiceItem);
+		boolean usouComSucesso = atacante.usarItemEspecifico(indiceItem);
 
-  private boolean verificarParalisiaEPerdaDeTurno(PokeSal atacante) {
-    if (atacante.getStatusAtual() == EfeitoStatus.PARALISADO) {
-      registroBatalha.registrarEfeitoStatus(
-          atacante.getNome() + " está PARALISADO e perdeu a vez",
-          EfeitoStatus.PARALISADO
-      );
-      atacante.setStatusAtual(EfeitoStatus.NENHUM);
-      avancarAcaoRodada();
-      return true;
-    }
-    return false;
-  }
+		if (usouComSucesso) {
+			this.totalItensUsadosPartida++;
+			registroBatalha.registrarUsoItem(nomeTreinador, itemConsultado.getNome());
+			avancarAcaoRodada();
+			return true;
+		}
+		return false;
+	}
 
-  private void avancarAcaoRodada() {
-    this.acoesRodadaAtual++;
-    if (this.acoesRodadaAtual >= 2) {
-      this.acoesRodadaAtual = 0;
-      this.contadorTurno++;
+	private boolean verificarParalisiaEPerdaDeTurno(PokeSal atacante) {
+		if (atacante.getStatusAtual() == EfeitoStatus.PARALISADO) {
+			registroBatalha.registrarEfeitoTerreno(atacante.getNome() + " está PARALISADO e perdeu a vez!");
+			atacante.setStatusAtual(EfeitoStatus.NENHUM);
+			avancarAcaoRodada();
+			return true;
+		}
+		return false;
+	}
 
-      aplicarDanoStatusFimDeTurno();
-      aplicarCuraCanteiroCentral();
-      verificarVencedor();
-    }
-  }
+	private void avancarAcaoRodada() {
+		this.acoesRodadaAtual++;
+		if (this.acoesRodadaAtual >= 2) {
+			this.acoesRodadaAtual = 0;
+			this.contadorTurno++;
 
-  public void processarRecuoPorAtaque(PokeSal atacante) {
-    if (atacante != null && atacante.isVivo()) {
-      int ataques = atacante.incrementarAtaquesConsecutivos();
-      if (ataques > 0 && ataques % ConstantesJogo.INTERVALO_TURNO_RECUO == 0) {
-        int danoRecuo = (int) Math.round(
-            atacante.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_RECUO
-        );
-        atacante.receberDano(danoRecuo);
-      }
-    }
-  }
+			aplicarDanoStatusFimDeTurno();
+			aplicarCuraCanteiroCentral();
+			verificarVencedor();
+		}
+	}
 
-  public void aplicarCuraCanteiroCentral() {
-    Terreno terrenoAtual = servicoTerreno.obterTerrenoAtual(clock);
-    if (terrenoAtual == Terreno.CANTEIRO_CENTRAL) {
-      if (pokesal1.isVivo() && pokesal1.getTipo() == TipoElemental.PLANTA) {
-        int cura = (int) Math.round(
-            pokesal1.getHpMaximo() * ConstantesJogo.BONUS_CANTEIRO_CENTRAL
-        );
-        pokesal1.curar(cura);
-        registroBatalha.registrarEfeitoTerreno(
-            "Canteiro Central restaurou " + cura + " HP de " + pokesal1.getNome()
-        );
-      }
-      if (pokesal2.isVivo() && pokesal2.getTipo() == TipoElemental.PLANTA) {
-        int cura = (int) Math.round(
-            pokesal2.getHpMaximo() * ConstantesJogo.BONUS_CANTEIRO_CENTRAL
-        );
-        pokesal2.curar(cura);
-        registroBatalha.registrarEfeitoTerreno(
-            "Canteiro Central restaurou " + cura + " HP de " + pokesal2.getNome()
-        );
-      }
-    }
-  }
+	public void processarRecuoPorAtaque(PokeSal atacante) {
+		if (atacante != null && atacante.isVivo()) {
+			int ataques = atacante.incrementarAtaquesConsecutivos();
+			if (ataques > 0 && ataques % ConstantesJogo.INTERVALO_TURNO_RECUO == 0) {
+				int danoRecuo = (int) Math.round(atacante.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_RECUO);
+				atacante.receberDano(danoRecuo);
+				registroBatalha.registrarEfeitoTerreno(
+						atacante.getNome() + " sofreu " + danoRecuo + " de dano de recuo (Req 01)!");
+			}
+		}
+	}
 
-  public void aplicarDanoStatusFimDeTurno() {
-    if (!this.pokesal1.isVivo() || !this.pokesal2.isVivo()) {
-      return;
-    }
-    if (this.pokesal1.getStatusAtual() == EfeitoStatus.QUEIMADO
-        || this.pokesal1.getStatusAtual() == EfeitoStatus.ENVENENADO) {
-      int danoStatus = (int) Math.round(
-          this.pokesal1.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_STATUS
-      );
-      this.pokesal1.receberDano(danoStatus);
-      registroBatalha.registrarEfeitoStatus(pokesal1.getNome(), pokesal1.getStatusAtual());
-    }
-    if (this.pokesal2.getStatusAtual() == EfeitoStatus.QUEIMADO
-        || this.pokesal2.getStatusAtual() == EfeitoStatus.ENVENENADO) {
-      int danoStatus = (int) Math.round(
-          this.pokesal2.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_STATUS
-      );
-      this.pokesal2.receberDano(danoStatus);
-      registroBatalha.registrarEfeitoStatus(pokesal2.getNome(), pokesal2.getStatusAtual());
-    }
-  }
+	public void aplicarCuraCanteiroCentral() {
+		Terreno terrenoAtual = servicoTerreno.obterTerrenoAtual(clock);
+		if (terrenoAtual == Terreno.CANTEIRO_CENTRAL) {
+			if (pokesal1.isVivo() && pokesal1.getTipo() == TipoElemental.PLANTA) {
+				int cura = (int) Math.round(pokesal1.getHpMaximo() * ConstantesJogo.BONUS_CANTEIRO_CENTRAL);
+				pokesal1.curar(cura);
+				registroBatalha
+						.registrarEfeitoTerreno("Canteiro Central restaurou " + cura + " HP de " + pokesal1.getNome());
+			}
+			if (pokesal2.isVivo() && pokesal2.getTipo() == TipoElemental.PLANTA) {
+				int cura = (int) Math.round(pokesal2.getHpMaximo() * ConstantesJogo.BONUS_CANTEIRO_CENTRAL);
+				pokesal2.curar(cura);
+				registroBatalha
+						.registrarEfeitoTerreno("Canteiro Central restaurou " + cura + " HP de " + pokesal2.getNome());
+			}
+		}
+	}
 
-  private void verificarVencedor() {
-    if (!this.pokesal1.isVivo() || !this.pokesal2.isVivo()) {
-      this.vencedor = this.pokesal1.isVivo() ? this.pokesal1 : this.pokesal2;
-    }
-  }
+	public void aplicarDanoStatusFimDeTurno() {
+		if (!this.pokesal1.isVivo() || !this.pokesal2.isVivo()) {
+			return;
+		}
+		if (this.pokesal1.getStatusAtual() == EfeitoStatus.QUEIMADO
+				|| this.pokesal1.getStatusAtual() == EfeitoStatus.ENVENENADO) {
+			int danoStatus = (int) Math.round(this.pokesal1.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_STATUS);
+			this.pokesal1.receberDano(danoStatus);
+			registroBatalha.registrarEfeitoTerreno(
+					pokesal1.getNome() + " sofreu " + danoStatus + " de dano por " + pokesal1.getStatusAtual());
+		}
+		if (this.pokesal2.getStatusAtual() == EfeitoStatus.QUEIMADO
+				|| this.pokesal2.getStatusAtual() == EfeitoStatus.ENVENENADO) {
+			int danoStatus = (int) Math.round(this.pokesal2.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_STATUS);
+			this.pokesal2.receberDano(danoStatus);
+			registroBatalha.registrarEfeitoTerreno(
+					pokesal2.getNome() + " sofreu " + danoStatus + " de dano por " + pokesal2.getStatusAtual());
+		}
+	}
 
-  public boolean isVelocidadeIgual() {
-    return pokesal1.getSpd() == pokesal2.getSpd();
-  }
+	private void verificarVencedor() {
+		if (!this.pokesal1.isVivo() || !this.pokesal2.isVivo()) {
+			this.vencedor = this.pokesal1.isVivo() ? this.pokesal1 : this.pokesal2;
+		}
+	}
 
-  public PokeSal getVencedor() {
-    return this.vencedor;
-  }
+	public boolean isVelocidadeIgual() {
+		return pokesal1.getSpd() == pokesal2.getSpd();
+	}
 
-  public PokeSal getPrimeiroAtacante() {
-    return primeiroAtacante;
-  }
+	public PokeSal getVencedor() {
+		return this.vencedor;
+	}
 
-  public PokeSal getSegundoAtacante() {
-    return segundoAtacante;
-  }
+	public PokeSal getPrimeiroAtacante() {
+		return primeiroAtacante;
+	}
 
-  public Terreno getTerreno() {
-    return servicoTerreno.obterTerrenoAtual(clock);
-  }
+	public PokeSal getSegundoAtacante() {
+		return segundoAtacante;
+	}
 
-  public int getContadorTurno() {
-    return contadorTurno;
-  }
+	public Terreno getTerreno() {
+		return servicoTerreno.obterTerrenoAtual(clock);
+	}
 
-  public int getDanoCausadoPokesal1() {
-    return danoCausadoPokesal1;
-  }
+	public int getContadorTurno() {
+		return contadorTurno;
+	}
 
-  public int getDanoCausadoPokesal2() {
-    return danoCausadoPokesal2;
-  }
+	public int getDanoCausadoPokesal1() {
+		return danoCausadoPokesal1;
+	}
 
-  public int getTotalItensUsadosPartida() {
-    return totalItensUsadosPartida;
-  }
+	public int getDanoCausadoPokesal2() {
+		return danoCausadoPokesal2;
+	}
+
+	public int getTotalItensUsadosPartida() {
+		return totalItensUsadosPartida;
+	}
 }
