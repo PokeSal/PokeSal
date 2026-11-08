@@ -119,6 +119,16 @@ public class PokeSal {
   }
 
   /**
+   * Tenta adicionar um item recebido por recompensa à mochila do Pokésal.
+   *
+   * @param item O item concedido.
+   * @return Verdadeiro se adicionado, falso se descartado por mochila cheia.
+   */
+  public boolean receberRecompensa(Item item) {
+    return this.mochila.adicionarItem(item);
+  }
+
+  /**
    * Incrementa o contador de ataques consecutivos do Pokésal para controle de dano de recuo.
    *
    * @return O número atualizado de ataques seguidos.

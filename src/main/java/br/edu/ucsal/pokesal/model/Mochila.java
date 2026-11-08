@@ -71,4 +71,18 @@ public class Mochila {
   public int getItensUsados() {
     return itensUsados;
   }
+
+  /**
+   * Adiciona um novo item à mochila respeitando o limite de capacidade de itens.
+   *
+   * @param item O {@link Item} a ser adicionado.
+   * @return Verdadeiro se guardado com sucesso, falso se a mochila estiver cheia.
+   */
+  public boolean adicionarItem(Item item) {
+    if (this.itens.size() < 3) {
+      this.itens.add(item);
+      return true;
+    }
+    return false;
+  }
 }
