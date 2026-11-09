@@ -64,4 +64,16 @@ public class RepositorioResultadosMemoria implements RepositorioResultados {
   public List<ResultadoBatalha> getResultados() {
     return resultados;
   }
+
+  @Override
+  public void registrarDano(Object any, int anyInt) {
+	// TODO Auto-generated method stub
+	
+  }
+
+  @Override
+  public void registrarTurnosPartida(int anyInt) {
+	// TODO Auto-generated method stub
+	
+  }
 }

@@ -43,7 +43,7 @@ public class GerenciadorTorneio {
 		pokeSal2.getMochila().resetarUsosBatalha();
 
 		GerenciadorDeBatalha batalha = new GerenciadorDeBatalha(pokeSal1, pokeSal2, gerador, servicoTerreno, clock,
-				registroBatalha);
+				registroBatalha, repositorio);
 
 		batalha.definirOrdemAtuacao();
 		boolean vezDoTreinador1 = (batalha.getPrimeiroAtacante() == pokeSal1);

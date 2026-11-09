@@ -6,21 +6,24 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.Clock;
+import java.util.Random;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 import br.edu.ucsal.pokesal.model.Mochila;
 import br.edu.ucsal.pokesal.model.PokeSal;
 import br.edu.ucsal.pokesal.model.Terreno;
 import br.edu.ucsal.pokesal.model.TipoPokesal;
+import br.edu.ucsal.pokesal.repository.RepositorioResultados;
 import br.edu.ucsal.pokesal.service.GeradorAleatorio;
 import br.edu.ucsal.pokesal.service.GeradorAleatorioImpl;
 import br.edu.ucsal.pokesal.service.RegistroBatalha;
 import br.edu.ucsal.pokesal.service.RegistroBatalhaConsoleImpl;
 import br.edu.ucsal.pokesal.service.ServicoTerreno;
 import br.edu.ucsal.pokesal.service.ServicoTerrenoImpl;
-import java.time.Clock;
-import java.util.Random;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 
 /**
  * Suíte de testes unitários adaptada para o motor de combate refatorado na Fase
@@ -36,6 +39,7 @@ public class CalculadoraDanoTest {
 	private Clock clock;
 	private RegistroBatalha registroBatalha;
 	private CalculadoraDano calculadora;
+	private  RepositorioResultados repositorio;
 
 	@BeforeEach
 	public void setUp() {
@@ -48,6 +52,7 @@ public class CalculadoraDanoTest {
 		clock = Clock.systemDefaultZone();
 		registroBatalha = new RegistroBatalhaConsoleImpl();
 		calculadora = new CalculadoraDano(gerador, servicoTerreno);
+		
 	}
 
 	@Test
@@ -68,7 +73,7 @@ public class CalculadoraDanoTest {
 		int hpAntes = planta.getHpAtual();
 
 		GerenciadorDeBatalha gerenciador = new GerenciadorDeBatalha(planta, fogo, gerador,
-				(c) -> Terreno.CANTEIRO_CENTRAL, clock, registroBatalha);
+				(c) -> Terreno.CANTEIRO_CENTRAL, clock, registroBatalha, repositorio);
 		gerenciador.aplicarCuraCanteiroCentral();
 
 		assertEquals(hpAntes + 5, planta.getHpAtual());
@@ -78,7 +83,7 @@ public class CalculadoraDanoTest {
 	@DisplayName("Validar ordem de iniciativa do turno com base no atributo SPD")
 	public void testOrdemDeAtaquePorVelocidade() {
 		GerenciadorDeBatalha gerenciador = new GerenciadorDeBatalha(planta, agua, gerador, servicoTerreno, clock,
-				registroBatalha);
+				registroBatalha, repositorio);
 		gerenciador.definirOrdemAtuacao();
 
 		assertEquals(planta, gerenciador.getPrimeiroAtacante());
@@ -119,7 +124,7 @@ public class CalculadoraDanoTest {
 	public void testDanoRecuo() {
 		final int hpInicial = fogo.getHpAtual();
 		GerenciadorDeBatalha batalha = new GerenciadorDeBatalha(fogo, planta, gerador, servicoTerreno, clock,
-				registroBatalha);
+				registroBatalha, repositorio);
 
 		for (int i = 0; i < 3; i++) {
 			batalha.processarRecuoPorAtaque(fogo);
