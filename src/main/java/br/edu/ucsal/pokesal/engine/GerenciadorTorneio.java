@@ -38,12 +38,13 @@ public class GerenciadorTorneio {
 				"   " + nomeT1 + " (" + pokeSal1.getNome() + ") VS " + nomeT2 + " (" + pokeSal2.getNome() + ")");
 		System.out.println("==================================================");
 
-		// Reseta o limite de itens por confronto (Ponto 6)
+		// Reseta o limite de itens por confronto
 		pokeSal1.getMochila().resetarUsosBatalha();
 		pokeSal2.getMochila().resetarUsosBatalha();
 
+		// Instanciação corrigida com 6 parâmetros
 		GerenciadorDeBatalha batalha = new GerenciadorDeBatalha(pokeSal1, pokeSal2, gerador, servicoTerreno, clock,
-				registroBatalha, repositorio);
+				registroBatalha);
 
 		batalha.definirOrdemAtuacao();
 		boolean vezDoTreinador1 = (batalha.getPrimeiroAtacante() == pokeSal1);
@@ -178,7 +179,7 @@ public class GerenciadorTorneio {
 	}
 
 	public void processarRecompensaPosBatalha(PokeSal vencedor) {
-		int sorteio = gerador.gerarNumero(1, 100);
+		int sorteio = gerador.gerarNumero(ConstantesJogo.FAIXA_MIN_SORTEIO, ConstantesJogo.FAIXA_MAX_SORTEIO);
 		Item itemRecompensa;
 
 		if (sorteio <= 50) {

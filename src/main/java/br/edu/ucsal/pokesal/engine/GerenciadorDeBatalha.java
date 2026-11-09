@@ -5,7 +5,6 @@ import br.edu.ucsal.pokesal.model.Item;
 import br.edu.ucsal.pokesal.model.PokeSal;
 import br.edu.ucsal.pokesal.model.Terreno;
 import br.edu.ucsal.pokesal.model.TipoElemental;
-import br.edu.ucsal.pokesal.repository.RepositorioResultados;
 import br.edu.ucsal.pokesal.service.GeradorAleatorio;
 import br.edu.ucsal.pokesal.service.RegistroBatalha;
 import br.edu.ucsal.pokesal.service.ServicoTerreno;
@@ -21,7 +20,6 @@ public class GerenciadorDeBatalha {
 	private final Clock clock;
 	private final RegistroBatalha registroBatalha;
 	private final CalculadoraDano calculadoraDano;
-	private final RepositorioResultados repositorio;
 
 	private PokeSal primeiroAtacante;
 	private PokeSal segundoAtacante;
@@ -34,7 +32,7 @@ public class GerenciadorDeBatalha {
 	private int totalItensUsadosPartida = 0;
 
 	public GerenciadorDeBatalha(PokeSal pokesal1, PokeSal pokesal2, GeradorAleatorio gerador,
-			ServicoTerreno servicoTerreno, Clock clock, RegistroBatalha registroBatalha, RepositorioResultados repositorio) {
+			ServicoTerreno servicoTerreno, Clock clock, RegistroBatalha registroBatalha) {
 		this.pokesal1 = pokesal1;
 		this.pokesal2 = pokesal2;
 		this.gerador = gerador;
@@ -43,7 +41,6 @@ public class GerenciadorDeBatalha {
 		this.registroBatalha = registroBatalha;
 		this.calculadoraDano = new CalculadoraDano(gerador, servicoTerreno);
 		this.vencedor = null;
-		this.repositorio = repositorio;
 	}
 
 	public void definirOrdemAtuacao() {

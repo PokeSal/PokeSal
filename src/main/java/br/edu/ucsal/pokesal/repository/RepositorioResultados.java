@@ -16,8 +16,4 @@ public interface RepositorioResultados {
    * Compila e exibe o relatório de estatísticas finais do torneio (Requisito Autoral 04).
    */
   void emitirRelatorioEstatistico();
-
-  void registrarDano(Object any, int anyInt);
-
-  void registrarTurnosPartida(int anyInt);
 }
