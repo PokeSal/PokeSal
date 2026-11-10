@@ -1,0 +1,42 @@
+# 🐛 Registro de Bugs e Defeitos Corrigidos (Fase 03)
+
+**Instituição:** Universidade Católica do Salvador – UCSal
+
+**Curso:** Análise e Desenvolvimento de Sistemas
+
+**Disciplina:** Testes e Qualidade de Software
+
+**Professor:** Pedro Arthur de Melo Nascimento
+
+**Projeto:** PokéSal — Simulador de Batalha (Fase 03)
+
+**Integrantes da Equipe:**
+
+* Cauã Lopes
+* Arivaldo Teixeira
+* Ryan Abade
+* Pedro Luiz
+
+---
+
+## 1. Visão Geral
+
+Durante a refatoração da Fase 03 e a execução das suítes de testes unitários com Mockito, foram identificadas **9 inconsistências, falhas de contrato de auditoria e bugs de execução** no motor do jogo e na interface de console.
+
+Todos os defeitos foram mapeados, corrigidos no código-fonte e validados através de testes automatizados dedicados.
+
+---
+
+## 2. Tabela Consolidadora de Bugs Identificados e Solucionados
+
+| ID | Categoria / Componente | Descrição do Problema | Impacto no Sistema | Solução / Patch Aplicado | Commit de Correção |
+| --- | --- | --- | --- | --- | --- |
+| **BUG-01** | `GerenciadorDeBatalha` / Auditoria | Duplicação de log ao aplicar status no ataque (`[STATUS]` impresso duas vezes no mesmo turno). | Poluição visual e logs duplicados no console. | Centralizada a verificação no `executarTurnoAtaque`, notificando o `RegistroBatalha` apenas uma vez se houver mudança real de estado. | `fix(engine)` |
+| **BUG-02** | `GerenciadorDeBatalha` / Auditoria | Log confuso de dano de status no fim do turno (reaproveitava a mensagem de inflição em vez de notificar dano sofrido). | Fazia parecer que o Pokésal contraía o efeito novamente a cada fim de rodada. | Formata explicitamente a mensagem no método `aplicarDanoStatusFimDeTurno` indicando os pontos de vida perdidos pelo status. | `fix(engine)` |
+| **BUG-03** | `PokeSal` / `GerenciadorDeBatalha` | Chamada direta a `System.out.println` na passiva defensiva furando a Inversão de Dependência (DIP). | Mensagem da passiva saía fora da ordem cronológica do auditor de eventos. | Removida a impressão direta e redirecionada a notificação da passiva através do contrato `RegistroBatalha`. | `fix(model)` |
+| **BUG-04** | `GerenciadorTorneio` / Requisito 05 | Drop de recompensa da semifinal sempre descartado devido à capacidade da mochila lotada (3/3 itens). | O Pokésal vencedor da semifinal nunca conseguia armazenar o prêmio do Requisito 05. | Ajustada a verificação para que a mochila aceite a adição caso o treinador tenha consumido itens na partida semifinal. | `fix(engine)` |
+| **BUG-05** | `GerenciadorTorneio` / Log | Notificação da recompensa (Req 05) sendo enviada via `registrarEfeitoTerreno`, saindo com a tag `[TERRENO]`. | Classificação incorreta do log de itens na interface de console. | Redirecionada a notificação do prêmio pós-semifinal para `registrarUsoItem`, saindo corretamente com a tag `[MOCHILA]`. | `fix(engine)` |
+| **BUG-06** | `Mochila` / Torneio | Limite de 2 itens por batalha não era resetado quando o vencedor avançava para a Grande Final. | Treinadores que usavam 2 itens na semifinal ficavam bloqueados de usar itens na decisão do torneio. | Criado o método `resetarUsosBatalha()` na `Mochila`, invocado no setup inicial de cada confronto no `GerenciadorTorneio`. | `fix(model)` |
+| **BUG-07** | `Main.java` / Interface Console | Crash por `ArrayIndexOutOfBoundsException` ao digitar `0` ou números fora do intervalo no menu de seleção do Pokésal. | Encerrava a aplicação abruptamente se o usuário errasse a opção. | Adicionada validação de intervalo (`1 <= opcao <= opcoes.length`) dentro do loop `while(true)` com tratamento de exceções. | `fix(main)` |
+| **BUG-08** | `GerenciadorDeBatalha` / Requisito 01 | Dano de recuo (a cada 4 ataques) era aplicado internamente no HP sem notificação ao auditor. | O dano de recuo ocorria de forma "silenciosa" sem feedback visual para o jogador. | Adicionada chamada ao `registroBatalha.registrarEfeitoTerreno` no método `processarRecuoPorAtaque` informando os pontos de recuo sofridos. | `fix(engine)` |
+| **BUG-09** | `GerenciadorDeBatalha` / Status | Mensagem redundante na perda de turno por paralisia (`...perdeu a vez ficou PARALISADO!`). | Frase mal formatada e concatenada com erros gramaticais na saída. | Ajustada a string enviada ao `RegistroBatalha` no método `verificarParalisiaEPerdaDeTurno`, exibindo texto limpo e padronizado. | `fix(engine)` |
