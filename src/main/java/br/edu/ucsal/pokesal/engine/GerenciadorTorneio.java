@@ -38,11 +38,9 @@ public class GerenciadorTorneio {
 				"   " + nomeT1 + " (" + pokeSal1.getNome() + ") VS " + nomeT2 + " (" + pokeSal2.getNome() + ")");
 		System.out.println("==================================================");
 
-		// Reseta o limite de itens por confronto
 		pokeSal1.getMochila().resetarUsosBatalha();
 		pokeSal2.getMochila().resetarUsosBatalha();
 
-		// Instanciação corrigida com 6 parâmetros
 		GerenciadorDeBatalha batalha = new GerenciadorDeBatalha(pokeSal1, pokeSal2, gerador, servicoTerreno, clock,
 				registroBatalha);
 

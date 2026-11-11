@@ -50,12 +50,10 @@ public class Main {
 		String nomeT4 = scan.next();
 		PokeSal pokeSal4 = escolherPokeSal(scan, nomeT4);
 
-		// SEMIFINAL 1
 		ResultadoPartida resSemifinal1 = torneio.executarPartida(nomeT1, pokeSal1, nomeT2, pokeSal2, scan,
 				"Semifinal 1");
 		torneio.processarRecompensaPosBatalha(resSemifinal1.pokesal());
 
-		// SEMIFINAL 2
 		ResultadoPartida resSemifinal2 = torneio.executarPartida(nomeT3, pokeSal3, nomeT4, pokeSal4, scan,
 				"Semifinal 2");
 		torneio.processarRecompensaPosBatalha(resSemifinal2.pokesal());
@@ -68,18 +66,15 @@ public class Main {
 				+ resSemifinal2.pokesal().getNome() + " [HP Restante: " + resSemifinal2.pokesal().getHpAtual() + "]");
 		System.out.println("==================================================");
 
-		// GRANDE FINAL
 		ResultadoPartida resFinal = torneio.executarPartida(resSemifinal1.nomeTreinador(), resSemifinal1.pokesal(),
 				resSemifinal2.nomeTreinador(), resSemifinal2.pokesal(), scan, "Grande Final");
 
-		// DECLARAÇÃO DO CAMPEÃO GERAL
 		System.out.println("\n🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆");
 		System.out.println(" O GRANDE CAMPEÃO GERAL DO ESTACIONAMENTO DA UCSAL É: ");
 		System.out.println(" TREINADOR: " + resFinal.nomeTreinador().toUpperCase());
 		System.out.println(" COM SEU VALENTE: " + resFinal.pokesal().getNome().toUpperCase());
 		System.out.println("🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆\n");
 
-		// RELATÓRIO ESTATÍSTICO DO TORNEIO (Req Autoral 04)
 		repositorio.emitirRelatorioEstatistico();
 	}
 
