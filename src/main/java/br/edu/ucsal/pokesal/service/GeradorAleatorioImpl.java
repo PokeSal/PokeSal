@@ -2,11 +2,18 @@ package br.edu.ucsal.pokesal.service;
 
 import java.util.Random;
 
-/** Implementação de {@link GeradorAleatorio} baseada em {@link java.util.Random}. */
+/**
+ * Implementação de {@link GeradorAleatorio} baseada em {@link java.util.Random}.
+ */
 public class GeradorAleatorioImpl implements GeradorAleatorio {
 
   private final Random random;
 
+  /**
+   * Construtor da classe GeradorAleatorioImpl.
+   *
+   * @param random Instância do gerador aleatório Java.
+   */
   public GeradorAleatorioImpl(Random random) {
     this.random = random;
   }

@@ -12,12 +12,7 @@ package br.edu.ucsal.pokesal.repository;
  * @param danoCausadoPerdedor Total de dano infligido pelo Pokésal perdedor.
  * @param itensUsadosPartida Total de itens consumidos durante a partida.
  */
-public record ResultadoBatalha(
-    String treinadorVencedor,
-    String treinadorPerdedor,
-    String pokesalVencedor,
-    String pokesalPerdedor,
-    int quantidadeTurnos,
-    int danoCausadoVencedor,
-    int danoCausadoPerdedor,
-    int itensUsadosPartida) {}
+public record ResultadoBatalha(String treinadorVencedor, String treinadorPerdedor,
+    String pokesalVencedor, String pokesalPerdedor, int quantidadeTurnos, int danoCausadoVencedor,
+    int danoCausadoPerdedor, int itensUsadosPartida) {
+}

@@ -16,12 +16,8 @@ public class RepositorioResultadosMemoria implements RepositorioResultados {
   @Override
   public void salvarResultado(ResultadoBatalha resultado) {
     resultados.add(resultado);
-    System.out.println(
-        "[REPOSITÓRIO] Resultado registrado: Vencedor "
-            + resultado.treinadorVencedor()
-            + " ("
-            + resultado.quantidadeTurnos()
-            + " turnos)");
+    System.out.println("[REPOSITÓRIO] Resultado registrado: Vencedor "
+        + resultado.treinadorVencedor() + " (" + resultado.quantidadeTurnos() + " turnos)");
   }
 
   @Override
@@ -38,35 +34,25 @@ public class RepositorioResultadosMemoria implements RepositorioResultados {
 
     Map<String, Integer> danoPorPokesal = new HashMap<>();
     for (ResultadoBatalha res : resultados) {
-      danoPorPokesal.put(
-          res.pokesalVencedor(),
+      danoPorPokesal.put(res.pokesalVencedor(),
           danoPorPokesal.getOrDefault(res.pokesalVencedor(), 0) + res.danoCausadoVencedor());
-      danoPorPokesal.put(
-          res.pokesalPerdedor(),
+      danoPorPokesal.put(res.pokesalPerdedor(),
           danoPorPokesal.getOrDefault(res.pokesalPerdedor(), 0) + res.danoCausadoPerdedor());
     }
 
     Map.Entry<String, Integer> mvp =
         danoPorPokesal.entrySet().stream().max(Map.Entry.comparingByValue()).orElse(null);
 
-    ResultadoBatalha partidaMaisLonga =
-        resultados.stream()
-            .max(Comparator.comparingInt(ResultadoBatalha::quantidadeTurnos))
-            .orElse(resultados.get(0));
+    ResultadoBatalha partidaMaisLonga = resultados.stream()
+        .max(Comparator.comparingInt(ResultadoBatalha::quantidadeTurnos)).orElse(resultados.get(0));
 
     int totalItensUsados = resultados.stream().mapToInt(ResultadoBatalha::itensUsadosPartida).sum();
 
-    System.out.println(
-        "⭐ MVP do Torneio: "
-            + (mvp != null ? mvp.getKey() + " (" + mvp.getValue() + " de dano total)" : "N/A"));
-    System.out.println(
-        "⏱️  Partida Mais Duradoura: "
-            + partidaMaisLonga.treinadorVencedor()
-            + " VS "
-            + partidaMaisLonga.treinadorPerdedor()
-            + " ("
-            + partidaMaisLonga.quantidadeTurnos()
-            + " turnos)");
+    System.out.println("⭐ MVP do Torneio: "
+        + (mvp != null ? mvp.getKey() + " (" + mvp.getValue() + " de dano total)" : "N/A"));
+    System.out.println("⏱️  Partida Mais Duradoura: " + partidaMaisLonga.treinadorVencedor()
+        + " VS " + partidaMaisLonga.treinadorPerdedor() + " (" + partidaMaisLonga.quantidadeTurnos()
+        + " turnos)");
     System.out.println("🎒 Consumo de Suprimentos: " + totalItensUsados + " item(ns) utilizado(s)");
     System.out.println("==================================================\n");
   }

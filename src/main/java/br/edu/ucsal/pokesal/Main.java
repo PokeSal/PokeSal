@@ -66,32 +66,17 @@ public class Main {
 
     System.out.println("\n==================================================");
     System.out.println("   CLASSIFICADOS PARA A GRANDE FINAL!");
-    System.out.println(
-        "   Finalista 1: "
-            + resSemifinal1.nomeTreinador()
-            + " com "
-            + resSemifinal1.pokesal().getNome()
-            + " [HP Restante: "
-            + resSemifinal1.pokesal().getHpAtual()
-            + "]");
-    System.out.println(
-        "   Finalista 2: "
-            + resSemifinal2.nomeTreinador()
-            + " com "
-            + resSemifinal2.pokesal().getNome()
-            + " [HP Restante: "
-            + resSemifinal2.pokesal().getHpAtual()
-            + "]");
+    System.out.println("   Finalista 1: " + resSemifinal1.nomeTreinador() + " com "
+        + resSemifinal1.pokesal().getNome() + " [HP Restante: "
+        + resSemifinal1.pokesal().getHpAtual() + "]");
+    System.out.println("   Finalista 2: " + resSemifinal2.nomeTreinador() + " com "
+        + resSemifinal2.pokesal().getNome() + " [HP Restante: "
+        + resSemifinal2.pokesal().getHpAtual() + "]");
     System.out.println("==================================================");
 
     ResultadoPartida resFinal =
-        torneio.executarPartida(
-            resSemifinal1.nomeTreinador(),
-            resSemifinal1.pokesal(),
-            resSemifinal2.nomeTreinador(),
-            resSemifinal2.pokesal(),
-            scan,
-            "Grande Final");
+        torneio.executarPartida(resSemifinal1.nomeTreinador(), resSemifinal1.pokesal(),
+            resSemifinal2.nomeTreinador(), resSemifinal2.pokesal(), scan, "Grande Final");
 
     System.out.println("\n🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆🏆");
     System.out.println(" O GRANDE CAMPEÃO GERAL DO ESTACIONAMENTO DA UCSAL É: ");

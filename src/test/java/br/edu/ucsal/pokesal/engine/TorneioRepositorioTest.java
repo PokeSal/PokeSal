@@ -30,110 +30,109 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
- * Suíte de testes unitários obrigatórios do Torneio e Repositório (Issue #93).
- * Valida a integração do GerenciadorTorneio com RepositorioResultados
- * utilizando Mockito.
+ * Suíte de testes unitários para o Torneio e Repositório (Issue #93).
  */
 @ExtendWith(MockitoExtension.class)
 public class TorneioRepositorioTest {
 
-	@Mock
-	private RepositorioResultados repositorioMock;
+  @Mock
+  private RepositorioResultados repositorioMock;
 
-	@Mock
-	private GeradorAleatorio geradorMock;
+  @Mock
+  private GeradorAleatorio geradorMock;
 
-	@Mock
-	private ServicoTerreno servicoTerrenoMock;
+  @Mock
+  private ServicoTerreno servicoTerrenoMock;
 
-	@Mock
-	private RegistroBatalha registroBatalhaMock;
+  @Mock
+  private RegistroBatalha registroBatalhaMock;
 
-	@Captor
-	private ArgumentCaptor<ResultadoBatalha> captorResultado;
+  @Captor
+  private ArgumentCaptor<ResultadoBatalha> captorResultado;
 
-	private final Clock clockDefault = Clock.systemDefaultZone();
+  private final Clock clockDefault = Clock.systemDefaultZone();
 
-	private GerenciadorTorneio gerenciadorTorneio;
-	private PokeSal pokesal1;
-	private PokeSal pokesal2;
+  private GerenciadorTorneio gerenciadorTorneio;
+  private PokeSal pokesal1;
+  private PokeSal pokesal2;
 
-	@BeforeEach
-	void setUp() {
-		gerenciadorTorneio = new GerenciadorTorneio(repositorioMock, geradorMock, servicoTerrenoMock, clockDefault,
-				registroBatalhaMock);
-		pokesal1 = new PokeSal(TipoPokesal.CHARSAL);
-		pokesal2 = new PokeSal(TipoPokesal.BULBASAL);
-	}
+  @BeforeEach
+  void setUp() {
+    gerenciadorTorneio = new GerenciadorTorneio(repositorioMock, geradorMock, servicoTerrenoMock,
+        clockDefault, registroBatalhaMock);
+    pokesal1 = new PokeSal(TipoPokesal.CHARSAL);
+    pokesal2 = new PokeSal(TipoPokesal.BULBASAL);
+  }
 
-	@Test
-	@DisplayName("testResultadoSalvoAoFimDaBatalha: ArgumentCaptor verificando vencedor, perdedor e número de turnos")
-	void testResultadoSalvoAoFimDaBatalha() {
-		when(servicoTerrenoMock.obterTerrenoAtual(clockDefault)).thenReturn(Terreno.ASFALTO_QUENTE);
+  @Test
+  @DisplayName("ArgumentCaptor verificando vencedor, perdedor e número de turnos")
+  void testResultadoSalvoAoFimDaBatalha() {
+    when(servicoTerrenoMock.obterTerrenoAtual(clockDefault)).thenReturn(Terreno.ASFALTO_QUENTE);
 
-		Scanner scan = new Scanner("3\n");
-		GerenciadorTorneio.ResultadoPartida resultadoPartida = gerenciadorTorneio.executarPartida("Ash", pokesal1,
-				"Gary", pokesal2, scan, "Semifinal");
+    Scanner scan = new Scanner("3\n");
+    GerenciadorTorneio.ResultadoPartida resultadoPartida =
+        gerenciadorTorneio.executarPartida("Ash", pokesal1, "Gary", pokesal2, scan, "Semifinal");
 
-		assertNotNull(resultadoPartida);
+    assertNotNull(resultadoPartida);
 
-		verify(repositorioMock, times(1)).salvarResultado(captorResultado.capture());
+    verify(repositorioMock, times(1)).salvarResultado(captorResultado.capture());
 
-		ResultadoBatalha resultadoSalvo = captorResultado.getValue();
-		assertNotNull(resultadoSalvo);
-		assertEquals(resultadoPartida.nomeTreinador(), resultadoSalvo.treinadorVencedor());
-		assertNotNull(resultadoSalvo.treinadorPerdedor());
-		assertNotNull(resultadoSalvo.pokesalVencedor());
-		assertNotNull(resultadoSalvo.pokesalPerdedor());
-	}
+    ResultadoBatalha resultadoSalvo = captorResultado.getValue();
+    assertNotNull(resultadoSalvo);
+    assertEquals(resultadoPartida.nomeTreinador(), resultadoSalvo.treinadorVencedor());
+    assertNotNull(resultadoSalvo.treinadorPerdedor());
+    assertNotNull(resultadoSalvo.pokesalVencedor());
+    assertNotNull(resultadoSalvo.pokesalPerdedor());
+  }
 
-	@Test
-	@DisplayName("testFalhaNoRepositorioNaoInvalidaBatalha: Repositório lança exceção e o vencedor continua definido")
-	void testFalhaNoRepositorioNaoInvalidaBatalha() {
-		when(servicoTerrenoMock.obterTerrenoAtual(clockDefault)).thenReturn(Terreno.ASFALTO_QUENTE);
-		doThrow(new RuntimeException("Erro de conexão com o banco de dados")).when(repositorioMock)
-				.salvarResultado(any(ResultadoBatalha.class));
+  @Test
+  @DisplayName("Repositório lança exceção e o vencedor continua definido")
+  void testFalhaNoRepositorioNaoInvalidaBatalha() {
+    when(servicoTerrenoMock.obterTerrenoAtual(clockDefault)).thenReturn(Terreno.ASFALTO_QUENTE);
+    doThrow(new RuntimeException("Erro de conexão com o banco de dados")).when(repositorioMock)
+        .salvarResultado(any(ResultadoBatalha.class));
 
-		Scanner scan = new Scanner("3\n");
+    Scanner scan = new Scanner("3\n");
 
-		GerenciadorTorneio.ResultadoPartida resultado = assertDoesNotThrow(
-				() -> gerenciadorTorneio.executarPartida("Ash", pokesal1, "Gary", pokesal2, scan, "Semifinal"));
+    GerenciadorTorneio.ResultadoPartida resultado = assertDoesNotThrow(() -> gerenciadorTorneio
+        .executarPartida("Ash", pokesal1, "Gary", pokesal2, scan, "Semifinal"));
 
-		assertNotNull(resultado);
-		assertNotNull(resultado.nomeTreinador());
-		assertNotNull(resultado.pokesal());
-		verify(repositorioMock, times(1)).salvarResultado(any(ResultadoBatalha.class));
-	}
+    assertNotNull(resultado);
+    assertNotNull(resultado.nomeTreinador());
+    assertNotNull(resultado.pokesal());
+    verify(repositorioMock, times(1)).salvarResultado(any(ResultadoBatalha.class));
+  }
 
-	@Test
-	@DisplayName("testRepositorioNaoChamadoSeBatalhaNaoTerminou: verify(..., never()) sobre o repositório")
-	void testRepositorioNaoChamadoSeBatalhaNaoTerminou() {
-		verify(repositorioMock, never()).salvarResultado(any(ResultadoBatalha.class));
-		verify(repositorioMock, never()).emitirRelatorioEstatistico();
-	}
+  @Test
+  @DisplayName("verify(..., never()) sobre o repositório em batalha não finalizada")
+  void testRepositorioNaoChamadoSeBatalhaNaoTerminou() {
+    verify(repositorioMock, never()).salvarResultado(any(ResultadoBatalha.class));
+    verify(repositorioMock, never()).emitirRelatorioEstatistico();
+  }
 
-	@Test
-	@DisplayName("testChaveamentoTorneioAvancaVencedores: Resultados de batalha mockados determinando quem avança de fase")
-	void testChaveamentoTorneioAvancaVencedores() {
-		when(servicoTerrenoMock.obterTerrenoAtual(clockDefault)).thenReturn(Terreno.ASFALTO_QUENTE);
+  @Test
+  @DisplayName("Resultados de batalha mockados determinando quem avança de fase")
+  void testChaveamentoTorneioAvancaVencedores() {
+    when(servicoTerrenoMock.obterTerrenoAtual(clockDefault)).thenReturn(Terreno.ASFALTO_QUENTE);
 
-		PokeSal pokesal3 = new PokeSal(TipoPokesal.SQUIRTSAL);
-		PokeSal pokesal4 = new PokeSal(TipoPokesal.CHIKOSAL);
+    PokeSal pokesal3 = new PokeSal(TipoPokesal.SQUIRTSAL);
+    PokeSal pokesal4 = new PokeSal(TipoPokesal.CHIKOSAL);
 
-		Scanner scan1 = new Scanner("3\n");
-		GerenciadorTorneio.ResultadoPartida semi1 = gerenciadorTorneio.executarPartida("Ash", pokesal1, "Gary",
-				pokesal2, scan1, "Semifinal 1");
+    Scanner scan1 = new Scanner("3\n");
+    GerenciadorTorneio.ResultadoPartida semi1 =
+        gerenciadorTorneio.executarPartida("Ash", pokesal1, "Gary", pokesal2, scan1, "Semifinal 1");
 
-		Scanner scan2 = new Scanner("3\n");
-		GerenciadorTorneio.ResultadoPartida semi2 = gerenciadorTorneio.executarPartida("Misty", pokesal3, "Brock",
-				pokesal4, scan2, "Semifinal 2");
+    Scanner scan2 = new Scanner("3\n");
+    GerenciadorTorneio.ResultadoPartida semi2 = gerenciadorTorneio.executarPartida("Misty",
+        pokesal3, "Brock", pokesal4, scan2, "Semifinal 2");
 
-		Scanner scanFinal = new Scanner("3\n");
-		GerenciadorTorneio.ResultadoPartida finalPartida = gerenciadorTorneio.executarPartida(semi1.nomeTreinador(),
-				semi1.pokesal(), semi2.nomeTreinador(), semi2.pokesal(), scanFinal, "Grande Final");
+    Scanner scanFinal = new Scanner("3\n");
+    GerenciadorTorneio.ResultadoPartida finalPartida =
+        gerenciadorTorneio.executarPartida(semi1.nomeTreinador(), semi1.pokesal(),
+            semi2.nomeTreinador(), semi2.pokesal(), scanFinal, "Grande Final");
 
-		assertNotNull(finalPartida);
-		assertNotNull(finalPartida.nomeTreinador());
-		verify(repositorioMock, times(3)).salvarResultado(any(ResultadoBatalha.class));
-	}
+    assertNotNull(finalPartida);
+    assertNotNull(finalPartida.nomeTreinador());
+    verify(repositorioMock, times(3)).salvarResultado(any(ResultadoBatalha.class));
+  }
 }

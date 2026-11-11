@@ -3,7 +3,9 @@ package br.edu.ucsal.pokesal.service;
 import br.edu.ucsal.pokesal.model.Terreno;
 import java.time.Clock;
 
-/** Contrato responsável pela consulta e obtenção das condições de terreno ativas. */
+/**
+ * Contrato responsável pela consulta e obtenção das condições de terreno ativas.
+ */
 public interface ServicoTerreno {
 
   /**

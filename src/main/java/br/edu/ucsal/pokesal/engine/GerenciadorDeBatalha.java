@@ -12,8 +12,7 @@ import br.edu.ucsal.pokesal.util.ConstantesJogo;
 import java.time.Clock;
 
 /**
- * Controla o fluxo de uma batalha entre dois Pokésais: ordem de atuação, turnos de ataque e de
- * item, efeitos de status, recuo, efeitos de terreno e determinação do vencedor.
+ * Controla o fluxo de uma batalha entre dois Pokésais.
  */
 public class GerenciadorDeBatalha {
 
@@ -48,13 +47,8 @@ public class GerenciadorDeBatalha {
    * @param clock relógio usado para consultar o terreno.
    * @param registroBatalha registrador dos eventos da batalha.
    */
-  public GerenciadorDeBatalha(
-      PokeSal pokesal1,
-      PokeSal pokesal2,
-      GeradorAleatorio gerador,
-      ServicoTerreno servicoTerreno,
-      Clock clock,
-      RegistroBatalha registroBatalha) {
+  public GerenciadorDeBatalha(PokeSal pokesal1, PokeSal pokesal2, GeradorAleatorio gerador,
+      ServicoTerreno servicoTerreno, Clock clock, RegistroBatalha registroBatalha) {
     this.pokesal1 = pokesal1;
     this.pokesal2 = pokesal2;
     this.gerador = gerador;
@@ -89,8 +83,7 @@ public class GerenciadorDeBatalha {
    *
    * @param atacante Pokésal que realiza o ataque.
    * @param defensor Pokésal que recebe o ataque.
-   * @return {@code true} sempre que o turno é consumido, inclusive quando o atacante está
-   *     paralisado.
+   * @return {@code true} sempre que o turno é consumido.
    */
   public boolean executarTurnoAtaque(PokeSal atacante, PokeSal defensor) {
     if (verificarParalisiaOuPerdaDeTurno(atacante)) {
@@ -98,24 +91,18 @@ public class GerenciadorDeBatalha {
     }
 
     if (defensor.isPassivaDefensivaAtiva()) {
-      registroBatalha.registrarEfeitoTerreno(
-          "Passiva de defesa ativada para " + defensor.getNome() + "!");
+      registroBatalha
+          .registrarEfeitoTerreno("Passiva de defesa ativada para " + defensor.getNome() + "!");
     }
 
     registroBatalha.registrarAtaque(atacante.getNome(), defensor.getNome());
 
     int dano = calculadoraDano.calcularDano(atacante, defensor, clock);
     boolean errou = (dano == ConstantesJogo.DANO_ERRO);
-    boolean critico =
-        !errou
-            && (dano
-                > (int)
-                    Math.round(
-                        ((double) atacante.getAtk() / defensor.getDef())
-                            * ConstantesJogo.DANO_BASE
-                            * calculadoraDano.calcularEfetividade(atacante, defensor)
-                            * calculadoraDano.calcularMultiplicadorTerreno(
-                                atacante, servicoTerreno.obterTerrenoAtual(clock))));
+    boolean critico = !errou && (dano > (int) Math
+        .round(((double) atacante.getAtk() / defensor.getDef()) * ConstantesJogo.DANO_BASE
+            * calculadoraDano.calcularEfetividade(atacante, defensor) * calculadoraDano
+                .calcularMultiplicadorTerreno(atacante, servicoTerreno.obterTerrenoAtual(clock))));
 
     defensor.receberDano(dano);
 
@@ -173,8 +160,8 @@ public class GerenciadorDeBatalha {
 
   private boolean verificarParalisiaOuPerdaDeTurno(PokeSal atacante) {
     if (atacante.getStatusAtual() == EfeitoStatus.PARALISADO) {
-      registroBatalha.registrarEfeitoTerreno(
-          atacante.getNome() + " está PARALISADO e perdeu a vez!");
+      registroBatalha
+          .registrarEfeitoTerreno(atacante.getNome() + " está PARALISADO e perdeu a vez!");
       atacante.setStatusAtual(EfeitoStatus.NENHUM);
       avancarAcaoRodada();
       return true;
@@ -195,7 +182,7 @@ public class GerenciadorDeBatalha {
   }
 
   /**
-   * Contabiliza o ataque consecutivo e aplica dano de recuo no intervalo configurado.
+   * Contabiliza o ataque consecutivo e aplica dano de recuo.
    *
    * @param atacante Pokésal que realizou o ataque.
    */
@@ -241,24 +228,16 @@ public class GerenciadorDeBatalha {
       int danoStatus =
           (int) Math.round(this.pokesal1.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_STATUS);
       this.pokesal1.receberDano(danoStatus);
-      registroBatalha.registrarEfeitoTerreno(
-          pokesal1.getNome()
-              + " sofreu "
-              + danoStatus
-              + " de dano por "
-              + pokesal1.getStatusAtual());
+      registroBatalha.registrarEfeitoTerreno(pokesal1.getNome() + " sofreu " + danoStatus
+          + " de dano por " + pokesal1.getStatusAtual());
     }
     if (this.pokesal2.getStatusAtual() == EfeitoStatus.QUEIMADO
         || this.pokesal2.getStatusAtual() == EfeitoStatus.ENVENENADO) {
       int danoStatus =
           (int) Math.round(this.pokesal2.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_STATUS);
       this.pokesal2.receberDano(danoStatus);
-      registroBatalha.registrarEfeitoTerreno(
-          pokesal2.getNome()
-              + " sofreu "
-              + danoStatus
-              + " de dano por "
-              + pokesal2.getStatusAtual());
+      registroBatalha.registrarEfeitoTerreno(pokesal2.getNome() + " sofreu " + danoStatus
+          + " de dano por " + pokesal2.getStatusAtual());
     }
   }
 

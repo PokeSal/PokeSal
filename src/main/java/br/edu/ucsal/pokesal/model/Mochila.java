@@ -16,19 +16,12 @@ public class Mochila {
   /** Cria a mochila com os itens iniciais: poção, super poção e cura total. */
   public Mochila() {
     this.itens = new ArrayList<>();
-    this.itens.add(
-        new Item(
-            ConstantesJogo.NOME_POCAO, ConstantesJogo.CURA_POCAO, ConstantesJogo.STATUS_NENHUM));
-    this.itens.add(
-        new Item(
-            ConstantesJogo.NOME_SUPER_POCAO,
-            ConstantesJogo.CURA_SUPER_POCAO,
-            ConstantesJogo.STATUS_NENHUM));
-    this.itens.add(
-        new Item(
-            ConstantesJogo.NOME_CURA_TOTAL,
-            ConstantesJogo.CURA_NENHUMA,
-            ConstantesJogo.STATUS_TODOS));
+    this.itens.add(new Item(ConstantesJogo.NOME_POCAO, ConstantesJogo.CURA_POCAO,
+        ConstantesJogo.STATUS_NENHUM));
+    this.itens.add(new Item(ConstantesJogo.NOME_SUPER_POCAO, ConstantesJogo.CURA_SUPER_POCAO,
+        ConstantesJogo.STATUS_NENHUM));
+    this.itens.add(new Item(ConstantesJogo.NOME_CURA_TOTAL, ConstantesJogo.CURA_NENHUMA,
+        ConstantesJogo.STATUS_TODOS));
     this.usosNaBatalha = 0;
   }
 

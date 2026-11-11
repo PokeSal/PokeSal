@@ -34,12 +34,8 @@ public class GerenciadorTorneio {
    * @param clock relógio usado para consultar o terreno.
    * @param registroBatalha registrador dos eventos da batalha.
    */
-  public GerenciadorTorneio(
-      RepositorioResultados repositorio,
-      GeradorAleatorio gerador,
-      ServicoTerreno servicoTerreno,
-      Clock clock,
-      RegistroBatalha registroBatalha) {
+  public GerenciadorTorneio(RepositorioResultados repositorio, GeradorAleatorio gerador,
+      ServicoTerreno servicoTerreno, Clock clock, RegistroBatalha registroBatalha) {
     this.repositorio = repositorio;
     this.gerador = gerador;
     this.servicoTerreno = servicoTerreno;
@@ -58,33 +54,19 @@ public class GerenciadorTorneio {
    * @param nomeFase nome da fase do torneio.
    * @return treinador e Pokésal vencedores da partida.
    */
-  public ResultadoPartida executarPartida(
-      String nomeT1,
-      PokeSal pokeSal1,
-      String nomeT2,
-      PokeSal pokeSal2,
-      Scanner scan,
-      String nomeFase) {
+  public ResultadoPartida executarPartida(String nomeT1, PokeSal pokeSal1, String nomeT2,
+      PokeSal pokeSal2, Scanner scan, String nomeFase) {
     System.out.println("\n==================================================");
     System.out.println("   INÍCIO DA PARTIDA - " + nomeFase.toUpperCase());
-    System.out.println(
-        "   "
-            + nomeT1
-            + " ("
-            + pokeSal1.getNome()
-            + ") VS "
-            + nomeT2
-            + " ("
-            + pokeSal2.getNome()
-            + ")");
+    System.out.println("   " + nomeT1 + " (" + pokeSal1.getNome() + ") VS " + nomeT2 + " ("
+        + pokeSal2.getNome() + ")");
     System.out.println("==================================================");
 
     pokeSal1.getMochila().resetarUsosBatalha();
     pokeSal2.getMochila().resetarUsosBatalha();
 
-    GerenciadorDeBatalha batalha =
-        new GerenciadorDeBatalha(
-            pokeSal1, pokeSal2, gerador, servicoTerreno, clock, registroBatalha);
+    GerenciadorDeBatalha batalha = new GerenciadorDeBatalha(pokeSal1, pokeSal2, gerador,
+        servicoTerreno, clock, registroBatalha);
 
     batalha.definirOrdemAtuacao();
     boolean vezDoTreinador1 = (batalha.getPrimeiroAtacante() == pokeSal1);
@@ -101,31 +83,15 @@ public class GerenciadorTorneio {
 
       System.out.println("\n--------------------------------------------------");
       System.out.println("STATUS DA PARTIDA:");
-      System.out.println(
-          pokeSal1.getNome()
-              + " ["
-              + nomeT1
-              + "] -> HP: "
-              + pokeSal1.getHpAtual()
-              + "/"
-              + pokeSal1.getHpMaximo());
-      System.out.println(
-          pokeSal2.getNome()
-              + " ["
-              + nomeT2
-              + "] -> HP: "
-              + pokeSal2.getHpAtual()
-              + "/"
-              + pokeSal2.getHpMaximo());
+      System.out.println(pokeSal1.getNome() + " [" + nomeT1 + "] -> HP: " + pokeSal1.getHpAtual()
+          + "/" + pokeSal1.getHpMaximo());
+      System.out.println(pokeSal2.getNome() + " [" + nomeT2 + "] -> HP: " + pokeSal2.getHpAtual()
+          + "/" + pokeSal2.getHpMaximo());
       System.out.println("TERRENO ATIVO: " + batalha.getTerreno().getNomeFormatado());
       System.out.println("--------------------------------------------------");
 
-      System.out.println(
-          "\n>>> TURNO DE "
-              + nomeTreinadorDaVez.toUpperCase()
-              + " ("
-              + atacante.getNome()
-              + ") <<<");
+      System.out.println("\n>>> TURNO DE " + nomeTreinadorDaVez.toUpperCase() + " ("
+          + atacante.getNome() + ") <<<");
       System.out.println("1 - Atacar");
       System.out.println("2 - Usar Mochila (Item de Cura)");
       System.out.println("3 - Desistir da Batalha");
@@ -161,12 +127,8 @@ public class GerenciadorTorneio {
               break;
             }
 
-            System.out.println(
-                "\n=== ITENS NA MOCHILA DE "
-                    + atacante.getNome()
-                    + " ["
-                    + nomeTreinadorDaVez
-                    + "] ===");
+            System.out.println("\n=== ITENS NA MOCHILA DE " + atacante.getNome() + " ["
+                + nomeTreinadorDaVez + "] ===");
             List<Item> itens = atacante.getMochila().getItens();
             for (int i = 0; i < itens.size(); i++) {
               System.out.println((i + 1) + " - " + itens.get(i).getNome());
@@ -220,25 +182,14 @@ public class GerenciadorTorneio {
       }
     }
 
-    int danoVencedor =
-        (vencedorBatalha == pokeSal1)
-            ? batalha.getDanoCausadoPokesal1()
-            : batalha.getDanoCausadoPokesal2();
-    int danoPerdedor =
-        (vencedorBatalha == pokeSal1)
-            ? batalha.getDanoCausadoPokesal2()
-            : batalha.getDanoCausadoPokesal1();
+    int danoVencedor = (vencedorBatalha == pokeSal1) ? batalha.getDanoCausadoPokesal1()
+        : batalha.getDanoCausadoPokesal2();
+    int danoPerdedor = (vencedorBatalha == pokeSal1) ? batalha.getDanoCausadoPokesal2()
+        : batalha.getDanoCausadoPokesal1();
 
-    ResultadoBatalha resultado =
-        new ResultadoBatalha(
-            treinadorVencedor,
-            treinadorPerdedor,
-            vencedorBatalha.getNome(),
-            perdedorBatalha.getNome(),
-            batalha.getContadorTurno(),
-            danoVencedor,
-            danoPerdedor,
-            batalha.getTotalItensUsadosPartida());
+    ResultadoBatalha resultado = new ResultadoBatalha(treinadorVencedor, treinadorPerdedor,
+        vencedorBatalha.getNome(), perdedorBatalha.getNome(), batalha.getContadorTurno(),
+        danoVencedor, danoPerdedor, batalha.getTotalItensUsadosPartida());
 
     try {
       repositorio.salvarResultado(resultado);
@@ -260,37 +211,24 @@ public class GerenciadorTorneio {
     Item itemRecompensa;
 
     if (sorteio <= LIMITE_SORTEIO_POCAO) {
-      itemRecompensa =
-          new Item(
-              ConstantesJogo.NOME_POCAO, ConstantesJogo.CURA_POCAO, ConstantesJogo.STATUS_NENHUM);
+      itemRecompensa = new Item(ConstantesJogo.NOME_POCAO, ConstantesJogo.CURA_POCAO,
+          ConstantesJogo.STATUS_NENHUM);
     } else if (sorteio <= LIMITE_SORTEIO_SUPER_POCAO) {
-      itemRecompensa =
-          new Item(
-              ConstantesJogo.NOME_SUPER_POCAO,
-              ConstantesJogo.CURA_SUPER_POCAO,
-              ConstantesJogo.STATUS_NENHUM);
+      itemRecompensa = new Item(ConstantesJogo.NOME_SUPER_POCAO, ConstantesJogo.CURA_SUPER_POCAO,
+          ConstantesJogo.STATUS_NENHUM);
     } else {
-      itemRecompensa =
-          new Item(
-              ConstantesJogo.NOME_CURA_TOTAL,
-              ConstantesJogo.CURA_NENHUMA,
-              ConstantesJogo.STATUS_TODOS);
+      itemRecompensa = new Item(ConstantesJogo.NOME_CURA_TOTAL, ConstantesJogo.CURA_NENHUMA,
+          ConstantesJogo.STATUS_TODOS);
     }
 
     boolean adicionou = vencedor.receberRecompensa(itemRecompensa);
 
     if (adicionou) {
-      registroBatalha.registrarUsoItem(
-          "RECOMPENSA (REQ 05)",
+      registroBatalha.registrarUsoItem("RECOMPENSA (REQ 05)",
           vencedor.getNome() + " ganhou " + itemRecompensa.getNome() + " para a Grande Final");
     } else {
-      registroBatalha.registrarUsoItem(
-          "RECOMPENSA (REQ 05)",
-          "Mochila de "
-              + vencedor.getNome()
-              + " está cheia! O item "
-              + itemRecompensa.getNome()
-              + " foi descartado");
+      registroBatalha.registrarUsoItem("RECOMPENSA (REQ 05)", "Mochila de " + vencedor.getNome()
+          + " está cheia! O item " + itemRecompensa.getNome() + " foi descartado");
     }
   }
 
@@ -300,5 +238,6 @@ public class GerenciadorTorneio {
    * @param nomeTreinador nome do treinador vencedor.
    * @param pokesal Pokésal vencedor.
    */
-  public record ResultadoPartida(String nomeTreinador, PokeSal pokesal) {}
+  public record ResultadoPartida(String nomeTreinador, PokeSal pokesal) {
+  }
 }

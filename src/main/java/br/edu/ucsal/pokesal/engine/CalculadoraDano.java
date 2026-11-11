@@ -92,19 +92,15 @@ public class CalculadoraDano {
    * @return multiplicador super efetivo, pouco efetivo ou neutro.
    */
   public double calcularEfetividade(PokeSal atacante, PokeSal defensor) {
-    boolean ehSuperEfetivo =
-        (atacante.getTipo() == TipoElemental.FOGO && defensor.getTipo() == TipoElemental.PLANTA)
-            || (atacante.getTipo() == TipoElemental.AGUA
-                && defensor.getTipo() == TipoElemental.FOGO)
-            || (atacante.getTipo() == TipoElemental.PLANTA
-                && defensor.getTipo() == TipoElemental.AGUA);
+    boolean ehSuperEfetivo = (atacante.getTipo() == TipoElemental.FOGO
+        && defensor.getTipo() == TipoElemental.PLANTA)
+        || (atacante.getTipo() == TipoElemental.AGUA && defensor.getTipo() == TipoElemental.FOGO)
+        || (atacante.getTipo() == TipoElemental.PLANTA && defensor.getTipo() == TipoElemental.AGUA);
 
-    boolean ehPoucoEfetivo =
-        (atacante.getTipo() == TipoElemental.FOGO && defensor.getTipo() == TipoElemental.AGUA)
-            || (atacante.getTipo() == TipoElemental.AGUA
-                && defensor.getTipo() == TipoElemental.PLANTA)
-            || (atacante.getTipo() == TipoElemental.PLANTA
-                && defensor.getTipo() == TipoElemental.FOGO);
+    boolean ehPoucoEfetivo = (atacante.getTipo() == TipoElemental.FOGO
+        && defensor.getTipo() == TipoElemental.AGUA)
+        || (atacante.getTipo() == TipoElemental.AGUA && defensor.getTipo() == TipoElemental.PLANTA)
+        || (atacante.getTipo() == TipoElemental.PLANTA && defensor.getTipo() == TipoElemental.FOGO);
 
     if (ehSuperEfetivo) {
       return ConstantesJogo.MULT_SUPER_EFETIVO;

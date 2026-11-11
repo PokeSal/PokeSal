@@ -1,8 +1,6 @@
 package br.edu.ucsal.pokesal.engine;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
@@ -28,90 +26,91 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
- * Suíte de testes unitários para os Requisitos Autorais 04 e 05 (Issue #94).
- * Valida a compilação estatística do torneio e o sistema de drop de recompensa
- * pós-semifinal.
+ * Suíte de testes unitários para os Requisitos Autorais 04 e 05.
  */
 @ExtendWith(MockitoExtension.class)
 public class RequisitosAutoraisTest {
 
-	@Mock
-	private RepositorioResultados repositorioMock;
+  @Mock
+  private RepositorioResultados repositorioMock;
 
-	@Mock
-	private GeradorAleatorio geradorMock;
+  @Mock
+  private GeradorAleatorio geradorMock;
 
-	@Mock
-	private ServicoTerreno servicoTerrenoMock;
+  @Mock
+  private ServicoTerreno servicoTerrenoMock;
 
-	@Mock
-	private RegistroBatalha registroBatalhaMock;
+  @Mock
+  private RegistroBatalha registroBatalhaMock;
 
-	private final Clock clockDefault = Clock.systemDefaultZone();
+  private final Clock clockDefault = Clock.systemDefaultZone();
 
-	private GerenciadorTorneio gerenciadorTorneio;
+  private GerenciadorTorneio gerenciadorTorneio;
 
-	@BeforeEach
-	void setUp() {
-		gerenciadorTorneio = new GerenciadorTorneio(repositorioMock, geradorMock, servicoTerrenoMock, clockDefault,
-				registroBatalhaMock);
-	}
+  @BeforeEach
+  void setUp() {
+    gerenciadorTorneio = new GerenciadorTorneio(repositorioMock, geradorMock, servicoTerrenoMock,
+        clockDefault, registroBatalhaMock);
+  }
 
-	@Test
-	@DisplayName("Req 04: Validar compilação estatística e cálculo de MVP no repositório de memória")
-	void testCompilacaoEstatisticaMVPNoFimDoTorneio() {
-		RepositorioResultadosMemoria repoMemoria = new RepositorioResultadosMemoria();
+  @Test
+  @DisplayName("Req 04: Validar compilação estatística e cálculo de MVP no repositório")
+  void testCompilacaoEstatisticaMvpNoFimDoTorneio() {
+    RepositorioResultadosMemoria repoMemoria = new RepositorioResultadosMemoria();
 
-		ResultadoBatalha partida1 = new ResultadoBatalha("Ash", "Gary", "CharSal", "BulbaSal", 6, 120, 40, 1);
-		ResultadoBatalha partida2 = new ResultadoBatalha("Misty", "Brock", "SquirtSal", "ChikoSal", 10, 80, 50, 2);
+    ResultadoBatalha partida1 =
+        new ResultadoBatalha("Ash", "Gary", "CharSal", "BulbaSal", 6, 120, 40, 1);
+    ResultadoBatalha partida2 =
+        new ResultadoBatalha("Misty", "Brock", "SquirtSal", "ChikoSal", 10, 80, 50, 2);
 
-		repoMemoria.salvarResultado(partida1);
-		repoMemoria.salvarResultado(partida2);
+    repoMemoria.salvarResultado(partida1);
+    repoMemoria.salvarResultado(partida2);
 
-		assertEquals(2, repoMemoria.getResultados().size());
-		assertEquals("CharSal", repoMemoria.getResultados().get(0).pokesalVencedor());
+    assertEquals(2, repoMemoria.getResultados().size());
+    assertEquals("CharSal", repoMemoria.getResultados().get(0).pokesalVencedor());
 
-		repoMemoria.emitirRelatorioEstatistico();
-	}
+    repoMemoria.emitirRelatorioEstatistico();
+  }
 
-	@Test
-	@DisplayName("Req 04: Validar que relatório estatístico não é emitido caso o torneio seja interrompido")
-	void testEstatisticaNaoGeradaSeTorneioIncompleto() {
-		verify(repositorioMock, never()).emitirRelatorioEstatistico();
-	}
+  @Test
+  @DisplayName("Req 04: Validar que relatório estatístico não é emitido em torneio incompleto")
+  void testEstatisticaNaoGeradaSeTorneioIncompleto() {
+    verify(repositorioMock, never()).emitirRelatorioEstatistico();
+  }
 
-	@Test
-	@DisplayName("Req 05: Validar adição de item de recompensa com sucesso quando a mochila tem espaço disponível")
-	void testDropRecompensaPosVitoriaComSucesso() {
-		PokeSal vencedor = new PokeSal(TipoPokesal.CHARSAL);
+  @Test
+  @DisplayName("Req 05: Validar adição de item de recompensa com sucesso na mochila")
+  void testDropRecompensaPosVitoriaComSucesso() {
+    PokeSal vencedor = new PokeSal(TipoPokesal.CHARSAL);
 
-		vencedor.getMochila().usarItemPorIndice(0);
-		assertEquals(2, vencedor.getMochila().getItens().size());
+    vencedor.getMochila().usarItemPorIndice(0);
+    assertEquals(2, vencedor.getMochila().getItens().size());
 
-		when(geradorMock.gerarNumero(ConstantesJogo.FAIXA_MIN_SORTEIO, ConstantesJogo.FAIXA_MAX_SORTEIO))
-				.thenReturn(25);
+    when(geradorMock.gerarNumero(
+        ConstantesJogo.FAIXA_MIN_SORTEIO, ConstantesJogo.FAIXA_MAX_SORTEIO)).thenReturn(25);
 
-		gerenciadorTorneio.processarRecompensaPosBatalha(vencedor);
+    gerenciadorTorneio.processarRecompensaPosBatalha(vencedor);
 
-		assertEquals(3, vencedor.getMochila().getItens().size());
-		verify(registroBatalhaMock, times(1)).registrarUsoItem(eq("RECOMPENSA (REQ 05)"),
-				contains("ganhou " + ConstantesJogo.NOME_POCAO));
-	}
+    assertEquals(3, vencedor.getMochila().getItens().size());
+    verify(registroBatalhaMock, times(1)).registrarUsoItem(
+        eq("RECOMPENSA (REQ 05)"), contains("ganhou " + ConstantesJogo.NOME_POCAO));
+  }
 
-	@Test
-	@DisplayName("Req 05: Validar descarte do item de recompensa quando a mochila do vencedor está lotada (3 itens)")
-	void testDropRecompensaIgnoradoMochilaCheia() {
-		PokeSal vencedor = new PokeSal(TipoPokesal.CHARSAL);
+  @Test
+  @DisplayName("Req 05: Validar descarte do item de recompensa quando a mochila está lotada")
+  void testDropRecompensaIgnoradoMochilaCheia() {
+    PokeSal vencedor = new PokeSal(TipoPokesal.CHARSAL);
 
-		assertEquals(3, vencedor.getMochila().getItens().size());
+    assertEquals(3, vencedor.getMochila().getItens().size());
 
-		when(geradorMock.gerarNumero(ConstantesJogo.FAIXA_MIN_SORTEIO, ConstantesJogo.FAIXA_MAX_SORTEIO))
-				.thenReturn(70);
+    when(geradorMock.gerarNumero(
+        ConstantesJogo.FAIXA_MIN_SORTEIO, ConstantesJogo.FAIXA_MAX_SORTEIO)).thenReturn(70);
 
-		gerenciadorTorneio.processarRecompensaPosBatalha(vencedor);
+    gerenciadorTorneio.processarRecompensaPosBatalha(vencedor);
 
-		assertEquals(3, vencedor.getMochila().getItens().size());
-		verify(registroBatalhaMock, times(1)).registrarUsoItem(eq("RECOMPENSA (REQ 05)"),
-				contains("está cheia! O item " + ConstantesJogo.NOME_SUPER_POCAO + " foi descartado"));
-	}
+    assertEquals(3, vencedor.getMochila().getItens().size());
+    verify(registroBatalhaMock, times(1)).registrarUsoItem(
+        eq("RECOMPENSA (REQ 05)"), contains("está cheia! O item "
+            + ConstantesJogo.NOME_SUPER_POCAO + " foi descartado"));
+  }
 }

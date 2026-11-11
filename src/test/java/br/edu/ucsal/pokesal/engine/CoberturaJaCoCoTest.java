@@ -28,7 +28,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Suíte complementar para garantia das metas de cobertura do JaCoCo (Issue #97).
- * Valida todas as ramificações de borda dos pacotes engine, model e service.
  */
 public class CoberturaJaCoCoTest {
 
@@ -70,9 +69,20 @@ public class CoberturaJaCoCoTest {
 
     PokeSal outroFogo = new PokeSal(TipoPokesal.CYNDASAL);
     GeradorAleatorio geradorStatusSempre = new GeradorAleatorio() {
-      @Override public int gerarNumero(int min, int max) { return min; }
-      @Override public double gerarDouble() { return 0.0; }
-      @Override public boolean testarChance(double percentual) { return true; }
+      @Override
+      public int gerarNumero(int min, int max) {
+        return min;
+      }
+
+      @Override
+      public double gerarDouble() {
+        return 0.0;
+      }
+
+      @Override
+      public boolean testarChance(double percentual) {
+        return true;
+      }
     };
     CalculadoraDano calcStatus = new CalculadoraDano(geradorStatusSempre, servicoTerrenoReal);
 
@@ -88,38 +98,53 @@ public class CoberturaJaCoCoTest {
 
   @Test
   @DisplayName("Cobertura GerenciadorDeBatalha: Iniciativa por velocidade e desempate")
-  void testIniciativaEVelocidade() {
+  void testIniciativaEvelocidade() {
     PokeSal rapido = new PokeSal(TipoPokesal.CHARSAL);
     PokeSal lento = new PokeSal(TipoPokesal.BULBASAL);
-    GerenciadorDeBatalha b1 = new GerenciadorDeBatalha(lento, rapido, geradorReal, servicoTerrenoReal, clockDia, registroConsole);
+    GerenciadorDeBatalha b1 = new GerenciadorDeBatalha(lento, rapido, geradorReal,
+        servicoTerrenoReal, clockDia, registroConsole);
     b1.definirOrdemAtuacao();
     assertEquals(rapido, b1.getPrimeiroAtacante());
 
     PokeSal p1 = new PokeSal(TipoPokesal.CHARSAL);
     PokeSal p2 = new PokeSal(TipoPokesal.CYNDASAL);
     GeradorAleatorio geradorFalso = new GeradorAleatorio() {
-      @Override public int gerarNumero(int min, int max) { return min; }
-      @Override public double gerarDouble() { return 0.0; }
-      @Override public boolean testarChance(double percentual) { return false; }
+      @Override
+      public int gerarNumero(int min, int max) {
+        return min;
+      }
+
+      @Override
+      public double gerarDouble() {
+        return 0.0;
+      }
+
+      @Override
+      public boolean testarChance(double percentual) {
+        return false;
+      }
     };
-    GerenciadorDeBatalha b2 = new GerenciadorDeBatalha(p1, p2, geradorFalso, servicoTerrenoReal, clockDia, registroConsole);
+    GerenciadorDeBatalha b2 =
+        new GerenciadorDeBatalha(p1, p2, geradorFalso, servicoTerrenoReal, clockDia,
+            registroConsole);
     b2.definirOrdemAtuacao();
     assertEquals(p2, b2.getPrimeiroAtacante());
   }
 
   @Test
-  @DisplayName("Cobertura GerenciadorDeBatalha: Fim de turno com status, cura de terreno e recuo")
-  void testFimDeTurnoStatusECuraTerreno() {
+  @DisplayName("Cobertura GerenciadorDeBatalha: Status e cura de terreno")
+  void testFimDeTurnoStatusEcuraTerreno() {
     PokeSal p1 = new PokeSal(TipoPokesal.BULBASAL);
     PokeSal p2 = new PokeSal(TipoPokesal.CHIKOSAL);
-    ServicoTerreno servicoCanteiro = (clock) -> Terreno.CANTEIRO_CENTRAL;
-
-    GerenciadorDeBatalha b = new GerenciadorDeBatalha(p1, p2, geradorReal, servicoCanteiro, clockDia, registroConsole);
 
     p1.receberDano(30);
     p2.receberDano(30);
     p1.setStatusAtual(EfeitoStatus.QUEIMADO);
     p2.setStatusAtual(EfeitoStatus.ENVENENADO);
+
+    ServicoTerreno servicoCanteiro = (clock) -> Terreno.CANTEIRO_CENTRAL;
+    GerenciadorDeBatalha b =
+        new GerenciadorDeBatalha(p1, p2, geradorReal, servicoCanteiro, clockDia, registroConsole);
 
     b.aplicarDanoStatusFimDeTurno();
     b.aplicarCuraCanteiroCentral();
@@ -134,24 +159,38 @@ public class CoberturaJaCoCoTest {
   }
 
   @Test
-  @DisplayName("Cobertura GerenciadorTorneio: Interação com menus, opções inválidas e scanner de texto")
+  @DisplayName("Cobertura GerenciadorTorneio: Interação com menus e opções inválidas")
   void testGerenciadorTorneioOpcoesMenu() {
     RepositorioResultadosMemoria repo = new RepositorioResultadosMemoria();
-    GerenciadorTorneio torneio = new GerenciadorTorneio(repo, geradorReal, servicoTerrenoReal, clockDia, registroConsole);
+    GerenciadorTorneio torneio =
+        new GerenciadorTorneio(repo, geradorReal, servicoTerrenoReal, clockDia, registroConsole);
 
     PokeSal p1 = new PokeSal(TipoPokesal.CHARSAL);
     PokeSal p2 = new PokeSal(TipoPokesal.BULBASAL);
 
     Scanner scan = new Scanner("abc\n99\n2\n9\n2\n1\n1\n3\n");
-    GerenciadorTorneio.ResultadoPartida res = torneio.executarPartida("Ash", p1, "Gary", p2, scan, "TestFase");
+    GerenciadorTorneio.ResultadoPartida res =
+        torneio.executarPartida("Ash", p1, "Gary", p2, scan, "TestFase");
     assertNotNull(res);
 
     GeradorAleatorio geradorCuraTotal = new GeradorAleatorio() {
-      @Override public int gerarNumero(int min, int max) { return 90; }
-      @Override public double gerarDouble() { return 0.9; }
-      @Override public boolean testarChance(double percentual) { return false; }
+      @Override
+      public int gerarNumero(int min, int max) {
+        return 90;
+      }
+
+      @Override
+      public double gerarDouble() {
+        return 0.9;
+      }
+
+      @Override
+      public boolean testarChance(double percentual) {
+        return false;
+      }
     };
-    GerenciadorTorneio torneioRecompensa = new GerenciadorTorneio(repo, geradorCuraTotal, servicoTerrenoReal, clockDia, registroConsole);
+    GerenciadorTorneio torneioRecompensa = new GerenciadorTorneio(repo, geradorCuraTotal,
+        servicoTerrenoReal, clockDia, registroConsole);
     PokeSal vencedor = new PokeSal(TipoPokesal.CHARSAL);
     vencedor.getMochila().usarItemPorIndice(0);
     torneioRecompensa.processarRecompensaPosBatalha(vencedor);
@@ -159,8 +198,8 @@ public class CoberturaJaCoCoTest {
   }
 
   @Test
-  @DisplayName("Cobertura Services e Models: ServicoTerreno, GeradorAleatorio, RegistroBatalha e Mochila")
-  void testServicesEModelsBorda() {
+  @DisplayName("Cobertura Services e Models: Terreno, Gerador e Mochila")
+  void testServicesEmodelsBorda() {
     assertEquals(Terreno.ASFALTO_QUENTE, servicoTerrenoReal.obterTerrenoAtual(clockDia));
     assertEquals(Terreno.POCA_CHUVA, servicoTerrenoReal.obterTerrenoAtual(clockNoite));
 
