@@ -59,21 +59,21 @@ Equipe:
 
 --- FASE 01 ---
 
-[Prompt 12 - Ajuste de Linha de Impressão]
+[Prompt 11 - Ajuste de Linha de Impressão]
 "Tenho uma linha muito longa de System.out.println no console, como faço eu quebro ela sem perder o que escrevi em várias linhas mantendo a sintaxe correta?"
 
-[Prompt 13 - Formatação de Mensagens de Interface]
+[Prompt 12 - Formatação de Mensagens de Interface]
 "Me dê sugestões de textos curtos para exibir quando o Pokésal usar um item de cura na mochila para ficar com cara de log de jogo clássico de RPG."
 
-[Prompt 14 - Sintaxe Básica de Herança/Enums]
+[Prompt 13 - Sintaxe Básica de Herança/Enums]
 "Como faço para acessar o nome formatado de um Enum dentro de uma classe sem dar erro de compilação?"
 
-[Prompt 15 - Revisão de Texto]
+[Prompt 14 - Revisão de Texto]
 "Revise se não tem algum erro nas mensagens que escrevi no menu de escolha do Pokésal no console."
 
 --- FASE 03 ---
 
-[Prompt 16 - Correção de Nomenclatura no Checkstyle]
+[Prompt 15 - Correção de Nomenclatura no Checkstyle]
 "O Checkstyle deu esse erro: 'Abbreviation in name should contain no more than 1 consecutive capital letters' em um dos testes. Como faz pra escrever camelCase se a palavra tiver e?"
 
 
@@ -83,23 +83,23 @@ Equipe:
 
 --- FASE 01 ---
 
-[Prompt 18 - Depuração de Comportamento Inesperado]
+[Prompt 16 - Depuração de Comportamento Inesperado]
 "O dano de recuo a cada 3 turnos e o evento de mudança de terreno não estão aparecendo nos logs do console durante a partida. Como posso analisar o fluxo do contadorTurno no GerenciadorDeBatalha para descobrir por que os gatilhos não estão sendo acionados no final da rodada?"
 
-[Prompt 19 - Entendimento de Erro (NullPointerException)]
+[Prompt 17 - Entendimento de Erro (NullPointerException)]
 "Ao tentar usar um item da mochila no menu da Main, tá dando NullPointerException. O que tá acontecendo?"
 
-[Prompt 20 - Revisão Ortográfica de Documentação]
+[Prompt 18 - Revisão Ortográfica de Documentação]
 "Pode revisar a ortografia e os tópicos do nosso documento de Análise Estática de Requisitos? Verifica também se a formatação .md está boa."
 
 --- FASE 02 ---
 
-[Prompt 21 - Dúvida sobre Magic Numbers e Constantes em Testes JUnit]
+[Prompt 19 - Dúvida sobre Magic Numbers e Constantes em Testes JUnit]
 "Existe algum problema em usar números literais diretamente nos asserts dos testes do JUnit 5 (como assertEquals(2.0, resultado)), ou o ideal é sempre criar constantes estáticas ou usar as da classe ConstantesJogo?"
 
 --- FASE 03 ---
 
-[Prompt 22 - Formatação do Relatório Comparativo do Sonar]
+[Prompt 20 - Formatação do Relatório Comparativo do Sonar]
 "Acha melhor organizar uma tabela simples em .md pra mostrar o comparativo das métricas do SonarQube de antes e depois da refatoração ou usar prints?"
 
 
@@ -109,5 +109,5 @@ Equipe:
 
 --- FASE 03 ---
 
-[Prompt 24 - Organização em Markdown de Documentação Técnica]
+[Prompt 21 - Organização em Markdown de Documentação Técnica]
 "Verifique se a estrutura em .md da página dos diagramas UML tá certa e bem formatada com os links das imagens e legendas formatadas em negrito."
