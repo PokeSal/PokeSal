@@ -1,3 +1,6 @@
+================================================================================
+HISTÓRICO DE PROMPTS DE IA - PROJETO POKÉSAL
+================================================================================
 Instituição: Universidade Católica do Salvador – UCSal  
 Curso: Análise e Desenvolvimento de Sistemas  
 Disciplina: Testes e Qualidade de Software  
@@ -5,7 +8,7 @@ Professor: Pedro Arthur de Melo Nascimento
 
 Equipe:
 - Cauã Lopes
-- Arivaldo Teixeira
+- Arivaldo Teixeira (Neto)
 - Ryan Abade
 - Pedro Luiz
 
@@ -41,24 +44,37 @@ Equipe:
 [Prompt 08 - Estruturação do Relatório do Sonar e Matriz de Rastreabilidade]
 "Como posso estruturar a pasta de documentos final de testes da Fase 02 pra incluir tanto o resultado das suítes JUnit 5 quanto o comparativo do SonarQube (Antes x Depois) e a tabela de Matriz de Rastreabilidade?"
 
+--- FASE 03 ---
+
+[Prompt 09 - Ajustes de Alertas de Linte do Checkstyle (Google Style)]
+"O Checkstyle do Eclipse tá reclamando que a ordem dos imports tá errada no RequisitosAutoraisTest e que tem linha estourando 100 caracteres. A ordem dos imports deveria ser em ordem alfabética? Se eu quebrar a linha já resolve o 100 caracteres?"
+
+[Prompt 10 - Formatação de Tabelas de Relatório JaCoCo no README]
+"Melhore a formatação da nossa tabela de cobertura do JaCoCo pra ficar mais facil de visualizar as porcentagens de linhas e branches cobertas, sem mudar os números."
+
 
 ================================================================================
-2. REGISTRO DE PROMPTS - ARIVALDO TEIXEIRA
+2. REGISTRO DE PROMPTS - ARIVALDO TEIXEIRA (NETO)
 ================================================================================
 
 --- FASE 01 ---
 
-[Prompt 09 - Ajuste de Linha de Impressão]
+[Prompt 12 - Ajuste de Linha de Impressão]
 "Tenho uma linha muito longa de System.out.println no console, como faço eu quebro ela sem perder o que escrevi em várias linhas mantendo a sintaxe correta?"
 
-[Prompt 10 - Formatação de Mensagens de Interface]
+[Prompt 13 - Formatação de Mensagens de Interface]
 "Me dê sugestões de textos curtos para exibir quando o Pokésal usar um item de cura na mochila para ficar com cara de log de jogo clássico de RPG."
 
-[Prompt 11 - Sintaxe Básica de Herança/Enums]
+[Prompt 14 - Sintaxe Básica de Herança/Enums]
 "Como faço para acessar o nome formatado de um Enum dentro de uma classe sem dar erro de compilação?"
 
-[Prompt 12 - Revisão de Texto]
+[Prompt 15 - Revisão de Texto]
 "Revise se não tem algum erro nas mensagens que escrevi no menu de escolha do Pokésal no console."
+
+--- FASE 03 ---
+
+[Prompt 16 - Correção de Nomenclatura no Checkstyle]
+"O Checkstyle deu esse erro: 'Abbreviation in name should contain no more than 1 consecutive capital letters' em um dos testes. Como faz pra escrever camelCase se a palavra tiver e?"
 
 
 ================================================================================
@@ -67,16 +83,31 @@ Equipe:
 
 --- FASE 01 ---
 
-[Prompt 13 - Depuração de Comportamento Inesperado]
+[Prompt 18 - Depuração de Comportamento Inesperado]
 "O dano de recuo a cada 3 turnos e o evento de mudança de terreno não estão aparecendo nos logs do console durante a partida. Como posso analisar o fluxo do contadorTurno no GerenciadorDeBatalha para descobrir por que os gatilhos não estão sendo acionados no final da rodada?"
 
-[Prompt 14 - Entendimento de Erro (NullPointerException)]
+[Prompt 19 - Entendimento de Erro (NullPointerException)]
 "Ao tentar usar um item da mochila no menu da Main, tá dando NullPointerException. O que tá acontecendo?"
 
-[Prompt 15 - Revisão Ortográfica de Documentação]
+[Prompt 20 - Revisão Ortográfica de Documentação]
 "Pode revisar a ortografia e os tópicos do nosso documento de Análise Estática de Requisitos? Verifica também se a formatação .md está boa."
 
 --- FASE 02 ---
 
-[Prompt 16 - Dúvida sobre Magic Numbers e Constantes em Testes JUnit]
+[Prompt 21 - Dúvida sobre Magic Numbers e Constantes em Testes JUnit]
 "Existe algum problema em usar números literais diretamente nos asserts dos testes do JUnit 5 (como assertEquals(2.0, resultado)), ou o ideal é sempre criar constantes estáticas ou usar as da classe ConstantesJogo?"
+
+--- FASE 03 ---
+
+[Prompt 22 - Formatação do Relatório Comparativo do Sonar]
+"Acha melhor organizar uma tabela simples em .md pra mostrar o comparativo das métricas do SonarQube de antes e depois da refatoração ou usar prints?"
+
+
+================================================================================
+4. REGISTRO DE PROMPTS - PEDRO LUIZ
+================================================================================
+
+--- FASE 03 ---
+
+[Prompt 24 - Organização em Markdown de Documentação Técnica]
+"Verifique se a estrutura em .md da página dos diagramas UML tá certa e bem formatada com os links das imagens e legendas formatadas em negrito."
