@@ -1,8 +1,6 @@
 package br.edu.ucsal.pokesal.model;
 
-/**
- * Representa os efeitos de status negativos que um Pokésal pode sofrer durante a batalha.
- */
+/** Representa os efeitos de status negativos que um Pokésal pode sofrer durante a batalha. */
 public enum EfeitoStatus {
 
   /** Nenhum efeito ativo. */

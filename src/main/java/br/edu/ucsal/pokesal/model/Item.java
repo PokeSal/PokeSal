@@ -1,8 +1,6 @@
 package br.edu.ucsal.pokesal.model;
 
-/**
- * Representa os itens consumíveis que podem ser mantidos na mochila e utilizados na batalha.
- */
+/** Representa os itens consumíveis que podem ser mantidos na mochila e utilizados na batalha. */
 public class Item {
 
   private final String nome;

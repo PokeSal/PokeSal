@@ -1,8 +1,6 @@
 package br.edu.ucsal.pokesal.repository;
 
-/**
- * Contrato responsável pela persistência dos resultados e geração de estatísticas do torneio.
- */
+/** Contrato responsável pela persistência dos resultados e geração de estatísticas do torneio. */
 public interface RepositorioResultados {
 
   /**
@@ -12,8 +10,6 @@ public interface RepositorioResultados {
    */
   void salvarResultado(ResultadoBatalha resultado);
 
-  /**
-   * Compila e exibe o relatório de estatísticas finais do torneio (Requisito Autoral 04).
-   */
+  /** Compila e exibe o relatório de estatísticas finais do torneio (Requisito Autoral 04). */
   void emitirRelatorioEstatistico();
 }

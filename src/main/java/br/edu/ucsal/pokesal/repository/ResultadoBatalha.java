@@ -20,5 +20,4 @@ public record ResultadoBatalha(
     int quantidadeTurnos,
     int danoCausadoVencedor,
     int danoCausadoPerdedor,
-    int itensUsadosPartida
-) {}
+    int itensUsadosPartida) {}
