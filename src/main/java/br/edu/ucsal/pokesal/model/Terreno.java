@@ -1,8 +1,6 @@
 package br.edu.ucsal.pokesal.model;
 
-/**
- * Enumeração dos terrenos disponíveis para o combate no Estacionamento da UCSal.
- */
+/** Enumeração dos terrenos disponíveis para o combate no Estacionamento da UCSal. */
 public enum Terreno {
 
   /** Aumenta o dano de golpes do tipo Fogo em 15%. */

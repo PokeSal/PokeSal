@@ -1,14 +1,13 @@
 package br.edu.ucsal.pokesal.model;
 
-/**
- * Define os atributos base e inicializadores de cada espécie de Pokésal disponível.
- */
+/** Define os atributos base e inicializadores de cada espécie de Pokésal disponível. */
 public enum TipoPokesal {
-
-  BULBASAL("BulbaSal", 95, 57, 67, 45, 95, TipoElemental.PLANTA), CHARSAL("CharSal", 99, 56, 67, 65, 85,
-      TipoElemental.FOGO), SQUIRTSAL("SquirtSal", 94, 49, 65, 43, 90, TipoElemental.AGUA), CHIKOSAL(
-          "ChikoSal", 95, 49, 65, 45, 95, TipoElemental.PLANTA), CYNDASAL("CyndaSal", 89, 56, 67, 65, 85,
-              TipoElemental.FOGO), TOTOSAL("TotoSal", 90, 55, 66, 43, 90, TipoElemental.AGUA);
+  BULBASAL("BulbaSal", 95, 57, 67, 45, 95, TipoElemental.PLANTA),
+  CHARSAL("CharSal", 99, 56, 67, 65, 85, TipoElemental.FOGO),
+  SQUIRTSAL("SquirtSal", 94, 49, 65, 43, 90, TipoElemental.AGUA),
+  CHIKOSAL("ChikoSal", 95, 49, 65, 45, 95, TipoElemental.PLANTA),
+  CYNDASAL("CyndaSal", 89, 56, 67, 65, 85, TipoElemental.FOGO),
+  TOTOSAL("TotoSal", 90, 55, 66, 43, 90, TipoElemental.AGUA);
 
   private final String nome;
   private final int hpBase;
@@ -17,9 +16,14 @@ public enum TipoPokesal {
   private final int spdBase;
   private final int precisaoBase;
   private final TipoElemental tipo;
-  
 
-  private TipoPokesal(String nome, int hpBase, int atkBase, int defBase, int spdBase, int precisao,
+  private TipoPokesal(
+      String nome,
+      int hpBase,
+      int atkBase,
+      int defBase,
+      int spdBase,
+      int precisao,
       TipoElemental tipo) {
     this.nome = nome;
     this.hpBase = hpBase;
@@ -32,14 +36,14 @@ public enum TipoPokesal {
 
   /**
    * Obtém a precisão do Pokésal.
-   * 
+   *
    * @return A precisão do Pokésal.
    */
   public int getPrecisaoBase() {
-	return precisaoBase;
-}
+    return precisaoBase;
+  }
 
-/**
+  /**
    * Obtém o nome original do Pokésal.
    *
    * @return O nome do Pokésal.

@@ -1,8 +1,6 @@
 package br.edu.ucsal.pokesal.util;
 
-/**
- * Armazena as constantes globais do jogo PokeSal.
- */
+/** Armazena as constantes globais do jogo PokeSal. */
 public class ConstantesJogo {
 
   public static final int LIMITE_USO_ITENS = 2;
@@ -38,13 +36,10 @@ public class ConstantesJogo {
   public static final int CURA_POCAO = 20;
   public static final int CURA_SUPER_POCAO = 40;
   public static final int CURA_NENHUMA = 0;
-  
 
   public static final double CHANCE_CRITICO = 0.0625;
   public static final double MULTIPLICADOR_CRITICO = 1.5;
   public static final int DANO_ERRO = 0;
   public static final int FAIXA_MIN_SORTEIO = 1;
   public static final int FAIXA_MAX_SORTEIO = 100;
-  
-
 }
