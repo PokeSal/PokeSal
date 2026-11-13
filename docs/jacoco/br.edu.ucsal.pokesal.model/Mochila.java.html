@@ -5,62 +5,78 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Representa a mochila de itens do Pokésal com limite de capacidade e uso por
- * batalha.
- */
+/** Representa a mochila de itens do Pokésal com limite de capacidade e uso por batalha. */
 public class Mochila {
 
-	private final List&lt;Item&gt; itens;
-	private int usosNaBatalha;
+  private static final int CAPACIDADE_MAXIMA = 3;
 
-<span class="fc" id="L17">	public Mochila() {</span>
-<span class="fc" id="L18">		this.itens = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L19">		this.itens.add(new Item(ConstantesJogo.NOME_POCAO, ConstantesJogo.CURA_POCAO, ConstantesJogo.STATUS_NENHUM));</span>
-<span class="fc" id="L20">		this.itens.add(new Item(ConstantesJogo.NOME_SUPER_POCAO, ConstantesJogo.CURA_SUPER_POCAO,</span>
-				ConstantesJogo.STATUS_NENHUM));
-<span class="fc" id="L22">		this.itens.add(</span>
-				new Item(ConstantesJogo.NOME_CURA_TOTAL, ConstantesJogo.CURA_NENHUMA, ConstantesJogo.STATUS_TODOS));
-<span class="fc" id="L24">		this.usosNaBatalha = 0;</span>
-<span class="fc" id="L25">	}</span>
+  private final List&lt;Item&gt; itens;
+  private int usosNaBatalha;
 
-	public boolean podeUsarItem() {
-<span class="pc bpc" id="L28" title="1 of 4 branches missed.">		return this.usosNaBatalha &lt; ConstantesJogo.LIMITE_USO_ITENS &amp;&amp; !this.itens.isEmpty();</span>
-	}
+  /** Cria a mochila com os itens iniciais: poção, super poção e cura total. */
+<span class="fc" id="L17">  public Mochila() {</span>
+<span class="fc" id="L18">    this.itens = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L19">    this.itens.add(new Item(ConstantesJogo.NOME_POCAO, ConstantesJogo.CURA_POCAO,</span>
+        ConstantesJogo.STATUS_NENHUM));
+<span class="fc" id="L21">    this.itens.add(new Item(ConstantesJogo.NOME_SUPER_POCAO, ConstantesJogo.CURA_SUPER_POCAO,</span>
+        ConstantesJogo.STATUS_NENHUM));
+<span class="fc" id="L23">    this.itens.add(new Item(ConstantesJogo.NOME_CURA_TOTAL, ConstantesJogo.CURA_NENHUMA,</span>
+        ConstantesJogo.STATUS_TODOS));
+<span class="fc" id="L25">    this.usosNaBatalha = 0;</span>
+<span class="fc" id="L26">  }</span>
 
-	public Item usarItemPorIndice(int indice) {
-<span class="fc bfc" id="L32" title="All 2 branches covered.">		if (!podeUsarItem()) {</span>
-<span class="fc" id="L33">			throw new IllegalStateException(&quot;Limite de uso de itens atingido nesta batalha!&quot;);</span>
-		}
-<span class="pc bpc" id="L35" title="1 of 4 branches missed.">		if (indice &gt;= 0 &amp;&amp; indice &lt; this.itens.size()) {</span>
-<span class="fc" id="L36">			this.usosNaBatalha++;</span>
-<span class="fc" id="L37">			return this.itens.remove(indice);</span>
-		}
-<span class="fc" id="L39">		return null;</span>
-	}
+  /**
+   * Indica se ainda é possível usar um item nesta batalha.
+   *
+   * @return {@code true} se o limite de usos não foi atingido e há itens na mochila.
+   */
+  public boolean podeUsarItem() {
+<span class="pc bpc" id="L34" title="1 of 4 branches missed.">    return this.usosNaBatalha &lt; ConstantesJogo.LIMITE_USO_ITENS &amp;&amp; !this.itens.isEmpty();</span>
+  }
 
-	public boolean adicionarItem(Item item) {
-<span class="fc bfc" id="L43" title="All 2 branches covered.">		if (this.itens.size() &lt; 3) {</span>
-<span class="fc" id="L44">			this.itens.add(item);</span>
-<span class="fc" id="L45">			return true;</span>
-		}
-<span class="fc" id="L47">		return false;</span>
-	}
+  /**
+   * Usa e remove o item da posição informada.
+   *
+   * @param indice posição do item na mochila.
+   * @return o item removido, ou {@code null} se o índice for inválido.
+   * @throws IllegalStateException se o limite de uso de itens da batalha foi atingido.
+   */
+  public Item usarItemPorIndice(int indice) {
+<span class="fc bfc" id="L45" title="All 2 branches covered.">    if (!podeUsarItem()) {</span>
+<span class="fc" id="L46">      throw new IllegalStateException(&quot;Limite de uso de itens atingido nesta batalha!&quot;);</span>
+    }
+<span class="pc bpc" id="L48" title="1 of 4 branches missed.">    if (indice &gt;= 0 &amp;&amp; indice &lt; this.itens.size()) {</span>
+<span class="fc" id="L49">      this.usosNaBatalha++;</span>
+<span class="fc" id="L50">      return this.itens.remove(indice);</span>
+    }
+<span class="fc" id="L52">    return null;</span>
+  }
 
-	/**
-	 * Reseta o contador de usos para renovar a cota de 2 itens na próxima partida
-	 * do torneio.
-	 */
-	public void resetarUsosBatalha() {
-<span class="fc" id="L55">		this.usosNaBatalha = 0;</span>
-<span class="fc" id="L56">	}</span>
+  /**
+   * Adiciona um item à mochila, respeitando a capacidade máxima.
+   *
+   * @param item item a ser adicionado.
+   * @return {@code true} se foi adicionado; {@code false} se a mochila está cheia.
+   */
+  public boolean adicionarItem(Item item) {
+<span class="fc bfc" id="L62" title="All 2 branches covered.">    if (this.itens.size() &lt; CAPACIDADE_MAXIMA) {</span>
+<span class="fc" id="L63">      this.itens.add(item);</span>
+<span class="fc" id="L64">      return true;</span>
+    }
+<span class="fc" id="L66">    return false;</span>
+  }
 
-	public List&lt;Item&gt; getItens() {
-<span class="fc" id="L59">		return Collections.unmodifiableList(itens);</span>
-	}
+  /** Reseta o contador de usos para renovar a cota de 2 itens na próxima partida do torneio. */
+  public void resetarUsosBatalha() {
+<span class="fc" id="L71">    this.usosNaBatalha = 0;</span>
+<span class="fc" id="L72">  }</span>
 
-	public int getUsosNaBatalha() {
-<span class="nc" id="L63">		return usosNaBatalha;</span>
-	}
+  public List&lt;Item&gt; getItens() {
+<span class="fc" id="L75">    return Collections.unmodifiableList(itens);</span>
+  }
+
+  public int getUsosNaBatalha() {
+<span class="nc" id="L79">    return usosNaBatalha;</span>
+  }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -44,6 +44,11 @@ As responsabilidades foram distribuídas para evitar classes sobrecarregadas:
 ### 2.3 Princípio Aberto/Fechado (OCP)
 Com a definição das interfaces, o sistema pode receber novas implementações sem alterar o código das regras de negócio. Um novo repositório baseado em banco relacional ou em arquivo pode ser acoplado ao GerenciadorTorneio sem qualquer mudança em sua implementação interna.
 
+### 2.4 Evolução Arquitetural e Descontinuação da Rotação Fixa de Terreno (Requisito 02)
+Nas Fases 01 e 02, o sistema possuía como requisito autoral a alternância de terreno a cada 3 turnos (representada pela constante `ConstantesJogo.MUDANCA_TERRENO_TURNO = 3`). No entanto, a especificação da Fase 03 introduziu o requisito formal de Serviço de Terreno dependente de condições temporais e climáticas via `ServicoTerreno` e `java.time.Clock`.
+
+Em alinhamento direto com o docente em sala de aula (registrado em ata de reunião da equipe), a regra interna de rotação fixa a cada 3 turnos foi formalmente descontinuada. A obtenção do terreno passou a ser delegada à abstração `ServicoTerreno`, reduzindo o acoplamento interno da batalha e transferindo o controle do ambiente para um colaborador externo injetado, permitindo o isolamento completo por testes unitários com Mockito.
+
 ---
 
 ## 3. Classes Refatoradas

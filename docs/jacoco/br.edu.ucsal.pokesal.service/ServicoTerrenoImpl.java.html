@@ -4,16 +4,24 @@ import br.edu.ucsal.pokesal.model.Terreno;
 import java.time.Clock;
 import java.time.LocalTime;
 
-/**
- * Implementação concreta do serviço de terreno baseada em horário.
- */
-<span class="fc" id="L10">public class ServicoTerrenoImpl implements ServicoTerreno {</span>
+/** Implementação concreta do serviço de terreno baseada em horário. */
+<span class="fc" id="L8">public class ServicoTerrenoImpl implements ServicoTerreno {</span>
 
-	@Override
-	public Terreno obterTerrenoAtual(Clock clock) {
-<span class="fc" id="L14">		LocalTime horaAtual = LocalTime.now(clock);</span>
-<span class="pc bpc" id="L15" title="1 of 4 branches missed.">		boolean ehDia = horaAtual.isAfter(LocalTime.of(6, 0)) &amp;&amp; horaAtual.isBefore(LocalTime.of(18, 0));</span>
-<span class="fc bfc" id="L16" title="All 2 branches covered.">		return ehDia ? Terreno.ASFALTO_QUENTE : Terreno.POCA_CHUVA;</span>
-	}
+<span class="fc" id="L10">  private static final LocalTime INICIO_ASFALTO_QUENTE = LocalTime.of(6, 0);</span>
+<span class="fc" id="L11">  private static final LocalTime FIM_ASFALTO_QUENTE = LocalTime.of(14, 0);</span>
+<span class="fc" id="L12">  private static final LocalTime FIM_CANTEIRO_CENTRAL = LocalTime.of(18, 0);</span>
+
+  @Override
+  public Terreno obterTerrenoAtual(Clock clock) {
+<span class="fc" id="L16">    LocalTime horaAtual = LocalTime.now(clock);</span>
+<span class="pc bpc" id="L17" title="1 of 4 branches missed.">    if (!horaAtual.isBefore(INICIO_ASFALTO_QUENTE) &amp;&amp; horaAtual.isBefore(FIM_ASFALTO_QUENTE)) {</span>
+<span class="fc" id="L18">      return Terreno.ASFALTO_QUENTE;</span>
+    }
+<span class="pc bpc" id="L20" title="1 of 4 branches missed.">    if (!horaAtual.isBefore(FIM_ASFALTO_QUENTE) &amp;&amp; horaAtual.isBefore(FIM_CANTEIRO_CENTRAL)) {</span>
+<span class="fc" id="L21">      return Terreno.CANTEIRO_CENTRAL;</span>
+    }
+<span class="fc" id="L23">    return Terreno.POCA_CHUVA;</span>
+  }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Item.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PokeSal</a> &gt; <a href="index.source.html" class="el_package">br.edu.ucsal.pokesal.model</a> &gt; <span class="el_source">Item.java</span></div><h1>Item.java</h1><pre class="source lang-java linenums">package br.edu.ucsal.pokesal.model;
 
-/**
- * Representa os itens consumíveis que podem ser mantidos na mochila e utilizados na batalha.
- */
+/** Representa os itens consumíveis que podem ser mantidos na mochila e utilizados na batalha. */
 public class Item {
 
   private final String nome;
@@ -16,11 +14,11 @@ public class Item {
    * @param pontosCura Quantidade de pontos de HP restaurados pelo item.
    * @param curaStatus Tipo de status removido pelo item (&quot;NENHUM&quot; ou &quot;TODOS&quot;).
    */
-<span class="fc" id="L19">  public Item(String nome, int pontosCura, String curaStatus) {</span>
-<span class="fc" id="L20">    this.nome = nome;</span>
-<span class="fc" id="L21">    this.pontosCura = pontosCura;</span>
-<span class="fc" id="L22">    this.curaStatus = curaStatus;</span>
-<span class="fc" id="L23">  }</span>
+<span class="fc" id="L17">  public Item(String nome, int pontosCura, String curaStatus) {</span>
+<span class="fc" id="L18">    this.nome = nome;</span>
+<span class="fc" id="L19">    this.pontosCura = pontosCura;</span>
+<span class="fc" id="L20">    this.curaStatus = curaStatus;</span>
+<span class="fc" id="L21">  }</span>
 
   /**
    * Obtém o nome formatado do item.
@@ -28,7 +26,7 @@ public class Item {
    * @return O nome do item.
    */
   public String getNome() {
-<span class="fc" id="L31">    return nome;</span>
+<span class="fc" id="L29">    return nome;</span>
   }
 
   /**
@@ -37,7 +35,7 @@ public class Item {
    * @return Os pontos de cura.
    */
   public int getPontosCura() {
-<span class="fc" id="L40">    return pontosCura;</span>
+<span class="fc" id="L38">    return pontosCura;</span>
   }
 
   /**
@@ -46,7 +44,7 @@ public class Item {
    * @return A regra de cura de status.
    */
   public String getCuraStatus() {
-<span class="fc" id="L49">    return curaStatus;</span>
+<span class="fc" id="L47">    return curaStatus;</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -6,61 +6,59 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//É bom pensar se essas estatísticas estao boas pra pegar ou se podemos trocar por outras
+// É bom pensar se essas estatísticas estao boas pra pegar ou se podemos trocar por outras
 
-/**
- * Implementação em memória do repositório com cálculo estatístico acumulado.
- */
-<span class="fc" id="L14">public class RepositorioResultadosMemoria implements RepositorioResultados {</span>
+/** Implementação em memória do repositório com cálculo estatístico acumulado. */
+<span class="fc" id="L12">public class RepositorioResultadosMemoria implements RepositorioResultados {</span>
 
-<span class="fc" id="L16">	private final List&lt;ResultadoBatalha&gt; resultados = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L14">  private final List&lt;ResultadoBatalha&gt; resultados = new ArrayList&lt;&gt;();</span>
 
-	@Override
-	public void salvarResultado(ResultadoBatalha resultado) {
-<span class="fc" id="L20">		resultados.add(resultado);</span>
-<span class="fc" id="L21">		System.out.println(&quot;[REPOSITÓRIO] Resultado registrado: Vencedor &quot; + resultado.treinadorVencedor() + &quot; (&quot;</span>
-<span class="fc" id="L22">				+ resultado.quantidadeTurnos() + &quot; turnos)&quot;);</span>
-<span class="fc" id="L23">	}</span>
+  @Override
+  public void salvarResultado(ResultadoBatalha resultado) {
+<span class="fc" id="L18">    resultados.add(resultado);</span>
+<span class="fc" id="L19">    System.out.println(&quot;[REPOSITÓRIO] Resultado registrado: Vencedor &quot;</span>
+<span class="fc" id="L20">        + resultado.treinadorVencedor() + &quot; (&quot; + resultado.quantidadeTurnos() + &quot; turnos)&quot;);</span>
+<span class="fc" id="L21">  }</span>
 
-	@Override
-	public void emitirRelatorioEstatistico() {
-<span class="fc" id="L27">		System.out.println(&quot;\n📊 ==================================================&quot;);</span>
-<span class="fc" id="L28">		System.out.println(&quot;   RELATÓRIO ESTATÍSTICO DO TORNEIO (REQ AUTORAL 04)&quot;);</span>
-<span class="fc" id="L29">		System.out.println(&quot;==================================================&quot;);</span>
+  @Override
+  public void emitirRelatorioEstatistico() {
+<span class="fc" id="L25">    System.out.println(&quot;\n📊 ==================================================&quot;);</span>
+<span class="fc" id="L26">    System.out.println(&quot;   RELATÓRIO ESTATÍSTICO DO TORNEIO (REQ AUTORAL 04)&quot;);</span>
+<span class="fc" id="L27">    System.out.println(&quot;==================================================&quot;);</span>
 
-<span class="pc bpc" id="L31" title="1 of 2 branches missed.">		if (resultados.isEmpty()) {</span>
-<span class="nc" id="L32">			System.out.println(&quot;Nenhuma partida foi registrada no repositório.&quot;);</span>
-<span class="nc" id="L33">			System.out.println(&quot;==================================================\n&quot;);</span>
-<span class="nc" id="L34">			return;</span>
-		}
+<span class="pc bpc" id="L29" title="1 of 2 branches missed.">    if (resultados.isEmpty()) {</span>
+<span class="nc" id="L30">      System.out.println(&quot;Nenhuma partida foi registrada no repositório.&quot;);</span>
+<span class="nc" id="L31">      System.out.println(&quot;==================================================\n&quot;);</span>
+<span class="nc" id="L32">      return;</span>
+    }
 
-<span class="fc" id="L37">		Map&lt;String, Integer&gt; danoPorPokesal = new HashMap&lt;&gt;();</span>
-<span class="fc bfc" id="L38" title="All 2 branches covered.">		for (ResultadoBatalha res : resultados) {</span>
-<span class="fc" id="L39">			danoPorPokesal.put(res.pokesalVencedor(),</span>
-<span class="fc" id="L40">					danoPorPokesal.getOrDefault(res.pokesalVencedor(), 0) + res.danoCausadoVencedor());</span>
-<span class="fc" id="L41">			danoPorPokesal.put(res.pokesalPerdedor(),</span>
-<span class="fc" id="L42">					danoPorPokesal.getOrDefault(res.pokesalPerdedor(), 0) + res.danoCausadoPerdedor());</span>
-<span class="fc" id="L43">		}</span>
+<span class="fc" id="L35">    Map&lt;String, Integer&gt; danoPorPokesal = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">    for (ResultadoBatalha res : resultados) {</span>
+<span class="fc" id="L37">      danoPorPokesal.put(res.pokesalVencedor(),</span>
+<span class="fc" id="L38">          danoPorPokesal.getOrDefault(res.pokesalVencedor(), 0) + res.danoCausadoVencedor());</span>
+<span class="fc" id="L39">      danoPorPokesal.put(res.pokesalPerdedor(),</span>
+<span class="fc" id="L40">          danoPorPokesal.getOrDefault(res.pokesalPerdedor(), 0) + res.danoCausadoPerdedor());</span>
+<span class="fc" id="L41">    }</span>
 
-<span class="fc" id="L45">		Map.Entry&lt;String, Integer&gt; mvp = danoPorPokesal.entrySet().stream().max(Map.Entry.comparingByValue())</span>
-<span class="fc" id="L46">				.orElse(null);</span>
+<span class="fc" id="L43">    Map.Entry&lt;String, Integer&gt; mvp =</span>
+<span class="fc" id="L44">        danoPorPokesal.entrySet().stream().max(Map.Entry.comparingByValue()).orElse(null);</span>
 
-<span class="fc" id="L48">		ResultadoBatalha partidaMaisLonga = resultados.stream()</span>
-<span class="fc" id="L49">				.max(Comparator.comparingInt(ResultadoBatalha::quantidadeTurnos)).orElse(resultados.get(0));</span>
+<span class="fc" id="L46">    ResultadoBatalha partidaMaisLonga = resultados.stream()</span>
+<span class="fc" id="L47">        .max(Comparator.comparingInt(ResultadoBatalha::quantidadeTurnos)).orElse(resultados.get(0));</span>
 
-<span class="fc" id="L51">		int totalItensUsados = resultados.stream().mapToInt(ResultadoBatalha::itensUsadosPartida).sum();</span>
+<span class="fc" id="L49">    int totalItensUsados = resultados.stream().mapToInt(ResultadoBatalha::itensUsadosPartida).sum();</span>
 
-<span class="fc" id="L53">		System.out.println(&quot;⭐ MVP do Torneio: &quot;</span>
-<span class="pc bpc" id="L54" title="1 of 2 branches missed.">				+ (mvp != null ? mvp.getKey() + &quot; (&quot; + mvp.getValue() + &quot; de dano total)&quot; : &quot;N/A&quot;));</span>
-<span class="fc" id="L55">		System.out.println(&quot;⏱️  Partida Mais Duradoura: &quot; + partidaMaisLonga.treinadorVencedor() + &quot; VS &quot;</span>
-<span class="fc" id="L56">				+ partidaMaisLonga.treinadorPerdedor() + &quot; (&quot; + partidaMaisLonga.quantidadeTurnos() + &quot; turnos)&quot;);</span>
-<span class="fc" id="L57">		System.out.println(&quot;🎒 Consumo de Suprimentos: &quot; + totalItensUsados + &quot; item(ns) utilizado(s)&quot;);</span>
-<span class="fc" id="L58">		System.out.println(&quot;==================================================\n&quot;);</span>
-<span class="fc" id="L59">	}</span>
+<span class="fc" id="L51">    System.out.println(&quot;⭐ MVP do Torneio: &quot;</span>
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">        + (mvp != null ? mvp.getKey() + &quot; (&quot; + mvp.getValue() + &quot; de dano total)&quot; : &quot;N/A&quot;));</span>
+<span class="fc" id="L53">    System.out.println(&quot;⏱️  Partida Mais Duradoura: &quot; + partidaMaisLonga.treinadorVencedor()</span>
+<span class="fc" id="L54">        + &quot; VS &quot; + partidaMaisLonga.treinadorPerdedor() + &quot; (&quot; + partidaMaisLonga.quantidadeTurnos()</span>
+        + &quot; turnos)&quot;);
+<span class="fc" id="L56">    System.out.println(&quot;🎒 Consumo de Suprimentos: &quot; + totalItensUsados + &quot; item(ns) utilizado(s)&quot;);</span>
+<span class="fc" id="L57">    System.out.println(&quot;==================================================\n&quot;);</span>
+<span class="fc" id="L58">  }</span>
 
-	public List&lt;ResultadoBatalha&gt; getResultados() {
-<span class="fc" id="L62">		return resultados;</span>
-	}
-
+  public List&lt;ResultadoBatalha&gt; getResultados() {
+<span class="fc" id="L61">    return resultados;</span>
+  }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

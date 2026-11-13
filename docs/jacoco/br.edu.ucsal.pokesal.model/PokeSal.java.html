@@ -2,9 +2,7 @@
 
 import br.edu.ucsal.pokesal.util.ConstantesJogo;
 
-/**
- * Entidade principal que representa o Pokésal no combate.
- */
+/** Entidade principal que representa o Pokésal no combate. */
 public class PokeSal {
 
   private final String nome;
@@ -19,90 +17,165 @@ public class PokeSal {
   private final Mochila mochila;
   private int ataquesConsecutivos;
 
-<span class="fc" id="L22">  public PokeSal(TipoPokesal tipoPokesal) {</span>
-<span class="fc" id="L23">    this.nome = tipoPokesal.getNomeFormatado();</span>
-<span class="fc" id="L24">    this.tipo = tipoPokesal.getTipo();</span>
-<span class="fc" id="L25">    this.hpMaximo = tipoPokesal.getHpBase();</span>
-<span class="fc" id="L26">    this.hpAtual = tipoPokesal.getHpBase();</span>
-<span class="fc" id="L27">    this.atk = tipoPokesal.getAtkBase();</span>
-<span class="fc" id="L28">    this.def = tipoPokesal.getDefBase();</span>
-<span class="fc" id="L29">    this.spd = tipoPokesal.getSpdBase();</span>
-<span class="fc" id="L30">    this.precisao = tipoPokesal.getPrecisaoBase();</span>
-<span class="fc" id="L31">    this.statusAtual = EfeitoStatus.NENHUM;</span>
-<span class="fc" id="L32">    this.mochila = new Mochila();</span>
-<span class="fc" id="L33">    this.ataquesConsecutivos = 0;</span>
-<span class="fc" id="L34">  }</span>
+  /**
+   * Cria um Pokésal a partir dos atributos base do tipo informado.
+   *
+   * @param tipoPokesal tipo de Pokésal que define os atributos iniciais.
+   */
+<span class="fc" id="L25">  public PokeSal(TipoPokesal tipoPokesal) {</span>
+<span class="fc" id="L26">    this.nome = tipoPokesal.getNomeFormatado();</span>
+<span class="fc" id="L27">    this.tipo = tipoPokesal.getTipo();</span>
+<span class="fc" id="L28">    this.hpMaximo = tipoPokesal.getHpBase();</span>
+<span class="fc" id="L29">    this.hpAtual = tipoPokesal.getHpBase();</span>
+<span class="fc" id="L30">    this.atk = tipoPokesal.getAtkBase();</span>
+<span class="fc" id="L31">    this.def = tipoPokesal.getDefBase();</span>
+<span class="fc" id="L32">    this.spd = tipoPokesal.getSpdBase();</span>
+<span class="fc" id="L33">    this.precisao = tipoPokesal.getPrecisaoBase();</span>
+<span class="fc" id="L34">    this.statusAtual = EfeitoStatus.NENHUM;</span>
+<span class="fc" id="L35">    this.mochila = new Mochila();</span>
+<span class="fc" id="L36">    this.ataquesConsecutivos = 0;</span>
+<span class="fc" id="L37">  }</span>
 
+  /**
+   * Indica se a passiva defensiva está ativa (HP baixo, porém vivo).
+   *
+   * @return {@code true} se a passiva defensiva está ativa.
+   */
   public boolean isPassivaDefensivaAtiva() {
-<span class="pc bpc" id="L37" title="1 of 4 branches missed.">    return this.hpAtual &gt; 0</span>
+<span class="pc bpc" id="L45" title="1 of 4 branches missed.">    return this.hpAtual &gt; 0</span>
         &amp;&amp; (double) this.hpAtual / this.hpMaximo &lt;= ConstantesJogo.LIMITAR_PASSIVA_DEFESA;
   }
 
+  /**
+   * Retorna a defesa atual, considerando o bônus da passiva defensiva.
+   *
+   * @return valor de defesa efetivo.
+   */
   public int getDef() {
-<span class="fc bfc" id="L42" title="All 2 branches covered.">    if (isPassivaDefensivaAtiva()) {</span>
-<span class="fc" id="L43">      return (int) Math.round(this.def * ConstantesJogo.MULTIPLICADOR_PASSIVA_DEFESA);</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">    if (isPassivaDefensivaAtiva()) {</span>
+<span class="fc" id="L56">      return (int) Math.round(this.def * ConstantesJogo.MULTIPLICADOR_PASSIVA_DEFESA);</span>
     }
-<span class="fc" id="L45">    return this.def;</span>
+<span class="fc" id="L58">    return this.def;</span>
   }
 
+  /**
+   * Reduz o HP atual, sem permitir valor negativo.
+   *
+   * @param dano quantidade de dano recebido.
+   */
   public void receberDano(int dano) {
-<span class="fc" id="L49">    this.hpAtual = Math.max(0, this.hpAtual - dano);</span>
-<span class="fc" id="L50">  }</span>
+<span class="fc" id="L67">    this.hpAtual = Math.max(0, this.hpAtual - dano);</span>
+<span class="fc" id="L68">  }</span>
 
+  /**
+   * Restaura HP, sem ultrapassar o HP máximo.
+   *
+   * @param quantidade pontos de HP a restaurar.
+   */
   public void curar(int quantidade) {
-<span class="fc" id="L53">    this.hpAtual = Math.min(this.hpMaximo, this.hpAtual + quantidade);</span>
-<span class="fc" id="L54">  }</span>
+<span class="fc" id="L76">    this.hpAtual = Math.min(this.hpMaximo, this.hpAtual + quantidade);</span>
+<span class="fc" id="L77">  }</span>
 
+  /**
+   * Usa o item da mochila na posição informada, se ele tiver efeito.
+   *
+   * @param indice posição do item na mochila.
+   * @return {@code true} se o item foi efetivamente utilizado.
+   * @throws IndexOutOfBoundsException se o índice do item for inválido.
+   */
   public boolean usarItemEspecifico(int indice) {
-<span class="pc bpc" id="L57" title="1 of 2 branches missed.">    if (!this.mochila.podeUsarItem()) {</span>
-<span class="nc" id="L58">      return false;</span>
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">    if (!this.mochila.podeUsarItem()) {</span>
+<span class="nc" id="L88">      return false;</span>
     }
 
-<span class="fc" id="L61">    Item item = this.mochila.getItens().get(indice);</span>
-<span class="fc" id="L62">    boolean itemUtilizado = false;</span>
+<span class="fc" id="L91">    Item item = this.mochila.getItens().get(indice);</span>
+<span class="fc" id="L92">    boolean itemUtilizado = false;</span>
 
-<span class="fc bfc" id="L64" title="All 2 branches covered.">    if (ConstantesJogo.STATUS_TODOS.equalsIgnoreCase(item.getCuraStatus())) {</span>
-<span class="fc bfc" id="L65" title="All 2 branches covered.">      if (this.statusAtual != EfeitoStatus.NENHUM) {</span>
-<span class="fc" id="L66">        this.statusAtual = EfeitoStatus.NENHUM;</span>
-<span class="fc" id="L67">        itemUtilizado = true;</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">    if (ConstantesJogo.STATUS_TODOS.equalsIgnoreCase(item.getCuraStatus())) {</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">      if (this.statusAtual != EfeitoStatus.NENHUM) {</span>
+<span class="fc" id="L96">        this.statusAtual = EfeitoStatus.NENHUM;</span>
+<span class="fc" id="L97">        itemUtilizado = true;</span>
       }
-<span class="pc bpc" id="L69" title="1 of 2 branches missed.">    } else if (item.getPontosCura() &gt; 0) {</span>
-<span class="pc bpc" id="L70" title="1 of 2 branches missed.">      if (this.hpAtual &lt; this.hpMaximo) {</span>
-<span class="nc" id="L71">        curar(item.getPontosCura());</span>
-<span class="nc" id="L72">        itemUtilizado = true;</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">    } else if (item.getPontosCura() &gt; 0) {</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">      if (this.hpAtual &lt; this.hpMaximo) {</span>
+<span class="fc" id="L101">        curar(item.getPontosCura());</span>
+<span class="fc" id="L102">        itemUtilizado = true;</span>
       }
     }
 
-<span class="fc bfc" id="L76" title="All 2 branches covered.">    if (itemUtilizado) {</span>
-<span class="fc" id="L77">      this.mochila.usarItemPorIndice(indice);</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">    if (itemUtilizado) {</span>
+<span class="fc" id="L107">      this.mochila.usarItemPorIndice(indice);</span>
     }
 
-<span class="fc" id="L80">    return itemUtilizado;</span>
+<span class="fc" id="L110">    return itemUtilizado;</span>
   }
 
+  /**
+   * Adiciona um item de recompensa à mochila.
+   *
+   * @param item item recebido.
+   * @return {@code true} se o item coube na mochila.
+   */
   public boolean receberRecompensa(Item item) {
-<span class="fc" id="L84">    return this.mochila.adicionarItem(item);</span>
+<span class="fc" id="L120">    return this.mochila.adicionarItem(item);</span>
   }
 
+  /**
+   * Incrementa o contador de ataques consecutivos.
+   *
+   * @return novo total de ataques consecutivos.
+   */
   public int incrementarAtaquesConsecutivos() {
-<span class="fc" id="L88">    this.ataquesConsecutivos++;</span>
-<span class="fc" id="L89">    return this.ataquesConsecutivos;</span>
+<span class="fc" id="L129">    this.ataquesConsecutivos++;</span>
+<span class="fc" id="L130">    return this.ataquesConsecutivos;</span>
   }
 
   public boolean isVivo() {
-<span class="fc bfc" id="L93" title="All 2 branches covered.">    return this.hpAtual &gt; 0;</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">    return this.hpAtual &gt; 0;</span>
   }
 
-<span class="fc" id="L96">  public String getNome() { return nome; }</span>
-<span class="fc" id="L97">  public TipoElemental getTipo() { return tipo; }</span>
-<span class="fc" id="L98">  public int getHpMaximo() { return hpMaximo; }</span>
-<span class="fc" id="L99">  public int getHpAtual() { return hpAtual; }</span>
-<span class="fc" id="L100">  public int getAtk() { return atk; }</span>
-<span class="fc" id="L101">  public int getSpd() { return spd; }</span>
-<span class="fc" id="L102">  public int getPrecisao() { return precisao; }</span>
-<span class="fc" id="L103">  public EfeitoStatus getStatusAtual() { return statusAtual; }</span>
-<span class="fc" id="L104">  public void setStatusAtual(EfeitoStatus statusAtual) { this.statusAtual = statusAtual; }</span>
-<span class="fc" id="L105">  public Mochila getMochila() { return mochila; }</span>
-<span class="nc" id="L106">  public int getAtaquesConsecutivos() { return ataquesConsecutivos; }</span>
+  public String getNome() {
+<span class="fc" id="L138">    return nome;</span>
+  }
+
+  public TipoElemental getTipo() {
+<span class="fc" id="L142">    return tipo;</span>
+  }
+
+  public int getHpMaximo() {
+<span class="fc" id="L146">    return hpMaximo;</span>
+  }
+
+  public int getHpAtual() {
+<span class="fc" id="L150">    return hpAtual;</span>
+  }
+
+  public int getAtk() {
+<span class="fc" id="L154">    return atk;</span>
+  }
+
+  public int getSpd() {
+<span class="fc" id="L158">    return spd;</span>
+  }
+
+  public int getPrecisao() {
+<span class="fc" id="L162">    return precisao;</span>
+  }
+
+  public EfeitoStatus getStatusAtual() {
+<span class="fc" id="L166">    return statusAtual;</span>
+  }
+
+  public void setStatusAtual(EfeitoStatus statusAtual) {
+<span class="fc" id="L170">    this.statusAtual = statusAtual;</span>
+<span class="fc" id="L171">  }</span>
+
+  public Mochila getMochila() {
+<span class="fc" id="L174">    return mochila;</span>
+  }
+
+  public int getAtaquesConsecutivos() {
+<span class="nc" id="L178">    return ataquesConsecutivos;</span>
+  }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

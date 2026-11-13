@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Terreno.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PokeSal</a> &gt; <a href="index.source.html" class="el_package">br.edu.ucsal.pokesal.model</a> &gt; <span class="el_source">Terreno.java</span></div><h1>Terreno.java</h1><pre class="source lang-java linenums">package br.edu.ucsal.pokesal.model;
 
-/**
- * Enumeração dos terrenos disponíveis para o combate no Estacionamento da UCSal.
- */
-<span class="fc" id="L6">public enum Terreno {</span>
+/** Enumeração dos terrenos disponíveis para o combate no Estacionamento da UCSal. */
+<span class="fc" id="L4">public enum Terreno {</span>
 
   /** Aumenta o dano de golpes do tipo Fogo em 15%. */
-<span class="fc" id="L9">  ASFALTO_QUENTE(&quot;ASFALTO QUENTE&quot;),</span>
+<span class="fc" id="L7">  ASFALTO_QUENTE(&quot;ASFALTO QUENTE&quot;),</span>
 
   /** Aumenta o dano de golpes do tipo Água em 10%. */
-<span class="fc" id="L12">  POCA_CHUVA(&quot;POÇA DE CHUVA&quot;),</span>
+<span class="fc" id="L10">  POCA_CHUVA(&quot;POÇA DE CHUVA&quot;),</span>
 
   /** Regenera 5% do HP máximo de Pokésais do tipo Planta a cada turno. */
-<span class="fc" id="L15">  CANTEIRO_CENTRAL(&quot;CANTEIRO CENTRAL&quot;);</span>
+<span class="fc" id="L13">  CANTEIRO_CENTRAL(&quot;CANTEIRO CENTRAL&quot;);</span>
 
   private final String nomeFormatado;
 
-<span class="fc" id="L19">  private Terreno(String nomeFormatado) {</span>
-<span class="fc" id="L20">    this.nomeFormatado = nomeFormatado;</span>
-<span class="fc" id="L21">  }</span>
+<span class="fc" id="L17">  private Terreno(String nomeFormatado) {</span>
+<span class="fc" id="L18">    this.nomeFormatado = nomeFormatado;</span>
+<span class="fc" id="L19">  }</span>
 
   /**
    * Obtém o nome amigável do terreno para exibição na interface do console.
@@ -26,7 +24,7 @@
    * @return O nome formatado do terreno.
    */
   public String getNomeFormatado() {
-<span class="fc" id="L29">    return nomeFormatado;</span>
+<span class="fc" id="L27">    return nomeFormatado;</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

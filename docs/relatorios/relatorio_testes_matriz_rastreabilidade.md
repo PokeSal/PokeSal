@@ -90,7 +90,7 @@ Implementados em MecanicasBatalhaTest, TorneioRepositorioTest e RequisitosAutora
 - Resultado esperado: dano diurno superior ao dano noturno.
 - Status: Aprovado.
 
-### CT11: testRetornosEmSequenciaEAtLeastOnce
+### CT11: testRetornosEmSequenciaComAtLeastOnce
 - Objetivo: validar retornos em sequência via thenReturn e verificação com atLeastOnce.
 - Mocks: GeradorAleatorio retornando false e true em sequência para a chance de crítico; RegistroBatalha verificado com atLeastOnce.
 - Resultado esperado: 1º ataque sem crítico e 2º ataque com crítico (dano 1.5x); auditor chamado ao menos uma vez.

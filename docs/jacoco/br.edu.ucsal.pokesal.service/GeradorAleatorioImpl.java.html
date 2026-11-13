@@ -2,29 +2,35 @@
 
 import java.util.Random;
 
+/**
+ * Implementação de {@link GeradorAleatorio} baseada em {@link java.util.Random}.
+ */
 public class GeradorAleatorioImpl implements GeradorAleatorio {
 
-	private final Random random;
-<span class="fc" id="L8">	public GeradorAleatorioImpl(Random random) {</span>
-<span class="fc" id="L9">	this.random = random;</span>
-<span class="fc" id="L10">	}</span>
-	
-	
-	@Override
-	public int gerarNumero(int min, int max) {
-<span class="fc" id="L15">		return min + random.nextInt((max - min) + 1);</span>
-	}
+  private final Random random;
 
-	@Override
-	public double gerarDouble() {
-<span class="fc" id="L20">		return random.nextDouble();</span>
-	}
+  /**
+   * Construtor da classe GeradorAleatorioImpl.
+   *
+   * @param random Instância do gerador aleatório Java.
+   */
+<span class="fc" id="L17">  public GeradorAleatorioImpl(Random random) {</span>
+<span class="fc" id="L18">    this.random = random;</span>
+<span class="fc" id="L19">  }</span>
 
+  @Override
+  public int gerarNumero(int min, int max) {
+<span class="fc" id="L23">    return min + random.nextInt((max - min) + 1);</span>
+  }
 
-	@Override
-	public boolean testarChance(double percentual) {
-<span class="pc bpc" id="L26" title="1 of 2 branches missed.">		return this.random.nextDouble() &lt; percentual;</span>
-	}
+  @Override
+  public double gerarDouble() {
+<span class="fc" id="L28">    return random.nextDouble();</span>
+  }
 
+  @Override
+  public boolean testarChance(double percentual) {
+<span class="fc bfc" id="L33" title="All 2 branches covered.">    return this.random.nextDouble() &lt; percentual;</span>
+  }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
