@@ -77,9 +77,7 @@ public class GerenciadorTorneio {
 
     while (pokeSal1.isVivo() && pokeSal2.isVivo()) {
       PokeSal atacante = vezDoTreinador1 ? pokeSal1 : pokeSal2;
-      PokeSal defensor = vezDoTreinador1 ? pokeSal2 : pokeSal1;
       String nomeTreinadorDaVez = vezDoTreinador1 ? nomeT1 : nomeT2;
-      String nomeTreinadorAdversario = vezDoTreinador1 ? nomeT2 : nomeT1;
 
       System.out.println("\n--------------------------------------------------");
       System.out.println("STATUS DA PARTIDA:");
@@ -102,6 +100,9 @@ public class GerenciadorTorneio {
       try {
         System.out.print("Digite a opção desejada: ");
         acaoEscolhida = scan.nextInt();
+
+        PokeSal defensor = vezDoTreinador1 ? pokeSal2 : pokeSal1;
+        String nomeTreinadorAdversario = vezDoTreinador1 ? nomeT2 : nomeT1;
 
         switch (acaoEscolhida) {
           case 1:

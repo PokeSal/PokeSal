@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -26,8 +25,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.InOrder;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -114,7 +113,7 @@ public class MecanicasBatalhaTest {
 
   @Test
   @DisplayName("Validar retornos em sequência com thenReturn() e verificação com atLeastOnce()")
-  void testRetornosEmSequenciaEAtLeastOnce() {
+  void testRetornosEmSequenciaComAtLeastOnce() {
     // Configura precisão sempre com sucesso (1)
     when(geradorMock.gerarNumero(
         ConstantesJogo.FAIXA_MIN_SORTEIO, ConstantesJogo.FAIXA_MAX_SORTEIO)).thenReturn(1);
@@ -132,12 +131,14 @@ public class MecanicasBatalhaTest {
     gerenciador.executarTurnoAtaque(fogo, planta);
 
     // Validação com atLeastOnce() conforme exigido pelo edital
-    verify(registroBatalhaMock, atLeastOnce()).registrarAtaque(eq(fogo.getNome()), eq(planta.getNome()));
-    verify(registroBatalhaMock, atLeastOnce()).registrarDano(eq(planta.getNome()), anyInt(), anyBoolean(), anyBoolean());
+    verify(registroBatalhaMock, atLeastOnce())
+        .registrarAtaque(eq(fogo.getNome()), eq(planta.getNome()));
+    verify(registroBatalhaMock, atLeastOnce())
+        .registrarDano(eq(planta.getNome()), anyInt(), anyBoolean(), anyBoolean());
   }
 
   @Test
-  @DisplayName("Validar a ordem exata de chamadas ao RegistroBatalha: ataque -> dano -> status -> terreno -> item")
+  @DisplayName("Validar a ordem de chamadas: ataque -> dano -> status -> terreno -> item")
   void testSequenciaDeEventosNoTurno() {
     when(geradorMock.gerarNumero(
         ConstantesJogo.FAIXA_MIN_SORTEIO, ConstantesJogo.FAIXA_MAX_SORTEIO)).thenReturn(1);
@@ -145,7 +146,7 @@ public class MecanicasBatalhaTest {
     when(geradorMock.testarChance(ConstantesJogo.CHANCE_CRITICO)).thenReturn(false);
     when(geradorMock.testarChance(ConstantesJogo.CHANCE_EFEITO_STATUS)).thenReturn(true);
 
-    // Prepara o atacante para que o próximo ataque seja o 4º consecutivo (aciona recuo - efeito de terreno/ambiente)
+    // Prepara atacante para que o 4º ataque acione o dano de recuo (Req 01)
     fogo.incrementarAtaquesConsecutivos();
     fogo.incrementarAtaquesConsecutivos();
     fogo.incrementarAtaquesConsecutivos();
@@ -163,7 +164,8 @@ public class MecanicasBatalhaTest {
 
     // Valida a ordem exata exigida pelo edital: ataque -> dano -> status -> terreno -> item
     inOrder.verify(registroBatalhaMock).registrarAtaque(fogo.getNome(), planta.getNome());
-    inOrder.verify(registroBatalhaMock).registrarDano(eq(planta.getNome()), anyInt(), anyBoolean(), anyBoolean());
+    inOrder.verify(registroBatalhaMock)
+        .registrarDano(eq(planta.getNome()), anyInt(), anyBoolean(), anyBoolean());
     inOrder.verify(registroBatalhaMock).registrarEfeitoStatus(eq(planta.getNome()), any());
     inOrder.verify(registroBatalhaMock).registrarEfeitoTerreno(anyString());
     inOrder.verify(registroBatalhaMock).registrarUsoItem(eq("Ash"), anyString());

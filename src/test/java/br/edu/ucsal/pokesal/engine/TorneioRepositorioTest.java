@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -142,28 +141,28 @@ public class TorneioRepositorioTest {
     when(geradorMock.testarChance(anyDouble())).thenReturn(false);
 
     // Semifinal 1: Ash (CharSal - SPD 65) vs Gary (SquirtSal - SPD 43)
-    // Ash é mais rápido, ataca primeiro. Com SquirtSal com 1 HP, nocauteia imediatamente.
+    // Ash ataca primeiro e com SquirtSal com 1 HP, nocauteia imediatamente.
     PokeSal squirtSalGary = new PokeSal(TipoPokesal.SQUIRTSAL);
     squirtSalGary.receberDano(squirtSalGary.getHpAtual() - 1);
     Scanner scan1 = new Scanner("1\n");
-    GerenciadorTorneio.ResultadoPartida semi1 =
-        gerenciadorTorneio.executarPartida("Ash", pokesal1, "Gary", squirtSalGary, scan1, "Semifinal 1");
+    GerenciadorTorneio.ResultadoPartida semi1 = gerenciadorTorneio.executarPartida(
+        "Ash", pokesal1, "Gary", squirtSalGary, scan1, "Semifinal 1");
     assertEquals("Ash", semi1.nomeTreinador());
 
     // Semifinal 2: Misty (CyndaSal - SPD 65) vs Brock (ChikoSal - SPD 45)
-    // Misty é mais rápida, ataca primeiro. Com ChikoSal com 1 HP, nocauteia imediatamente.
+    // Misty ataca primeiro e com ChikoSal com 1 HP, nocauteia imediatamente.
     PokeSal cyndaSalMisty = new PokeSal(TipoPokesal.CYNDASAL);
     PokeSal chikoSalBrock = new PokeSal(TipoPokesal.CHIKOSAL);
     chikoSalBrock.receberDano(chikoSalBrock.getHpAtual() - 1);
     Scanner scan2 = new Scanner("1\n");
-    GerenciadorTorneio.ResultadoPartida semi2 =
-        gerenciadorTorneio.executarPartida("Misty", cyndaSalMisty, "Brock", chikoSalBrock, scan2, "Semifinal 2");
+    GerenciadorTorneio.ResultadoPartida semi2 = gerenciadorTorneio.executarPartida(
+        "Misty", cyndaSalMisty, "Brock", chikoSalBrock, scan2, "Semifinal 2");
     assertEquals("Misty", semi2.nomeTreinador());
 
     // Grande Final: Ash (CharSal - SPD 65) vs Misty (CyndaSal - SPD 65)
-    // Velocidades iguais (65 vs 65). O geradorMock decide quem ataca primeiro via desempate.
-    when(geradorMock.testarChance(0.5)).thenReturn(true); // Ash ataca primeiro
-    cyndaSalMisty.receberDano(cyndaSalMisty.getHpAtual() - 1); // Misty com 1 HP para nocaute no 1º golpe
+    // Desempate de velocidade via geradorMock para que Ash ataque primeiro.
+    when(geradorMock.testarChance(0.5)).thenReturn(true);
+    cyndaSalMisty.receberDano(cyndaSalMisty.getHpAtual() - 1);
 
     Scanner scanFinal = new Scanner("1\n");
     GerenciadorTorneio.ResultadoPartida finalPartida =
