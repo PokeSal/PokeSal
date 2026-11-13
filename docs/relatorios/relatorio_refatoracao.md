@@ -1,78 +1,67 @@
-# 📘 Relatório de Refatoração e Inversão de Dependência (Fase 03)
+# Relatório de Refatoração e Inversão de Dependência (Fase 03)
 
-**Instituição:** Universidade Católica do Salvador – UCSal
+Universidade Católica do Salvador – UCSal  
+Curso: Análise e Desenvolvimento de Sistemas  
+Disciplina: Testes e Qualidade de Software  
+Professor: Pedro Arthur de Melo Nascimento  
+Projeto: PokéSal – Simulador de Batalha (Fase 03)  
 
-**Curso:** Análise e Desenvolvimento de Sistemas
-
-**Disciplina:** Testes e Qualidade de Software
-
-**Professor:** Pedro Arthur de Melo Nascimento
-
-**Projeto:** PokéSal — Simulador de Batalha (Fase 03)
-
-**Integrantes da Equipe:**
-
-* Cauã Lopes
-* Arivaldo Teixeira
-* Ryan Abade
-* Pedro Luiz
+Integrantes:
+- Arivaldo Teixeira Moraes Neto
+- Cauã de Oliveira Lopes
+- Pedro Luiz de Barros Pereira
+- Ryan Abade Oliveira
 
 ---
 
 ## 1. Visão Geral e Motivação da Refatoração
 
-Na Fase 02 do projeto **PokéSal**, as classes de regra de negócio apresentavam alto acoplamento concreto. A aleatoriedade do combate era gerada internamente via instanciação direta (`new Random()`), os dados de terreno eram estáticos, a auditoria de partidas dependia de chamadas diretas a `System.out.println` e as operações de torneio dependiam de dados fixos. Esse cenário tornava a execução de testes unitários determinísticos inviável, pois não era possível isolar as regras de combate das dependências externas e do relógio do sistema.
+Na Fase 02 do projeto PokéSal, as classes de regra de negócio continham acoplamento direto com recursos de sistema. A aleatoriedade do combate dependia de instanciação direta com new Random(), os efeitos de terreno eram fixos, os eventos de batalha eram impressos diretamente no console com System.out e as regras de persistência não estavam isoladas. Esse cenário dificultava a escrita de testes unitários previsíveis e determinísticos, uma vez que não era possível isolar o combate dos efeitos colaterais de entrada e saída e do relógio da máquina.
 
-Para a Fase 03, a arquitetura do sistema foi integralmente refatorada visando testabilidade, modulação e alinhamento às boas práticas de Engenharia de Software. O objetivo central foi isolar cada componente por meio de **Injeção de Dependências** e **Interfaces de Serviço**, permitindo que a suíte de testes utilize **Mockito** para simular comportamentos externos de forma previsível e sem efeitos colaterais.
-
----
-
-## 2. Aplicação dos Princípios SOLID e Padrões Arquiteturais
-
-### 2.1 Princípio da Inversão de Dependência (DIP - Dependency Inversion Principle)
-
-O motor do jogo e as regras de torneio deixaram de instanciar suas próprias dependências. Módulos de alto nível (`GerenciadorDeBatalha` e `GerenciadorTorneio`) passaram a depender exclusivamente de **abstrações (interfaces)** e não de implementações concretas:
-
-* **`GeradorAleatorio`:** Interface que substitui o uso direto de `java.util.Random` e `Math.random()`.
-* **`ServicoTerreno`:** Interface para consulta dinâmica das condições de terreno com base no relógio.
-* **`RegistroBatalha`:** Interface encarregada da auditoria e log dos eventos do turno.
-* **`RepositorioResultados`:** Interface de contrato para persistência e compilação estatística do torneio.
-* **`java.time.Clock`:** Abstração nativa do Java para injeção e controle temporal de partidas.
-
-Todas as dependências são recebidas estritamente através dos **construtores** das classes motoras, garantindo transparência e facilidade de substituição por instâncias *mockadas* (`@Mock`) durante os testes.
-
-### 2.2 Princípio da Responsabilidade Única (SRP - Single Responsibility Principle)
-
-A refatoração redistribuiu os papéis do sistema para evitar classes "Deus" (*God Classes*):
-
-* **`GerenciadorDeBatalha`:** Responsável estritamente pelo fluxo de combate 1v1 entre dois Pokésais, controle de turnos, alteração de status e aplicação de passivas. A responsabilidade de salvar resultados de torneio foi removida desta classe.
-* **`GerenciadorTorneio`:** Responsável exclusivamente pela orquestração do chaveamento entre treinadores, fluxo de menu interativo, concessão de recompensas pós-semifinal (Req Autoral 05) e integração resiliente com o repositório.
-* **`CalculadoraDano`:** Componente especialista no cálculo matemático de dano, eficácia elemental e aplicação de efeitos de status.
-* **`RegistroBatalhaConsoleImpl`:** Implementação concreta focada apenas em formatar e exibir as mensagens de auditoria no console.
-
-### 2.3 Princípio Aberto/Fechado (OCP - Open/Closed Principle)
-
-A introdução das interfaces permite que o sistema seja estendido com novos comportamentos sem alteração do código-fonte existente nas regras de negócio. Por exemplo, pode-se criar um `RepositorioResultadosBancoDadosImpl` ou `RegistroBatalhaArquivoImpl` e injetá-los no `GerenciadorTorneio` sem modificar uma única linha do motor de combate.
+Para a Fase 03, o sistema foi refatorado aplicando Inversão de Dependência (DIP) e interfaces de serviço, permitindo isolar cada classe testada por meio de dublês de teste com o Mockito.
 
 ---
 
-## 3. Mapeamento Detalhado das Classes Refatoradas
+## 2. Aplicação de Princípios SOLID e Padrões de Projeto
 
-| Classe Refatorada | Mudanças Efetuadas | Motivação & Benefício Técnico |
+### 2.1 Princípio da Inversão de Dependência (DIP)
+As classes de alto nível (GerenciadorDeBatalha e GerenciadorTorneio) deixaram de instanciar suas dependências concretas e passaram a depender de abstrações (interfaces):
+- GeradorAleatorio: interface que abstrai geradores de números pseudoaleatórios e testes de probabilidade.
+- ServicoTerreno: interface para obter as condições climáticas e de terreno a partir de um relógio.
+- RegistroBatalha: interface responsável por receber os eventos do turno de batalha.
+- RepositorioResultados: interface de contrato para salvar resultados e compilar estatísticas.
+- java.time.Clock: abstração para controle temporal sem depender do horário real do sistema operacional.
+
+Todas as dependências são fornecidas através dos construtores das classes, permitindo a substituição por mocks (@Mock) durante os testes automatizados.
+
+### 2.2 Princípio da Responsabilidade Única (SRP)
+As responsabilidades foram distribuídas para evitar classes sobrecarregadas:
+- GerenciadorDeBatalha: responsável exclusivamente pelo fluxo de combate entre dois Pokésais, controle de iniciativa, aplicação de dano, status e passivas. A responsabilidade de persistir partidas foi retirada desta classe.
+- GerenciadorTorneio: orquestra o chaveamento entre os treinadores, a coleta de entradas no terminal, a entrega de recompensas pós-semifinal e a chamada ao repositório de resultados.
+- CalculadoraDano: responsável exclusivamente pelo cálculo matemático de dano, multiplicadores elementais e chances de infligir efeitos de status.
+- RegistroBatalhaConsoleImpl: implementação concreta encarregada de exibir as mensagens no terminal.
+
+### 2.3 Princípio Aberto/Fechado (OCP)
+Com a definição das interfaces, o sistema pode receber novas implementações sem alterar o código das regras de negócio. Um novo repositório baseado em banco relacional ou em arquivo pode ser acoplado ao GerenciadorTorneio sem qualquer mudança em sua implementação interna.
+
+---
+
+## 3. Classes Refatoradas
+
+| Classe | Alterações Realizadas | Motivação Técnica |
 | --- | --- | --- |
-| **`GerenciadorDeBatalha`** | Removida dependência direta do repositório; adicionado construtor de 6 parâmetros recebendo `GeradorAleatorio`, `ServicoTerreno`, `Clock` e `RegistroBatalha`. | Isola o combate 1v1. Permite testar rodadas completas usando mocks sem necessidade de banco de dados ou entradas I/O reais. |
-| **`GerenciadorTorneio`** | Construtor refatorado para receber `RepositorioResultados`, `GeradorAleatorio`, `ServicoTerreno`, `Clock` e `RegistroBatalha`. Adicionado bloco de tratamento de exceção no salvamento do resultado. | Garante a regra de resiliência (Seção 2.3 do edital): falhas de persistência lançam exceção capturada que não anula a partida nem interrompe o torneio. |
-| **`CalculadoraDano`** | Passou a receber `GeradorAleatorio` e `ServicoTerreno` via construtor e `Clock` por parâmetro no método `calcularDano`. | Permite mockar acertos críticos (6,25%) e falhas de precisão (dano zero) de forma 100% determinística no JUnit. |
-| **`ServicoTerrenoImpl`** | Implementa `ServicoTerreno` utilizando `LocalTime.now(clock)` para determinar se o horário corresponde ao dia (Asfalto Quente) ou noite (Poça de Chuva). | Permite simular mudanças de horário em testes injetando `Clock.fixed(...)`. |
-| **`RepositorioResultadosMemoria`** | Criada implementação em memória da interface `RepositorioResultados`, encapsulando a emissão do relatório estatístico (Req Autoral 04). | Separa a lógica de dados do motor de combate e simplifica a verificação de estatísticas acumuladas do torneio. |
+| GerenciadorDeBatalha | Remoção de dependências estáticas; construtor passa a receber GeradorAleatorio, ServicoTerreno, Clock e RegistroBatalha. | Isola o combate 1v1 e permite simular turnos completos via mocks sem acoplamento a banco ou console. |
+| GerenciadorTorneio | Construtor passa a receber RepositorioResultados, GeradorAleatorio, ServicoTerreno, Clock e RegistroBatalha; inclusão de tratamento de erro ao salvar partida. | Garante a regra de resiliência: falhas ao salvar não invalidam a partida nem interrompem o torneio. |
+| CalculadoraDano | Recebe GeradorAleatorio e ServicoTerreno via construtor e Clock por parâmetro em calcularDano. | Permite mockar acertos críticos (6.25%) e falhas de precisão de forma determinística nos testes. |
+| ServicoTerrenoImpl | Implementa ServicoTerreno utilizando faixas de horário do Clock para retornar Asfalto Quente (manhã), Canteiro Central (tarde) e Poça de Chuva (noite). | Permite testar a ativação de cada terreno de forma determinística injetando instâncias de Clock.fixed. |
+| RepositorioResultadosMemoria | Implementação em memória da interface RepositorioResultados com geração de relatório estatístico (Requisito 04). | Separa a lógica de persistência do motor de jogo. |
 
 ---
 
-## 4. Impacto na Testabilidade e Uso do Mockito
+## 4. Benefícios na Testabilidade com Mockito
 
-A refatoração arquitetural foi o fator determinante para o alcance dos índices de cobertura exigidos pelo edital (85,2% de linhas e 71,7% de branches no pacote `engine`):
-
-1. **Simulação Determinística de Aleatoriedade:** Com a interface `GeradorAleatorio`, os testes conseguem fixar retornos como acertos críticos (`testAcertoCriticoComGeradorMockado`), erros por precisão (`testGolpeErraQuandoPrecisaoFalha`) e sorteios de itens de recompensa pós-semifinal (`testDropRecompensaPosVitoriaComSucesso`).
-2. **Isolamento de Falhas de Infraestrutura:** A injeção da interface `RepositorioResultados` permitiu utilizar `doThrow(...).when(repositorioMock).salvarResultado(...)`, comprovando que o `GerenciadorTorneio` é resiliente e mantém a integridade do vencedor em caso de erro na camada de dados.
-3. **Auditoria de Sequência Estrita:** O desacoplamento do `RegistroBatalha` permitiu o uso de `InOrder` do Mockito (`testSequenciaDeEventosNoTurno`), garantindo que o ciclo de eventos do turno siga rigidamente a ordem: **Ataque $\rightarrow$ Dano $\rightarrow$ Efeito de Status $\rightarrow$ Efeito de Terreno $\rightarrow$ Uso de Item**.
-4. **Inspeção de Objetos Consolidados:** O uso de `ArgumentCaptor<ResultadoBatalha>` permitiu validar minuciosamente se todos os dados consolidados da partida (vencedor, perdedor, número de turnos, dano causado) são transmitidos corretamente ao repositório ao final de cada confronto.
+A refatoração permitiu atingir os índices de cobertura exigidos pelo edital nas classes de negócio:
+1. Controle de Aleatoriedade: com GeradorAleatorio mockado, é possível reproduzir golpes críticos, falhas de precisão e empates de velocidade de forma determinística.
+2. Resiliência a Falhas de Persistência: o uso de RepositorioResultados com doThrow permitiu validar que o torneio continua normalmente mesmo se o repositório lançar exceção.
+3. Validação de Ordem com InOrder: a interface RegistroBatalha possibilitou auditar a ordem exata de despacho dos eventos de cada turno: ataque -> dano -> status -> terreno -> item.
+4. Inspeção de Dados com ArgumentCaptor: possibilitou inspecionar o objeto ResultadoBatalha gravado no repositório, validando nomes dos participantes, vencedor e contagem de turnos.

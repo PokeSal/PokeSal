@@ -1,55 +1,87 @@
 # Relatório de Contribuição Individual
 
-*Elaborado de acordo com as atividades executadas na Fase 01 e Fase 02 do projeto PokeSal.*
+Universidade Católica do Salvador – UCSal  
+Curso: Análise e Desenvolvimento de Sistemas  
+Disciplina: Testes e Qualidade de Software  
+Professor: Pedro Arthur de Melo Nascimento  
+Projeto: PokéSal – Simulador de Batalha  
+
+Integrantes:
+- Arivaldo Teixeira Moraes Neto
+- Cauã de Oliveira Lopes
+- Pedro Luiz de Barros Pereira
+- Ryan Abade Oliveira
 
 ---
 
-## Arivaldo Teixeira Moraes Neto
+## 1. Arivaldo Teixeira Moraes Neto
 
 ### Fase 01
-- **Análise e Modelagem:** Participação na análise estática do edital, identificando ambiguidades e lacunas nas regras de negócio. Implementação dos enums `TipoElemental` e `Terreno`, além do `TipoPokesal` com os atributos base dos seis Pokésais.
-- **Domínio de Negócio:** Implementação das classes `PokeSal`, `Item` e `Mochila`, incluindo o controle de estado e o limite de itens por batalha.
-- **Centralização de Constantes:** Criação da classe `ConstantesJogo.java` para padronizar multiplicadores elementais, bônus de terreno, chances e taxas do sistema.
-- **Interface e Mensagens:** Implementação de nomes de exibição amigáveis para os enums e atualização das mensagens de console na `Main.java`.
+- Análise de requisitos: identificação de ambiguidades no edital.
+- Domínio: implementação dos enums TipoElemental, Terreno e TipoPokesal com os atributos base dos seis Pokésais.
+- Modelagem de dados: implementação inicial das classes PokeSal, Item e Mochila.
+- Criação da classe ConstantesJogo para centralizar valores fixos de combate e bônus.
 
 ### Fase 02
-- **Gestão de Atas e Documentação:** Elaboração, organização e acompanhamento da coleta de assinaturas digitais da **Ata de Reunião Nº 02** (`Ata_de_Reuniao_02.pdf`) para acompanhamento e encerramento dos entregáveis do grupo.
+- Elaboração, condução e coleta de assinaturas da Ata de Reunião Nº 02.
+- Apoio na revisão estática de código e checagem de regras de negócio.
+
+### Fase 03
+- Elaboração e revisão do documento de justificativa dos mocks (docs/justificativa_mocks.md), documentando a razão de cada colaborador mockado e o uso de argument matchers (any vs eq).
+- Mapeamento e catalogação dos defeitos corrigidos durante os testes no documento de registro de bugs (docs/registro_bugs_fase03).
+- Organização e registro das atas de reunião da Fase 03.
 
 ---
 
-## Cauã de Oliveira Lopes
+## 2. Cauã de Oliveira Lopes
 
 ### Fase 01
-- **Estrutura e Arquitetura:** Configuração da estrutura inicial do repositório, `.gitignore`, documentação Javadoc e suporte à modelagem dos requisitos autorais.
-- **Combate e Dano:** Implementação das vantagens/desvantagens elementais e bônus de terreno em `CalculadoraDano.java`.
-- **Fluxo de Aplicação:** Desenvolvimento da seleção de Pokésais, definição de iniciativa (SPD), controle do fluxo de turnos, K.O., desistência e vitória por W.O. no terminal.
-- **Itens e Status:** Integração da Mochila ao combate, recuperação de HP e suporte aos efeitos de status (QUEIMADO, ENVENENADO, PARALISADO).
+- Configuração do repositório Git, estrutura de pastas Maven, checkstyle e documentação Javadoc.
+- Implementação da lógica de cálculo de dano elemental e terreno na CalculadoraDano.
+- Implementação do fluxo de console, menus de seleção e turnos na classe Main.
 
 ### Fase 02
-- **Qualidade e Refatoração:** Execução do **CheckList de Teste Estático (Revisão Manual)**, com foco na remoção de métodos obsoletos e código morto (`relatorio_teste_estatico.md`).
-- **Análise SonarQube:** Execução do SonarScanner local e resolução dos **3 Bugs de Confiabilidade (Reliability)**, padronizando o reuso de geradores aleatórios (`Random`/`SecureRandom`) e adequação às regras do Checkstyle[cite: 7].
-- **Rastreabilidade e IA:** Elaboração da **Matriz de Rastreabilidade, Documento de Testes e Registro de Bugs** (`relatorio_testes_matriz_rastreabilidade.md`), além dos relatórios de transparência do uso de Inteligência Artificial (`AI_DECLARATION.md` e `prompts_ia.txt`).
+- Execução do checklist de teste estático manual (relatorio_teste_estatico.md).
+- Execução do SonarScanner e correção dos bugs de confiabilidade apontados pelo SonarQube.
+- Elaboração da matriz de rastreabilidade de testes e documentação de transparência de IA (AI_DECLARATION.md).
+
+### Fase 03
+- Refatoração da suíte de testes com Mockito: aplicação de @InjectMocks na CalculadoraDano, configuração de retornos em sequência (thenReturn), verificação com atLeastOnce() e validação da ordem completa de eventos com InOrder.
+- Correção do teste de chaveamento do torneio com combates e iniciativa orientados por mocks e teste de batalha não finalizada com verify never.
+- Ajuste no ServicoTerrenoImpl para cobrir os três terrenos (Asfalto Quente, Canteiro Central e Poça de Chuva) por faixas de horário do Clock.
+- Desenvolvimento de testes para elevação da cobertura de branches do GerenciadorDeBatalha acima de 70%.
 
 ---
 
-## Ryan Abade Oliveira
+## 3. Ryan Abade Oliveira
 
 ### Fase 01
-- **Gerenciamento de Batalha:** Criação da classe `GerenciadorDeBatalha.java`, controle da iniciativa por SPD, gestão de turnos e encerramento do combate.
-- **Mecânicas Autorais e Terreno:** Implementação do bônus defensivo com HP baixo, dano de recuo por ataques consecutivos, rotação dinâmica de terrenos e regeneração no Canteiro Central.
-- **Tratamento de Exceções:** Implementação da validação e tratamento de entradas no terminal para prevenir erros de execução.
+- Implementação da classe GerenciadorDeBatalha: controle de turnos, iniciativa por velocidade (SPD) e condições de vitória.
+- Implementação dos requisitos autorais de combate: dano de recuo por esforço contínuo e passiva defensiva de baixo HP.
+- Tratamento de exceções e validação de entradas no fluxo de batalha.
 
 ### Fase 02
-- **Suíte de Testes Automatizados (JUnit 5):** Desenvolvimento e validação da suíte de testes unitários (`CalculadoraDanoTest.java`), cobrindo as mecânicas de combate, vantagens elementais, efeitos de terreno, limite de mochila com exceção (`IllegalStateException`) e requisitos autorais (100% de aprovação)[cite: 8].
-- **Análise Estática Dinâmica:** Suporte na execução e validação das suítes automatizadas e verificação de comportamento dos testes no ambiente de análise contínua[cite: 8].
+- Implementação dos testes automatizados em JUnit 5 (CalculadoraDanoTest), cobrindo efetividade, terrenos, limites de mochila e requisitos autorais.
+- Acompanhamento das métricas de cobertura no JaCoCo.
+
+### Fase 03
+- Implementação e validação da suíte de testes dos requisitos autorais com Mockito (RequisitosAutoraisTest.java), cobrindo o relatório estatístico e o drop de recompensas da mochila.
+- Medição e análise comparativa da cobertura de código gerada pelo JaCoCo e métricas de qualidade de código.
+- Apoio na refatoração da classe GerenciadorTorneio e persistência em RepositorioResultadosMemoria.
 
 ---
 
-## Pedro Luiz de Barros Pereira
+## 4. Pedro Luiz de Barros Pereira
 
 ### Fase 01
-- **Modelagem UML:** Elaboração do Diagrama de Casos de Uso (interações do treinador, combate, mochila e desistência) e do Diagrama de Classes (`PokeSal`, `Item`, `Mochila`, enums e camada engine).
-- **Consistência de Arquitetura:** Mapeamento de divergências entre os diagramas UML e a implementação do código Java, garantindo conformidade entre a especificação visual e o modelo orientado a objetos.
+- Elaboração do Diagrama de Casos de Uso (interações do treinador, opções de combate e itens).
+- Elaboração do Diagrama de Classes contemplando entidades de domínio, enums e motor de batalha.
+- Revisão de consistência entre os diagramas UML e as classes implementadas no código Java.
 
 ### Fase 02
-- **Acompanhamento e Revisão:** Acompanhamento da validação dos entregáveis de documentação da equipe e revisão da conformidade do projeto com o edital da Fase 02.
+- Revisão dos entregáveis de documentação e validação do checklist estático em relação aos critérios do edital.
+
+### Fase 03
+- Atualização do Diagrama de Classes no UML, destacando as novas interfaces de serviço (GeradorAleatorio, ServicoTerreno, RegistroBatalha, RepositorioResultados) e suas implementações concretas.
+- Elaboração dos Diagramas de Sequência exigidos pelo edital: turno completo de batalha e fluxo de registro de resultado no torneio.
+- Revisão da conformidade da entrega com os critérios de avaliação da Fase 03.
