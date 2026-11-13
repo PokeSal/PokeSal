@@ -53,7 +53,7 @@ Conforme as recomendações de boas práticas de teste unitário e o edital da F
 
 ### 4.2 Retornos em Sequência com thenReturn
 Exigido para simular chamadas sucessivas ao mesmo método mockado que retornam valores distintos:
-- Em testRetornosEmSequenciaEAtLeastOnce, o método geradorMock.testarChance(CHANCE_CRITICO) foi configurado com thenReturn(false, true). Isso simula dois ataques seguidos: o primeiro sem crítico e o segundo com crítico, permitindo comparar diretamente o multiplicador de dano (1.5x) entre os dois turnos.
+- Em testRetornosEmSequenciaComAtLeastOnce, o método geradorMock.testarChance(CHANCE_CRITICO) foi configurado com thenReturn(false, true). Isso simula dois ataques seguidos: o primeiro sem crítico e o segundo com crítico, permitindo comparar diretamente o multiplicador de dano (1.5x) entre os dois turnos.
 
 ### 4.3 verify com times, never e atLeastOnce
 - times(N): Garante uma quantidade exata de chamadas, como as três persistências em um torneio eliminatório de quatro participantes (testChaveamentoTorneioAvancaVencedores).
