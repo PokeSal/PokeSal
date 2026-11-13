@@ -52,9 +52,34 @@ Conforme recomendado nas boas práticas de teste unitário e explicitado na Seç
 
 ## 4. Recursos Avançados do Mockito Aplicados na Suíte
 
-1. **`@Mock` e `@InjectMocks`:** Utilizados para instanciar automaticamente as dependências abstratas no setup dos testes (`CalculadoraDanoTest`, `MecanicasBatalhaTest`, `TorneioRepositorioTest` e `RequisitosAutoraisTest`).
-2. **`when(...).thenReturn(...)` com Retornos em Sequência:** Aplicado para simular comportamentos dinâmicos de aleatoriedade, como chamadas consecutivas ao gerador de números e variação de relógio.
-3. **`verify(...)` (`times()`, `never()`, `atLeastOnce()`):** Aplicado para garantir que o repositório **nunca** seja chamado quando uma batalha não termina (`testRepositorioNaoChamadoSeBatalhaNaoTerminou`) e exatamente 3 vezes em um torneio completo (`testChaveamentoTorneioAvancaVencedores`).
-4. **`InOrder` (Verificação de Ordem):** Utilizado em `testSequenciaDeEventosNoTurno` para garantir que o auditor registre os eventos exatamente na ordem padronizada: Ataque $\rightarrow$ Dano $\rightarrow$ Status $\rightarrow$ Terreno $\rightarrow$ Item.
-5. **`ArgumentCaptor<ResultadoBatalha>`:** Utilizado para capturar a instância enviada ao `RepositorioResultados`, permitindo validar as asserções de nome do treinador vencedor, perdedor, Pokésais e quantidade de turnos decorridos.
-6. **`doThrow(...)` (Simulação de Exceção):** Aplicado em `testFalhaNoRepositorioNaoInvalidaBatalha` para injetar uma `RuntimeException` durante o salvamento do resultado e validar se o torneio trata o erro sem abortar a partida.
+A suíte de testes da Fase 03 emprega os recursos avançados do ecossistema Mockito de forma intencional e justificada:
+
+### 4.1 `@Mock` e `@InjectMocks`
+* **`@Mock`:** Cria dublês de teste (*test doubles*) estritos para todas as dependências externas e interfaces (`GeradorAleatorio`, `ServicoTerreno`, `RegistroBatalha`, `RepositorioResultados`).
+* **`@InjectMocks`:** Aplicado diretamente na classe sob teste (como `CalculadoraDano` em `MecanicasBatalhaTest`), delegando ao Mockito a tarefa de resolver e injetar automaticamente os mocks correspondentes via construtor. Isso elimina código repetitivo de instanciação manual (*boilerplate* nos `@BeforeEach`), garantindo aderência formal ao Princípio da Inversão de Dependência (DIP) e comprovando que a arquitetura não possui dependências ocultas.
+
+### 4.2 Retornos em Sequência (`when(...).thenReturn(valor1, valor2, ...)`)
+* Exigido formalmente para validar cenários onde sucessivas invocações ao mesmo colaborador produzem comportamentos encadeados diferentes.
+* **Aplicação prática (`testRetornosEmSequenciaEAtLeastOnce`):** O método `geradorMock.testarChance(CHANCE_CRITICO)` foi configurado com `.thenReturn(false, true)`. Isso simula com exatidão dois turnos consecutivos de ataque: no primeiro, o ataque ocorre normalmente sem multiplicador de crítico; no segundo turno, o mesmo atacante obtém um golpe crítico, permitindo comparar determinística e matematicamente a progressão de dano ($1.5\times$) entre os dois turnos.
+
+### 4.3 `verify(...)` com `times()`, `never()` e `atLeastOnce()`
+* **`times(N)`:** Utilizado para assegurar quantidade exata de interações determinísticas, como exatamente 3 invocações a `salvarResultado(...)` nas 3 partidas de um torneio eliminatório de 4 treinadores (`testChaveamentoTorneioAvancaVencedores`).
+* **`never()`:** Utilizado para certificar que métodos críticos **não** são executados sob certas pré-condições. Em `testRepositorioNaoChamadoSeBatalhaNaoTerminou`, comprova que o repositório não persiste dados enquanto a batalha ainda está em andamento (ambos os Pokésais com HP positivo).
+* **`atLeastOnce()`:** Utilizado quando o foco da asserção é verificar que o canal de auditoria ou gerador foi acionado pelo menos uma vez durante o fluxo, independentemente da quantidade de turnos ou trocas de golpes necessárias para a conclusão da ação (ex.: `verify(registroBatalhaMock, atLeastOnce()).registrarDano(...)`).
+
+### 4.4 Argument Matchers: Distinção entre `any(...)` e `eq(...)`
+Conforme exigido pelo edital, a escolha entre correspondência flexível (*matchers*) e valores exatos é fundamentada no contexto de negócio de cada teste:
+* **Quando utilizar `eq(valorExato)`:** Deve ser utilizado quando o valor passado ao colaborador for **relevante e determinante para a regra de negócio** sob validação. Exemplos:
+  * Em `registrarAtaque(fogo.getNome(), planta.getNome())` e `registrarDano(eq(planta.getNome()), ...)`, é imprescindível assegurar que quem atacou e quem recebeu dano foi o alvo correto, e não o próprio atacante trocado.
+  * Em `testSequenciaDeEventosNoTurno`, `eq("Ash")` garante que o uso de item foi registrado para o treinador correto.
+* **Quando utilizar matchers genéricos (`any()`, `anyInt()`, `anyBoolean()`):** Deve ser utilizado quando o colaborador recebe dados que não afetam a asserção principal ou quando qualquer instância válida é aceitável pelo fluxo. Exemplos:
+  * `any(ResultadoBatalha.class)` em `testFalhaNoRepositorioNaoInvalidaBatalha`: o teste valida a resiliência a falhas de conexão; o conteúdo específico do registro é irrelevante para provar que a exceção foi capturada e o torneio prosseguiu.
+  * `anyInt()` e `anyBoolean()` na verificação da assinatura de `registrarDano`: o valor numérico exato do dano já foi matematicamente validado nos testes de cálculo; na verificação de log, basta comprovar que o evento foi despachado com a tipagem esperada.
+
+### 4.5 `InOrder` (Verificação Estrita da Sequência de Turno)
+* Aplicado em `testSequenciaDeEventosNoTurno` para garantir que o registrador de eventos receba as notificações rigorosamente na ordem do edital:  
+  $$\text{Ataque} \longrightarrow \text{Dano} \longrightarrow \text{Efeito de Status} \longrightarrow \text{Efeito de Terreno / Recuo} \longrightarrow \text{Uso de Item}$$
+
+### 4.6 `ArgumentCaptor` e Simulação de Falhas (`doThrow`)
+* **`ArgumentCaptor<ResultadoBatalha>`:** Empregado em `testResultadoSalvoAoFimDaBatalha` para inspecionar em detalhes o payload final encaminhado à persistência (vencedor, perdedor, Pokésais e quantidade de turnos).
+* **`doThrow(...)`:** Empregado em `testFalhaNoRepositorioNaoInvalidaBatalha` para simular uma pane de banco de dados (`RuntimeException`), validando que a aplicação não trava e que o torneio continua normalmente.

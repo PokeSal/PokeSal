@@ -45,7 +45,22 @@ public class CalculadoraDanoTest {
     planta = new PokeSal(TipoPokesal.BULBASAL);
     agua = new PokeSal(TipoPokesal.SQUIRTSAL);
 
-    gerador = new GeradorAleatorioImpl(new Random());
+    gerador = new GeradorAleatorio() {
+      @Override
+      public int gerarNumero(int min, int max) {
+        return 1;
+      }
+
+      @Override
+      public double gerarDouble() {
+        return 0.5;
+      }
+
+      @Override
+      public boolean testarChance(double percentual) {
+        return false;
+      }
+    };
     servicoTerreno = new ServicoTerrenoImpl();
     clock = Clock.systemDefaultZone();
     registroBatalha = new RegistroBatalhaConsoleImpl();

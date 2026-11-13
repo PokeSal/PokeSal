@@ -200,7 +200,9 @@ public class CoberturaJaCoCoTest {
   @Test
   @DisplayName("Cobertura Services e Models: Terreno, Gerador e Mochila")
   void testServicesEmodelsBorda() {
+    Clock clockTarde = Clock.fixed(Instant.parse("2026-11-10T16:00:00Z"), ZoneId.of("UTC"));
     assertEquals(Terreno.ASFALTO_QUENTE, servicoTerrenoReal.obterTerrenoAtual(clockDia));
+    assertEquals(Terreno.CANTEIRO_CENTRAL, servicoTerrenoReal.obterTerrenoAtual(clockTarde));
     assertEquals(Terreno.POCA_CHUVA, servicoTerrenoReal.obterTerrenoAtual(clockNoite));
 
     assertTrue(geradorReal.gerarNumero(1, 10) >= 1);
