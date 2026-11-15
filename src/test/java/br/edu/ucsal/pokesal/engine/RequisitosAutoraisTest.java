@@ -1,6 +1,8 @@
 package br.edu.ucsal.pokesal.engine;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
@@ -9,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import br.edu.ucsal.pokesal.model.PokeSal;
+import br.edu.ucsal.pokesal.model.Terreno;
 import br.edu.ucsal.pokesal.model.TipoPokesal;
 import br.edu.ucsal.pokesal.repository.RepositorioResultados;
 import br.edu.ucsal.pokesal.repository.RepositorioResultadosMemoria;
@@ -18,10 +21,11 @@ import br.edu.ucsal.pokesal.service.RegistroBatalha;
 import br.edu.ucsal.pokesal.service.ServicoTerreno;
 import br.edu.ucsal.pokesal.util.ConstantesJogo;
 import java.time.Clock;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.Scanner;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -41,17 +45,13 @@ public class RequisitosAutoraisTest {
   private ServicoTerreno servicoTerrenoMock;
 
   @Mock
+  private Clock clockMock;
+
+  @Mock
   private RegistroBatalha registroBatalhaMock;
 
-  private final Clock clockDefault = Clock.systemDefaultZone();
-
+  @InjectMocks
   private GerenciadorTorneio gerenciadorTorneio;
-
-  @BeforeEach
-  void setUp() {
-    gerenciadorTorneio = new GerenciadorTorneio(repositorioMock, geradorMock, servicoTerrenoMock,
-        clockDefault, registroBatalhaMock);
-  }
 
   @Test
   @DisplayName("Req 04: Validar compilação estatística e cálculo de MVP no repositório")
@@ -67,14 +67,45 @@ public class RequisitosAutoraisTest {
     repoMemoria.salvarResultado(partida2);
 
     assertEquals(2, repoMemoria.getResultados().size());
-    assertEquals("CharSal", repoMemoria.getResultados().get(0).pokesalVencedor());
 
-    repoMemoria.emitirRelatorioEstatistico();
+    ResultadoBatalha res1 = repoMemoria.getResultados().get(0);
+    assertEquals("Ash", res1.treinadorVencedor());
+    assertEquals("Gary", res1.treinadorPerdedor());
+    assertEquals("CharSal", res1.pokesalVencedor());
+    assertEquals("BulbaSal", res1.pokesalPerdedor());
+    assertEquals(6, res1.quantidadeTurnos());
+    assertEquals(120, res1.danoCausadoVencedor());
+    assertEquals(40, res1.danoCausadoPerdedor());
+    assertEquals(1, res1.itensUsadosPartida());
+
+    ResultadoBatalha res2 = repoMemoria.getResultados().get(1);
+    assertEquals("Misty", res2.treinadorVencedor());
+    assertEquals("Brock", res2.treinadorPerdedor());
+    assertEquals("SquirtSal", res2.pokesalVencedor());
+    assertEquals("ChikoSal", res2.pokesalPerdedor());
+    assertEquals(10, res2.quantidadeTurnos());
+    assertEquals(80, res2.danoCausadoVencedor());
+    assertEquals(50, res2.danoCausadoPerdedor());
+    assertEquals(2, res2.itensUsadosPartida());
+
+    assertDoesNotThrow(() -> repoMemoria.emitirRelatorioEstatistico());
+
+    RepositorioResultadosMemoria repoVazio = new RepositorioResultadosMemoria();
+    assertDoesNotThrow(() -> repoVazio.emitirRelatorioEstatistico());
   }
 
   @Test
   @DisplayName("Req 04: Validar que relatório estatístico não é emitido em torneio incompleto")
   void testEstatisticaNaoGeradaSeTorneioIncompleto() {
+    when(servicoTerrenoMock.obterTerrenoAtual(clockMock)).thenReturn(Terreno.ASFALTO_QUENTE);
+
+    PokeSal p1 = new PokeSal(TipoPokesal.CHARSAL);
+    PokeSal p2 = new PokeSal(TipoPokesal.BULBASAL);
+    Scanner scan = new Scanner("3\n");
+
+    gerenciadorTorneio.executarPartida("Ash", p1, "Gary", p2, scan, "Semifinal");
+
+    verify(repositorioMock, times(1)).salvarResultado(any(ResultadoBatalha.class));
     verify(repositorioMock, never()).emitirRelatorioEstatistico();
   }
 
