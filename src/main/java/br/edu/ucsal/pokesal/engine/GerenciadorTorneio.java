@@ -183,13 +183,18 @@ public class GerenciadorTorneio {
       }
     }
 
+    if (vencedorBatalha == null) {
+      return new ResultadoPartida(null, null);
+    }
+
     int danoVencedor = (vencedorBatalha == pokeSal1) ? batalha.getDanoCausadoPokesal1()
         : batalha.getDanoCausadoPokesal2();
     int danoPerdedor = (vencedorBatalha == pokeSal1) ? batalha.getDanoCausadoPokesal2()
         : batalha.getDanoCausadoPokesal1();
 
+    String nomePerdedor = (perdedorBatalha != null) ? perdedorBatalha.getNome() : "";
     ResultadoBatalha resultado = new ResultadoBatalha(treinadorVencedor, treinadorPerdedor,
-        vencedorBatalha.getNome(), perdedorBatalha.getNome(), batalha.getContadorTurno(),
+        vencedorBatalha.getNome(), nomePerdedor, batalha.getContadorTurno(),
         danoVencedor, danoPerdedor, batalha.getTotalItensUsadosPartida());
 
     try {
