@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// É bom pensar se essas estatísticas estao boas pra pegar ou se podemos trocar por outras
-
 /** Implementação em memória do repositório com cálculo estatístico acumulado. */
 public class RepositorioResultadosMemoria implements RepositorioResultados {
 

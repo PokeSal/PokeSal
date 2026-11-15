@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -49,10 +50,12 @@ public class TorneioRepositorioTest {
   private ServicoTerreno servicoTerrenoMock;
 
   @Mock
+  private Clock clockMock;
+
+  @Mock
   private RegistroBatalha registroBatalhaMock;
 
-  private final Clock clockDefault = Clock.systemDefaultZone();
-
+  @InjectMocks
   private GerenciadorTorneio gerenciadorTorneio;
 
   @Captor
@@ -63,8 +66,6 @@ public class TorneioRepositorioTest {
 
   @BeforeEach
   void setUp() {
-    gerenciadorTorneio = new GerenciadorTorneio(repositorioMock, geradorMock, servicoTerrenoMock,
-        clockDefault, registroBatalhaMock);
     pokesal1 = new PokeSal(TipoPokesal.CHARSAL);
     pokesal2 = new PokeSal(TipoPokesal.BULBASAL);
   }
@@ -72,7 +73,7 @@ public class TorneioRepositorioTest {
   @Test
   @DisplayName("ArgumentCaptor verificando vencedor, perdedor e número de turnos")
   void testResultadoSalvoAoFimDaBatalha() {
-    when(servicoTerrenoMock.obterTerrenoAtual(clockDefault)).thenReturn(Terreno.ASFALTO_QUENTE);
+    when(servicoTerrenoMock.obterTerrenoAtual(clockMock)).thenReturn(Terreno.ASFALTO_QUENTE);
 
     Scanner scan = new Scanner("3\n");
     GerenciadorTorneio.ResultadoPartida resultadoPartida =
@@ -93,7 +94,7 @@ public class TorneioRepositorioTest {
   @Test
   @DisplayName("Repositório lança exceção e o vencedor continua definido")
   void testFalhaNoRepositorioNaoInvalidaBatalha() {
-    when(servicoTerrenoMock.obterTerrenoAtual(clockDefault)).thenReturn(Terreno.ASFALTO_QUENTE);
+    when(servicoTerrenoMock.obterTerrenoAtual(clockMock)).thenReturn(Terreno.ASFALTO_QUENTE);
     doThrow(new RuntimeException("Erro de conexão com o banco de dados")).when(repositorioMock)
         .salvarResultado(any(ResultadoBatalha.class));
 
@@ -111,23 +112,21 @@ public class TorneioRepositorioTest {
   @Test
   @DisplayName("verify(..., never()) sobre o repositório quando a batalha não foi finalizada")
   void testRepositorioNaoChamadoSeBatalhaNaoTerminou() {
-    when(servicoTerrenoMock.obterTerrenoAtual(clockDefault)).thenReturn(Terreno.ASFALTO_QUENTE);
+    when(servicoTerrenoMock.obterTerrenoAtual(clockMock)).thenReturn(Terreno.ASFALTO_QUENTE);
     when(geradorMock.gerarNumero(
         ConstantesJogo.FAIXA_MIN_SORTEIO, ConstantesJogo.FAIXA_MAX_SORTEIO)).thenReturn(1);
     when(geradorMock.testarChance(anyDouble())).thenReturn(false);
 
     GerenciadorDeBatalha batalha = new GerenciadorDeBatalha(
-        pokesal1, pokesal2, geradorMock, servicoTerrenoMock, clockDefault, registroBatalhaMock);
+        pokesal1, pokesal2, geradorMock, servicoTerrenoMock, clockMock, registroBatalhaMock);
 
     batalha.definirOrdemAtuacao();
     batalha.executarTurnoAtaque(pokesal1, pokesal2);
 
-    // Comprova que a batalha foi iniciada, houve troca de dano mas ambos continuam vivos
     assertTrue(pokesal1.isVivo());
     assertTrue(pokesal2.isVivo());
     assertNull(batalha.getVencedor());
 
-    // Assegura categoricamente que o repositório NUNCA foi chamado com a batalha incompleta
     verify(repositorioMock, never()).salvarResultado(any(ResultadoBatalha.class));
     verify(repositorioMock, never()).emitirRelatorioEstatistico();
   }
@@ -135,13 +134,11 @@ public class TorneioRepositorioTest {
   @Test
   @DisplayName("Resultados de batalha mockados determinando quem avança de fase")
   void testChaveamentoTorneioAvancaVencedores() {
-    when(servicoTerrenoMock.obterTerrenoAtual(clockDefault)).thenReturn(Terreno.ASFALTO_QUENTE);
+    when(servicoTerrenoMock.obterTerrenoAtual(clockMock)).thenReturn(Terreno.ASFALTO_QUENTE);
     when(geradorMock.gerarNumero(
         ConstantesJogo.FAIXA_MIN_SORTEIO, ConstantesJogo.FAIXA_MAX_SORTEIO)).thenReturn(1);
     when(geradorMock.testarChance(anyDouble())).thenReturn(false);
 
-    // Semifinal 1: Ash (CharSal - SPD 65) vs Gary (SquirtSal - SPD 43)
-    // Ash ataca primeiro e com SquirtSal com 1 HP, nocauteia imediatamente.
     PokeSal squirtSalGary = new PokeSal(TipoPokesal.SQUIRTSAL);
     squirtSalGary.receberDano(squirtSalGary.getHpAtual() - 1);
     Scanner scan1 = new Scanner("1\n");
@@ -149,8 +146,6 @@ public class TorneioRepositorioTest {
         "Ash", pokesal1, "Gary", squirtSalGary, scan1, "Semifinal 1");
     assertEquals("Ash", semi1.nomeTreinador());
 
-    // Semifinal 2: Misty (CyndaSal - SPD 65) vs Brock (ChikoSal - SPD 45)
-    // Misty ataca primeiro e com ChikoSal com 1 HP, nocauteia imediatamente.
     PokeSal cyndaSalMisty = new PokeSal(TipoPokesal.CYNDASAL);
     PokeSal chikoSalBrock = new PokeSal(TipoPokesal.CHIKOSAL);
     chikoSalBrock.receberDano(chikoSalBrock.getHpAtual() - 1);
@@ -159,8 +154,6 @@ public class TorneioRepositorioTest {
         "Misty", cyndaSalMisty, "Brock", chikoSalBrock, scan2, "Semifinal 2");
     assertEquals("Misty", semi2.nomeTreinador());
 
-    // Grande Final: Ash (CharSal - SPD 65) vs Misty (CyndaSal - SPD 65)
-    // Desempate de velocidade via geradorMock para que Ash ataque primeiro.
     when(geradorMock.testarChance(0.5)).thenReturn(true);
     cyndaSalMisty.receberDano(cyndaSalMisty.getHpAtual() - 1);
 
@@ -173,7 +166,6 @@ public class TorneioRepositorioTest {
     assertEquals("Ash", finalPartida.nomeTreinador());
     assertEquals(pokesal1.getNome(), finalPartida.pokesal().getNome());
 
-    // Verifica que exatamente 3 resultados de batalha foram registrados (2 semis + 1 final)
     verify(repositorioMock, times(3)).salvarResultado(any(ResultadoBatalha.class));
   }
 }

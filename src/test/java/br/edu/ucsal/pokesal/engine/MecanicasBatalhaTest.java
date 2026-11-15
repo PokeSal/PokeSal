@@ -114,10 +114,8 @@ public class MecanicasBatalhaTest {
   @Test
   @DisplayName("Validar retornos em sequência com thenReturn() e verificação com atLeastOnce()")
   void testRetornosEmSequenciaComAtLeastOnce() {
-    // Configura precisão sempre com sucesso (1)
     when(geradorMock.gerarNumero(
         ConstantesJogo.FAIXA_MIN_SORTEIO, ConstantesJogo.FAIXA_MAX_SORTEIO)).thenReturn(1);
-    // Retorno em sequência: 1º ataque normal (sem crítico), 2º ataque com crítico
     when(geradorMock.testarChance(ConstantesJogo.CHANCE_CRITICO)).thenReturn(false, true);
     when(servicoTerrenoMock.obterTerrenoAtual(clockDefault)).thenReturn(Terreno.ASFALTO_QUENTE);
 
@@ -127,10 +125,8 @@ public class MecanicasBatalhaTest {
     assertTrue(danoCritico > danoNormal);
     assertEquals((int) Math.round(danoNormal * ConstantesJogo.MULTIPLICADOR_CRITICO), danoCritico);
 
-    // Executa turno com o gerenciador para registrar eventos
     gerenciador.executarTurnoAtaque(fogo, planta);
 
-    // Validação com atLeastOnce() conforme exigido pelo edital
     verify(registroBatalhaMock, atLeastOnce())
         .registrarAtaque(eq(fogo.getNome()), eq(planta.getNome()));
     verify(registroBatalhaMock, atLeastOnce())
@@ -146,23 +142,18 @@ public class MecanicasBatalhaTest {
     when(geradorMock.testarChance(ConstantesJogo.CHANCE_CRITICO)).thenReturn(false);
     when(geradorMock.testarChance(ConstantesJogo.CHANCE_EFEITO_STATUS)).thenReturn(true);
 
-    // Prepara atacante para que o 4º ataque acione o dano de recuo (Req 01)
     fogo.incrementarAtaquesConsecutivos();
     fogo.incrementarAtaquesConsecutivos();
     fogo.incrementarAtaquesConsecutivos();
 
-    // Planta perde HP para poder usar a poção
     planta.receberDano(30);
 
     InOrder inOrder = inOrder(registroBatalhaMock);
 
-    // 1. Executa turno de ataque (dispara ataque, dano, status e recuo/terreno)
     gerenciador.executarTurnoAtaque(fogo, planta);
 
-    // 2. Executa turno de item
     gerenciador.executarTurnoItem(planta, "Ash", 0);
 
-    // Valida a ordem exata exigida pelo edital: ataque -> dano -> status -> terreno -> item
     inOrder.verify(registroBatalhaMock).registrarAtaque(fogo.getNome(), planta.getNome());
     inOrder.verify(registroBatalhaMock)
         .registrarDano(eq(planta.getNome()), anyInt(), anyBoolean(), anyBoolean());
@@ -176,16 +167,14 @@ public class MecanicasBatalhaTest {
   void testCaminhosDeControleBatalha() {
     when(servicoTerrenoMock.obterTerrenoAtual(clockDefault)).thenReturn(Terreno.CANTEIRO_CENTRAL);
 
-    // 1. Iniciativa quando pokesal2 é mais veloz que pokesal1
-    PokeSal veloz = new PokeSal(TipoPokesal.CHARSAL); // SPD 65
-    PokeSal lento = new PokeSal(TipoPokesal.SQUIRTSAL); // SPD 43
+    PokeSal veloz = new PokeSal(TipoPokesal.CHARSAL);
+    PokeSal lento = new PokeSal(TipoPokesal.SQUIRTSAL);
     GerenciadorDeBatalha batalhaVel = new GerenciadorDeBatalha(
         lento, veloz, geradorMock, servicoTerrenoMock, clockDefault, registroBatalhaMock);
     batalhaVel.definirOrdemAtuacao();
     assertEquals(veloz, batalhaVel.getPrimeiroAtacante());
     assertEquals(lento, batalhaVel.getSegundoAtacante());
 
-    // 2. Paralisia impedindo ação no turno de ataque e no turno de item
     fogo.setStatusAtual(br.edu.ucsal.pokesal.model.EfeitoStatus.PARALISADO);
     assertTrue(gerenciador.executarTurnoAtaque(fogo, planta));
     assertEquals(br.edu.ucsal.pokesal.model.EfeitoStatus.NENHUM, fogo.getStatusAtual());
@@ -194,10 +183,8 @@ public class MecanicasBatalhaTest {
     assertTrue(gerenciador.executarTurnoItem(planta, "Ash", 0));
     assertEquals(br.edu.ucsal.pokesal.model.EfeitoStatus.NENHUM, planta.getStatusAtual());
 
-    // 3. Uso de item quando HP já está cheio (retorna false)
     assertFalse(gerenciador.executarTurnoItem(fogo, "Gary", 0));
 
-    // 4. Cura do Canteiro Central para Planta com dano
     planta.receberDano(20);
     int hpAntes = planta.getHpAtual();
     gerenciador.aplicarCuraCanteiroCentral();
