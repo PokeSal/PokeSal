@@ -2,7 +2,10 @@ package br.edu.ucsal.pokesal.engine;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
@@ -25,6 +28,8 @@ import java.util.Scanner;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -52,6 +57,9 @@ public class RequisitosAutoraisTest {
 
   @InjectMocks
   private GerenciadorTorneio gerenciadorTorneio;
+
+  @Captor
+  private ArgumentCaptor<ResultadoBatalha> captorResultado;
 
   @Test
   @DisplayName("Req 04: Validar compilação estatística e cálculo de MVP no repositório")
@@ -106,6 +114,29 @@ public class RequisitosAutoraisTest {
     gerenciadorTorneio.executarPartida("Ash", p1, "Gary", p2, scan, "Semifinal");
 
     verify(repositorioMock, times(1)).salvarResultado(any(ResultadoBatalha.class));
+    verify(repositorioMock, never()).emitirRelatorioEstatistico();
+  }
+
+  @Test
+  @DisplayName("Req 04: Validar envio de métricas estatísticas MVP com Mockito")
+  void testEnvioMetricasEstatisticasMvpComMockito() {
+    when(servicoTerrenoMock.obterTerrenoAtual(clockMock)).thenReturn(Terreno.ASFALTO_QUENTE);
+    when(geradorMock.gerarNumero(
+        ConstantesJogo.FAIXA_MIN_SORTEIO, ConstantesJogo.FAIXA_MAX_SORTEIO)).thenReturn(1);
+    when(geradorMock.testarChance(anyDouble())).thenReturn(false);
+
+    PokeSal p1 = new PokeSal(TipoPokesal.CHARSAL);
+    PokeSal p2 = new PokeSal(TipoPokesal.BULBASAL);
+    Scanner scan = new Scanner("1\n1\n2\n1\n3\n");
+
+    gerenciadorTorneio.executarPartida("Ash", p1, "Gary", p2, scan, "Semifinal");
+
+    verify(repositorioMock, times(1)).salvarResultado(captorResultado.capture());
+    ResultadoBatalha resultadoSalvo = captorResultado.getValue();
+    assertNotNull(resultadoSalvo);
+    assertTrue(resultadoSalvo.danoCausadoVencedor() > 0);
+    assertTrue(resultadoSalvo.danoCausadoPerdedor() > 0);
+    assertEquals(1, resultadoSalvo.itensUsadosPartida());
     verify(repositorioMock, never()).emitirRelatorioEstatistico();
   }
 

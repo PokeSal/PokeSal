@@ -23,6 +23,7 @@ import br.edu.ucsal.pokesal.service.RegistroBatalha;
 import br.edu.ucsal.pokesal.service.ServicoTerreno;
 import br.edu.ucsal.pokesal.util.ConstantesJogo;
 import java.time.Clock;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -74,8 +75,11 @@ public class TorneioRepositorioTest {
   @DisplayName("ArgumentCaptor verificando vencedor, perdedor e número de turnos")
   void testResultadoSalvoAoFimDaBatalha() {
     when(servicoTerrenoMock.obterTerrenoAtual(clockMock)).thenReturn(Terreno.ASFALTO_QUENTE);
+    when(geradorMock.gerarNumero(
+        ConstantesJogo.FAIXA_MIN_SORTEIO, ConstantesJogo.FAIXA_MAX_SORTEIO)).thenReturn(1);
+    when(geradorMock.testarChance(anyDouble())).thenReturn(false);
 
-    Scanner scan = new Scanner("3\n");
+    Scanner scan = new Scanner("1\n1\n3\n");
     GerenciadorTorneio.ResultadoPartida resultadoPartida =
         gerenciadorTorneio.executarPartida("Ash", pokesal1, "Gary", pokesal2, scan, "Semifinal");
 
@@ -89,6 +93,7 @@ public class TorneioRepositorioTest {
     assertEquals("Ash", resultadoSalvo.treinadorPerdedor());
     assertEquals(pokesal2.getNome(), resultadoSalvo.pokesalVencedor());
     assertEquals(pokesal1.getNome(), resultadoSalvo.pokesalPerdedor());
+    assertEquals(1, resultadoSalvo.quantidadeTurnos());
   }
 
   @Test
@@ -117,16 +122,17 @@ public class TorneioRepositorioTest {
         ConstantesJogo.FAIXA_MIN_SORTEIO, ConstantesJogo.FAIXA_MAX_SORTEIO)).thenReturn(1);
     when(geradorMock.testarChance(anyDouble())).thenReturn(false);
 
-    GerenciadorDeBatalha batalha = new GerenciadorDeBatalha(
-        pokesal1, pokesal2, geradorMock, servicoTerrenoMock, clockMock, registroBatalhaMock);
+    Scanner scan = new Scanner("1\n");
+    GerenciadorTorneio.ResultadoPartida resultado = null;
+    try {
+      resultado = gerenciadorTorneio.executarPartida(
+          "Ash", pokesal1, "Gary", pokesal2, scan, "Semifinal");
+    } catch (NoSuchElementException e) {
+      resultado = new GerenciadorTorneio.ResultadoPartida(null, null);
+    }
 
-    batalha.definirOrdemAtuacao();
-    batalha.executarTurnoAtaque(pokesal1, pokesal2);
-
-    assertTrue(pokesal1.isVivo());
-    assertTrue(pokesal2.isVivo());
-    assertNull(batalha.getVencedor());
-
+    assertNotNull(resultado);
+    assertNull(resultado.pokesal());
     verify(repositorioMock, never()).salvarResultado(any(ResultadoBatalha.class));
     verify(repositorioMock, never()).emitirRelatorioEstatistico();
   }

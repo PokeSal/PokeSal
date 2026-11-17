@@ -90,10 +90,7 @@ public class GerenciadorDeBatalha {
       return true;
     }
 
-    if (defensor.isPassivaDefensivaAtiva()) {
-      registroBatalha
-          .registrarEfeitoTerreno("Passiva de defesa ativada para " + defensor.getNome() + "!");
-    }
+    final boolean passivaDefensivaAtiva = defensor.isPassivaDefensivaAtiva();
 
     registroBatalha.registrarAtaque(atacante.getNome(), defensor.getNome());
 
@@ -120,6 +117,11 @@ public class GerenciadorDeBatalha {
       if (defensor.getStatusAtual() != statusAntes) {
         registroBatalha.registrarEfeitoStatus(defensor.getNome(), defensor.getStatusAtual());
       }
+    }
+
+    if (passivaDefensivaAtiva) {
+      registroBatalha
+          .registrarEfeitoTerreno("Passiva de defesa ativada para " + defensor.getNome() + "!");
     }
 
     processarRecuoPorAtaque(atacante);
