@@ -90,42 +90,44 @@ public class GerenciadorDeBatalha {
 <span class="fc" id="L90">      return true;</span>
     }
 
-<span class="fc bfc" id="L93" title="All 2 branches covered.">    if (defensor.isPassivaDefensivaAtiva()) {</span>
-<span class="fc" id="L94">      registroBatalha</span>
-<span class="fc" id="L95">          .registrarEfeitoTerreno(&quot;Passiva de defesa ativada para &quot; + defensor.getNome() + &quot;!&quot;);</span>
-    }
+<span class="fc" id="L93">    final boolean passivaDefensivaAtiva = defensor.isPassivaDefensivaAtiva();</span>
 
-<span class="fc" id="L98">    registroBatalha.registrarAtaque(atacante.getNome(), defensor.getNome());</span>
+<span class="fc" id="L95">    registroBatalha.registrarAtaque(atacante.getNome(), defensor.getNome());</span>
 
-<span class="fc" id="L100">    int dano = calculadoraDano.calcularDano(atacante, defensor, clock);</span>
-<span class="fc bfc" id="L101" title="All 2 branches covered.">    boolean errou = (dano == ConstantesJogo.DANO_ERRO);</span>
-<span class="fc bfc" id="L102" title="All 2 branches covered.">    boolean critico = !errou &amp;&amp; (dano &gt; (int) Math</span>
-<span class="fc bfc" id="L103" title="All 2 branches covered.">        .round(((double) atacante.getAtk() / defensor.getDef()) * ConstantesJogo.DANO_BASE</span>
-<span class="fc" id="L104">            * calculadoraDano.calcularEfetividade(atacante, defensor) * calculadoraDano</span>
-<span class="fc" id="L105">                .calcularMultiplicadorTerreno(atacante, servicoTerreno.obterTerrenoAtual(clock))));</span>
+<span class="fc" id="L97">    int dano = calculadoraDano.calcularDano(atacante, defensor, clock);</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">    boolean errou = (dano == ConstantesJogo.DANO_ERRO);</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">    boolean critico = !errou &amp;&amp; (dano &gt; (int) Math</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        .round(((double) atacante.getAtk() / defensor.getDef()) * ConstantesJogo.DANO_BASE</span>
+<span class="fc" id="L101">            * calculadoraDano.calcularEfetividade(atacante, defensor) * calculadoraDano</span>
+<span class="fc" id="L102">                .calcularMultiplicadorTerreno(atacante, servicoTerreno.obterTerrenoAtual(clock))));</span>
 
-<span class="fc" id="L107">    defensor.receberDano(dano);</span>
+<span class="fc" id="L104">    defensor.receberDano(dano);</span>
 
-<span class="pc bpc" id="L109" title="1 of 2 branches missed.">    if (atacante == pokesal1) {</span>
-<span class="fc" id="L110">      this.danoCausadoPokesal1 += dano;</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">    if (atacante == pokesal1) {</span>
+<span class="fc" id="L107">      this.danoCausadoPokesal1 += dano;</span>
     } else {
-<span class="nc" id="L112">      this.danoCausadoPokesal2 += dano;</span>
+<span class="fc" id="L109">      this.danoCausadoPokesal2 += dano;</span>
     }
 
-<span class="fc" id="L115">    registroBatalha.registrarDano(defensor.getNome(), dano, critico, errou);</span>
+<span class="fc" id="L112">    registroBatalha.registrarDano(defensor.getNome(), dano, critico, errou);</span>
 
-<span class="fc bfc" id="L117" title="All 2 branches covered.">    if (!errou) {</span>
-<span class="fc" id="L118">      EfeitoStatus statusAntes = defensor.getStatusAtual();</span>
-<span class="fc" id="L119">      calculadoraDano.aplicarEfeitoStatus(atacante, defensor);</span>
-<span class="fc bfc" id="L120" title="All 2 branches covered.">      if (defensor.getStatusAtual() != statusAntes) {</span>
-<span class="fc" id="L121">        registroBatalha.registrarEfeitoStatus(defensor.getNome(), defensor.getStatusAtual());</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">    if (!errou) {</span>
+<span class="fc" id="L115">      EfeitoStatus statusAntes = defensor.getStatusAtual();</span>
+<span class="fc" id="L116">      calculadoraDano.aplicarEfeitoStatus(atacante, defensor);</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">      if (defensor.getStatusAtual() != statusAntes) {</span>
+<span class="fc" id="L118">        registroBatalha.registrarEfeitoStatus(defensor.getNome(), defensor.getStatusAtual());</span>
       }
     }
 
-<span class="fc" id="L125">    processarRecuoPorAtaque(atacante);</span>
-<span class="fc" id="L126">    verificarVencedor();</span>
-<span class="fc" id="L127">    avancarAcaoRodada();</span>
-<span class="fc" id="L128">    return true;</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">    if (passivaDefensivaAtiva) {</span>
+<span class="fc" id="L123">      registroBatalha</span>
+<span class="fc" id="L124">          .registrarEfeitoTerreno(&quot;Passiva de defesa ativada para &quot; + defensor.getNome() + &quot;!&quot;);</span>
+    }
+
+<span class="fc" id="L127">    processarRecuoPorAtaque(atacante);</span>
+<span class="fc" id="L128">    verificarVencedor();</span>
+<span class="fc" id="L129">    avancarAcaoRodada();</span>
+<span class="fc" id="L130">    return true;</span>
   }
 
   /**
@@ -138,48 +140,48 @@ public class GerenciadorDeBatalha {
    * @throws IndexOutOfBoundsException se o índice do item for inválido.
    */
   public boolean executarTurnoItem(PokeSal atacante, String nomeTreinador, int indiceItem) {
-<span class="fc bfc" id="L141" title="All 2 branches covered.">    if (verificarParalisiaOuPerdaDeTurno(atacante)) {</span>
-<span class="fc" id="L142">      return true;</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">    if (verificarParalisiaOuPerdaDeTurno(atacante)) {</span>
+<span class="fc" id="L144">      return true;</span>
     }
 
-<span class="pc bpc" id="L145" title="1 of 2 branches missed.">    if (!atacante.getMochila().podeUsarItem()) {</span>
-<span class="nc" id="L146">      return false;</span>
+<span class="pc bpc" id="L147" title="1 of 2 branches missed.">    if (!atacante.getMochila().podeUsarItem()) {</span>
+<span class="nc" id="L148">      return false;</span>
     }
 
-<span class="fc" id="L149">    Item itemConsultado = atacante.getMochila().getItens().get(indiceItem);</span>
-<span class="fc" id="L150">    boolean usouComSucesso = atacante.usarItemEspecifico(indiceItem);</span>
+<span class="fc" id="L151">    Item itemConsultado = atacante.getMochila().getItens().get(indiceItem);</span>
+<span class="fc" id="L152">    boolean usouComSucesso = atacante.usarItemEspecifico(indiceItem);</span>
 
-<span class="fc bfc" id="L152" title="All 2 branches covered.">    if (usouComSucesso) {</span>
-<span class="fc" id="L153">      this.totalItensUsadosPartida++;</span>
-<span class="fc" id="L154">      registroBatalha.registrarUsoItem(nomeTreinador, itemConsultado.getNome());</span>
-<span class="fc" id="L155">      avancarAcaoRodada();</span>
-<span class="fc" id="L156">      return true;</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">    if (usouComSucesso) {</span>
+<span class="fc" id="L155">      this.totalItensUsadosPartida++;</span>
+<span class="fc" id="L156">      registroBatalha.registrarUsoItem(nomeTreinador, itemConsultado.getNome());</span>
+<span class="fc" id="L157">      avancarAcaoRodada();</span>
+<span class="fc" id="L158">      return true;</span>
     }
-<span class="fc" id="L158">    return false;</span>
+<span class="fc" id="L160">    return false;</span>
   }
 
   private boolean verificarParalisiaOuPerdaDeTurno(PokeSal atacante) {
-<span class="fc bfc" id="L162" title="All 2 branches covered.">    if (atacante.getStatusAtual() == EfeitoStatus.PARALISADO) {</span>
-<span class="fc" id="L163">      registroBatalha</span>
-<span class="fc" id="L164">          .registrarEfeitoTerreno(atacante.getNome() + &quot; está PARALISADO e perdeu a vez!&quot;);</span>
-<span class="fc" id="L165">      atacante.setStatusAtual(EfeitoStatus.NENHUM);</span>
-<span class="fc" id="L166">      avancarAcaoRodada();</span>
-<span class="fc" id="L167">      return true;</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">    if (atacante.getStatusAtual() == EfeitoStatus.PARALISADO) {</span>
+<span class="fc" id="L165">      registroBatalha</span>
+<span class="fc" id="L166">          .registrarEfeitoTerreno(atacante.getNome() + &quot; está PARALISADO e perdeu a vez!&quot;);</span>
+<span class="fc" id="L167">      atacante.setStatusAtual(EfeitoStatus.NENHUM);</span>
+<span class="fc" id="L168">      avancarAcaoRodada();</span>
+<span class="fc" id="L169">      return true;</span>
     }
-<span class="fc" id="L169">    return false;</span>
+<span class="fc" id="L171">    return false;</span>
   }
 
   private void avancarAcaoRodada() {
-<span class="fc" id="L173">    this.acoesRodadaAtual++;</span>
-<span class="fc bfc" id="L174" title="All 2 branches covered.">    if (this.acoesRodadaAtual &gt;= ACOES_POR_RODADA) {</span>
-<span class="fc" id="L175">      this.acoesRodadaAtual = 0;</span>
-<span class="fc" id="L176">      this.contadorTurno++;</span>
+<span class="fc" id="L175">    this.acoesRodadaAtual++;</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">    if (this.acoesRodadaAtual &gt;= ACOES_POR_RODADA) {</span>
+<span class="fc" id="L177">      this.acoesRodadaAtual = 0;</span>
+<span class="fc" id="L178">      this.contadorTurno++;</span>
 
-<span class="fc" id="L178">      aplicarDanoStatusFimDeTurno();</span>
-<span class="fc" id="L179">      aplicarCuraCanteiroCentral();</span>
-<span class="fc" id="L180">      verificarVencedor();</span>
+<span class="fc" id="L180">      aplicarDanoStatusFimDeTurno();</span>
+<span class="fc" id="L181">      aplicarCuraCanteiroCentral();</span>
+<span class="fc" id="L182">      verificarVencedor();</span>
     }
-<span class="fc" id="L182">  }</span>
+<span class="fc" id="L184">  }</span>
 
   /**
    * Contabiliza o ataque consecutivo e aplica dano de recuo.
@@ -187,100 +189,100 @@ public class GerenciadorDeBatalha {
    * @param atacante Pokésal que realizou o ataque.
    */
   public void processarRecuoPorAtaque(PokeSal atacante) {
-<span class="fc bfc" id="L190" title="All 4 branches covered.">    if (atacante != null &amp;&amp; atacante.isVivo()) {</span>
-<span class="fc" id="L191">      int ataques = atacante.incrementarAtaquesConsecutivos();</span>
-<span class="pc bpc" id="L192" title="1 of 4 branches missed.">      if (ataques &gt; 0 &amp;&amp; ataques % ConstantesJogo.INTERVALO_TURNO_RECUO == 0) {</span>
-<span class="fc" id="L193">        int danoRecuo =</span>
-<span class="fc" id="L194">            (int) Math.round(atacante.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_RECUO);</span>
-<span class="fc" id="L195">        atacante.receberDano(danoRecuo);</span>
-<span class="fc" id="L196">        registroBatalha.registrarEfeitoTerreno(</span>
-<span class="fc" id="L197">            atacante.getNome() + &quot; sofreu &quot; + danoRecuo + &quot; de dano de recuo (Req 01)!&quot;);</span>
+<span class="fc bfc" id="L192" title="All 4 branches covered.">    if (atacante != null &amp;&amp; atacante.isVivo()) {</span>
+<span class="fc" id="L193">      int ataques = atacante.incrementarAtaquesConsecutivos();</span>
+<span class="pc bpc" id="L194" title="1 of 4 branches missed.">      if (ataques &gt; 0 &amp;&amp; ataques % ConstantesJogo.INTERVALO_TURNO_RECUO == 0) {</span>
+<span class="fc" id="L195">        int danoRecuo =</span>
+<span class="fc" id="L196">            (int) Math.round(atacante.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_RECUO);</span>
+<span class="fc" id="L197">        atacante.receberDano(danoRecuo);</span>
+<span class="fc" id="L198">        registroBatalha.registrarEfeitoTerreno(</span>
+<span class="fc" id="L199">            atacante.getNome() + &quot; sofreu &quot; + danoRecuo + &quot; de dano de recuo (Req 01)!&quot;);</span>
       }
     }
-<span class="fc" id="L200">  }</span>
+<span class="fc" id="L202">  }</span>
 
   /** Cura Pokésais do tipo planta vivos quando o terreno ativo é o Canteiro Central. */
   public void aplicarCuraCanteiroCentral() {
-<span class="fc" id="L204">    Terreno terrenoAtual = servicoTerreno.obterTerrenoAtual(clock);</span>
-<span class="fc bfc" id="L205" title="All 2 branches covered.">    if (terrenoAtual == Terreno.CANTEIRO_CENTRAL) {</span>
-<span class="pc bpc" id="L206" title="1 of 4 branches missed.">      if (pokesal1.isVivo() &amp;&amp; pokesal1.getTipo() == TipoElemental.PLANTA) {</span>
-<span class="fc" id="L207">        int cura = (int) Math.round(pokesal1.getHpMaximo() * ConstantesJogo.BONUS_CANTEIRO_CENTRAL);</span>
-<span class="fc" id="L208">        pokesal1.curar(cura);</span>
-<span class="fc" id="L209">        registroBatalha.registrarEfeitoTerreno(</span>
-<span class="fc" id="L210">            &quot;Canteiro Central restaurou &quot; + cura + &quot; HP de &quot; + pokesal1.getNome());</span>
+<span class="fc" id="L206">    Terreno terrenoAtual = servicoTerreno.obterTerrenoAtual(clock);</span>
+<span class="fc bfc" id="L207" title="All 2 branches covered.">    if (terrenoAtual == Terreno.CANTEIRO_CENTRAL) {</span>
+<span class="pc bpc" id="L208" title="1 of 4 branches missed.">      if (pokesal1.isVivo() &amp;&amp; pokesal1.getTipo() == TipoElemental.PLANTA) {</span>
+<span class="fc" id="L209">        int cura = (int) Math.round(pokesal1.getHpMaximo() * ConstantesJogo.BONUS_CANTEIRO_CENTRAL);</span>
+<span class="fc" id="L210">        pokesal1.curar(cura);</span>
+<span class="fc" id="L211">        registroBatalha.registrarEfeitoTerreno(</span>
+<span class="fc" id="L212">            &quot;Canteiro Central restaurou &quot; + cura + &quot; HP de &quot; + pokesal1.getNome());</span>
       }
-<span class="pc bpc" id="L212" title="1 of 4 branches missed.">      if (pokesal2.isVivo() &amp;&amp; pokesal2.getTipo() == TipoElemental.PLANTA) {</span>
-<span class="fc" id="L213">        int cura = (int) Math.round(pokesal2.getHpMaximo() * ConstantesJogo.BONUS_CANTEIRO_CENTRAL);</span>
-<span class="fc" id="L214">        pokesal2.curar(cura);</span>
-<span class="fc" id="L215">        registroBatalha.registrarEfeitoTerreno(</span>
-<span class="fc" id="L216">            &quot;Canteiro Central restaurou &quot; + cura + &quot; HP de &quot; + pokesal2.getNome());</span>
+<span class="pc bpc" id="L214" title="1 of 4 branches missed.">      if (pokesal2.isVivo() &amp;&amp; pokesal2.getTipo() == TipoElemental.PLANTA) {</span>
+<span class="fc" id="L215">        int cura = (int) Math.round(pokesal2.getHpMaximo() * ConstantesJogo.BONUS_CANTEIRO_CENTRAL);</span>
+<span class="fc" id="L216">        pokesal2.curar(cura);</span>
+<span class="fc" id="L217">        registroBatalha.registrarEfeitoTerreno(</span>
+<span class="fc" id="L218">            &quot;Canteiro Central restaurou &quot; + cura + &quot; HP de &quot; + pokesal2.getNome());</span>
       }
     }
-<span class="fc" id="L219">  }</span>
+<span class="fc" id="L221">  }</span>
 
   /** Aplica dano de queimadura ou envenenamento aos Pokésais ao fim da rodada. */
   public void aplicarDanoStatusFimDeTurno() {
-<span class="pc bpc" id="L223" title="2 of 4 branches missed.">    if (!this.pokesal1.isVivo() || !this.pokesal2.isVivo()) {</span>
-<span class="nc" id="L224">      return;</span>
+<span class="pc bpc" id="L225" title="2 of 4 branches missed.">    if (!this.pokesal1.isVivo() || !this.pokesal2.isVivo()) {</span>
+<span class="nc" id="L226">      return;</span>
     }
-<span class="fc bfc" id="L226" title="All 2 branches covered.">    if (this.pokesal1.getStatusAtual() == EfeitoStatus.QUEIMADO</span>
-<span class="pc bpc" id="L227" title="1 of 2 branches missed.">        || this.pokesal1.getStatusAtual() == EfeitoStatus.ENVENENADO) {</span>
-<span class="fc" id="L228">      int danoStatus =</span>
-<span class="fc" id="L229">          (int) Math.round(this.pokesal1.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_STATUS);</span>
-<span class="fc" id="L230">      this.pokesal1.receberDano(danoStatus);</span>
-<span class="fc" id="L231">      registroBatalha.registrarEfeitoTerreno(pokesal1.getNome() + &quot; sofreu &quot; + danoStatus</span>
-<span class="fc" id="L232">          + &quot; de dano por &quot; + pokesal1.getStatusAtual());</span>
+<span class="fc bfc" id="L228" title="All 2 branches covered.">    if (this.pokesal1.getStatusAtual() == EfeitoStatus.QUEIMADO</span>
+<span class="pc bpc" id="L229" title="1 of 2 branches missed.">        || this.pokesal1.getStatusAtual() == EfeitoStatus.ENVENENADO) {</span>
+<span class="fc" id="L230">      int danoStatus =</span>
+<span class="fc" id="L231">          (int) Math.round(this.pokesal1.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_STATUS);</span>
+<span class="fc" id="L232">      this.pokesal1.receberDano(danoStatus);</span>
+<span class="fc" id="L233">      registroBatalha.registrarEfeitoTerreno(pokesal1.getNome() + &quot; sofreu &quot; + danoStatus</span>
+<span class="fc" id="L234">          + &quot; de dano por &quot; + pokesal1.getStatusAtual());</span>
     }
-<span class="fc bfc" id="L234" title="All 2 branches covered.">    if (this.pokesal2.getStatusAtual() == EfeitoStatus.QUEIMADO</span>
-<span class="fc bfc" id="L235" title="All 2 branches covered.">        || this.pokesal2.getStatusAtual() == EfeitoStatus.ENVENENADO) {</span>
-<span class="fc" id="L236">      int danoStatus =</span>
-<span class="fc" id="L237">          (int) Math.round(this.pokesal2.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_STATUS);</span>
-<span class="fc" id="L238">      this.pokesal2.receberDano(danoStatus);</span>
-<span class="fc" id="L239">      registroBatalha.registrarEfeitoTerreno(pokesal2.getNome() + &quot; sofreu &quot; + danoStatus</span>
-<span class="fc" id="L240">          + &quot; de dano por &quot; + pokesal2.getStatusAtual());</span>
+<span class="fc bfc" id="L236" title="All 2 branches covered.">    if (this.pokesal2.getStatusAtual() == EfeitoStatus.QUEIMADO</span>
+<span class="fc bfc" id="L237" title="All 2 branches covered.">        || this.pokesal2.getStatusAtual() == EfeitoStatus.ENVENENADO) {</span>
+<span class="fc" id="L238">      int danoStatus =</span>
+<span class="fc" id="L239">          (int) Math.round(this.pokesal2.getHpMaximo() * ConstantesJogo.PERCENTUAL_DANO_STATUS);</span>
+<span class="fc" id="L240">      this.pokesal2.receberDano(danoStatus);</span>
+<span class="fc" id="L241">      registroBatalha.registrarEfeitoTerreno(pokesal2.getNome() + &quot; sofreu &quot; + danoStatus</span>
+<span class="fc" id="L242">          + &quot; de dano por &quot; + pokesal2.getStatusAtual());</span>
     }
-<span class="fc" id="L242">  }</span>
+<span class="fc" id="L244">  }</span>
 
   private void verificarVencedor() {
-<span class="pc bpc" id="L245" title="1 of 4 branches missed.">    if (!this.pokesal1.isVivo() || !this.pokesal2.isVivo()) {</span>
-<span class="pc bpc" id="L246" title="1 of 2 branches missed.">      this.vencedor = this.pokesal1.isVivo() ? this.pokesal1 : this.pokesal2;</span>
+<span class="pc bpc" id="L247" title="1 of 4 branches missed.">    if (!this.pokesal1.isVivo() || !this.pokesal2.isVivo()) {</span>
+<span class="pc bpc" id="L248" title="1 of 2 branches missed.">      this.vencedor = this.pokesal1.isVivo() ? this.pokesal1 : this.pokesal2;</span>
     }
-<span class="fc" id="L248">  }</span>
+<span class="fc" id="L250">  }</span>
 
   public boolean isVelocidadeIgual() {
-<span class="nc bnc" id="L251" title="All 2 branches missed.">    return pokesal1.getSpd() == pokesal2.getSpd();</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">    return pokesal1.getSpd() == pokesal2.getSpd();</span>
   }
 
   public PokeSal getVencedor() {
-<span class="fc" id="L255">    return this.vencedor;</span>
+<span class="fc" id="L257">    return this.vencedor;</span>
   }
 
   public PokeSal getPrimeiroAtacante() {
-<span class="fc" id="L259">    return primeiroAtacante;</span>
+<span class="fc" id="L261">    return primeiroAtacante;</span>
   }
 
   public PokeSal getSegundoAtacante() {
-<span class="fc" id="L263">    return segundoAtacante;</span>
+<span class="fc" id="L265">    return segundoAtacante;</span>
   }
 
   public Terreno getTerreno() {
-<span class="fc" id="L267">    return servicoTerreno.obterTerrenoAtual(clock);</span>
+<span class="fc" id="L269">    return servicoTerreno.obterTerrenoAtual(clock);</span>
   }
 
   public int getContadorTurno() {
-<span class="fc" id="L271">    return contadorTurno;</span>
+<span class="fc" id="L273">    return contadorTurno;</span>
   }
 
   public int getDanoCausadoPokesal1() {
-<span class="fc" id="L275">    return danoCausadoPokesal1;</span>
+<span class="fc" id="L277">    return danoCausadoPokesal1;</span>
   }
 
   public int getDanoCausadoPokesal2() {
-<span class="fc" id="L279">    return danoCausadoPokesal2;</span>
+<span class="fc" id="L281">    return danoCausadoPokesal2;</span>
   }
 
   public int getTotalItensUsadosPartida() {
-<span class="fc" id="L283">    return totalItensUsadosPartida;</span>
+<span class="fc" id="L285">    return totalItensUsadosPartida;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

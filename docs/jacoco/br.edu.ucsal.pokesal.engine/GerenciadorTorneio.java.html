@@ -139,8 +139,8 @@ public class GerenciadorTorneio {
 <span class="fc" id="L139">            int opcaoItem = scan.nextInt();</span>
 
 <span class="pc bpc" id="L141" title="1 of 4 branches missed.">            if (opcaoItem &gt;= 1 &amp;&amp; opcaoItem &lt;= itens.size()) {</span>
-<span class="pc bpc" id="L142" title="1 of 2 branches missed.">              if (batalha.executarTurnoItem(atacante, nomeTreinadorDaVez, opcaoItem - 1)) {</span>
-<span class="nc" id="L143">                acaoConcluida = true;</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">              if (batalha.executarTurnoItem(atacante, nomeTreinadorDaVez, opcaoItem - 1)) {</span>
+<span class="fc" id="L143">                acaoConcluida = true;</span>
               } else {
 <span class="fc" id="L145">                System.out.println(&quot;\n[MOCHILA] HP já está cheio ou escolha inválida!&quot;);</span>
               }
@@ -179,26 +179,31 @@ public class GerenciadorTorneio {
 <span class="nc bnc" id="L179" title="All 2 branches missed.">          treinadorPerdedor = (vencedorBatalha == pokeSal1) ? nomeT2 : nomeT1;</span>
 <span class="nc" id="L180">          break;</span>
         }
-<span class="pc bpc" id="L182" title="1 of 2 branches missed.">        vezDoTreinador1 = !vezDoTreinador1;</span>
+<span class="fc bfc" id="L182" title="All 2 branches covered.">        vezDoTreinador1 = !vezDoTreinador1;</span>
       }
 <span class="fc" id="L184">    }</span>
 
-<span class="fc bfc" id="L186" title="All 2 branches covered.">    int danoVencedor = (vencedorBatalha == pokeSal1) ? batalha.getDanoCausadoPokesal1()</span>
-<span class="fc" id="L187">        : batalha.getDanoCausadoPokesal2();</span>
-<span class="fc bfc" id="L188" title="All 2 branches covered.">    int danoPerdedor = (vencedorBatalha == pokeSal1) ? batalha.getDanoCausadoPokesal2()</span>
-<span class="fc" id="L189">        : batalha.getDanoCausadoPokesal1();</span>
+<span class="pc bpc" id="L186" title="1 of 2 branches missed.">    if (vencedorBatalha == null) {</span>
+<span class="nc" id="L187">      return new ResultadoPartida(null, null);</span>
+    }
 
-<span class="fc" id="L191">    ResultadoBatalha resultado = new ResultadoBatalha(treinadorVencedor, treinadorPerdedor,</span>
-<span class="fc" id="L192">        vencedorBatalha.getNome(), perdedorBatalha.getNome(), batalha.getContadorTurno(),</span>
-<span class="fc" id="L193">        danoVencedor, danoPerdedor, batalha.getTotalItensUsadosPartida());</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">    int danoVencedor = (vencedorBatalha == pokeSal1) ? batalha.getDanoCausadoPokesal1()</span>
+<span class="fc" id="L191">        : batalha.getDanoCausadoPokesal2();</span>
+<span class="fc bfc" id="L192" title="All 2 branches covered.">    int danoPerdedor = (vencedorBatalha == pokeSal1) ? batalha.getDanoCausadoPokesal2()</span>
+<span class="fc" id="L193">        : batalha.getDanoCausadoPokesal1();</span>
+
+<span class="pc bpc" id="L195" title="1 of 2 branches missed.">    String nomePerdedor = (perdedorBatalha != null) ? perdedorBatalha.getNome() : &quot;&quot;;</span>
+<span class="fc" id="L196">    ResultadoBatalha resultado = new ResultadoBatalha(treinadorVencedor, treinadorPerdedor,</span>
+<span class="fc" id="L197">        vencedorBatalha.getNome(), nomePerdedor, batalha.getContadorTurno(),</span>
+<span class="fc" id="L198">        danoVencedor, danoPerdedor, batalha.getTotalItensUsadosPartida());</span>
 
     try {
-<span class="fc" id="L196">      repositorio.salvarResultado(resultado);</span>
-<span class="fc" id="L197">    } catch (Exception e) {</span>
-<span class="fc" id="L198">      System.out.println(&quot;\n[AVISO REPOSITÓRIO] Falha ao salvar resultado: &quot; + e.getMessage());</span>
-<span class="fc" id="L199">    }</span>
+<span class="fc" id="L201">      repositorio.salvarResultado(resultado);</span>
+<span class="fc" id="L202">    } catch (Exception e) {</span>
+<span class="fc" id="L203">      System.out.println(&quot;\n[AVISO REPOSITÓRIO] Falha ao salvar resultado: &quot; + e.getMessage());</span>
+<span class="fc" id="L204">    }</span>
 
-<span class="fc" id="L201">    return new ResultadoPartida(treinadorVencedor, vencedorBatalha);</span>
+<span class="fc" id="L206">    return new ResultadoPartida(treinadorVencedor, vencedorBatalha);</span>
   }
 
   /**
@@ -207,31 +212,31 @@ public class GerenciadorTorneio {
    * @param vencedor Pokésal vencedor que recebe a recompensa.
    */
   public void processarRecompensaPosBatalha(PokeSal vencedor) {
-<span class="fc" id="L210">    int sorteio =</span>
-<span class="fc" id="L211">        gerador.gerarNumero(ConstantesJogo.FAIXA_MIN_SORTEIO, ConstantesJogo.FAIXA_MAX_SORTEIO);</span>
+<span class="fc" id="L215">    int sorteio =</span>
+<span class="fc" id="L216">        gerador.gerarNumero(ConstantesJogo.FAIXA_MIN_SORTEIO, ConstantesJogo.FAIXA_MAX_SORTEIO);</span>
     Item itemRecompensa;
 
-<span class="fc bfc" id="L214" title="All 2 branches covered.">    if (sorteio &lt;= LIMITE_SORTEIO_POCAO) {</span>
-<span class="fc" id="L215">      itemRecompensa = new Item(ConstantesJogo.NOME_POCAO, ConstantesJogo.CURA_POCAO,</span>
+<span class="fc bfc" id="L219" title="All 2 branches covered.">    if (sorteio &lt;= LIMITE_SORTEIO_POCAO) {</span>
+<span class="fc" id="L220">      itemRecompensa = new Item(ConstantesJogo.NOME_POCAO, ConstantesJogo.CURA_POCAO,</span>
           ConstantesJogo.STATUS_NENHUM);
-<span class="fc bfc" id="L217" title="All 2 branches covered.">    } else if (sorteio &lt;= LIMITE_SORTEIO_SUPER_POCAO) {</span>
-<span class="fc" id="L218">      itemRecompensa = new Item(ConstantesJogo.NOME_SUPER_POCAO, ConstantesJogo.CURA_SUPER_POCAO,</span>
+<span class="fc bfc" id="L222" title="All 2 branches covered.">    } else if (sorteio &lt;= LIMITE_SORTEIO_SUPER_POCAO) {</span>
+<span class="fc" id="L223">      itemRecompensa = new Item(ConstantesJogo.NOME_SUPER_POCAO, ConstantesJogo.CURA_SUPER_POCAO,</span>
           ConstantesJogo.STATUS_NENHUM);
     } else {
-<span class="fc" id="L221">      itemRecompensa = new Item(ConstantesJogo.NOME_CURA_TOTAL, ConstantesJogo.CURA_NENHUMA,</span>
+<span class="fc" id="L226">      itemRecompensa = new Item(ConstantesJogo.NOME_CURA_TOTAL, ConstantesJogo.CURA_NENHUMA,</span>
           ConstantesJogo.STATUS_TODOS);
     }
 
-<span class="fc" id="L225">    boolean adicionou = vencedor.receberRecompensa(itemRecompensa);</span>
+<span class="fc" id="L230">    boolean adicionou = vencedor.receberRecompensa(itemRecompensa);</span>
 
-<span class="fc bfc" id="L227" title="All 2 branches covered.">    if (adicionou) {</span>
-<span class="fc" id="L228">      registroBatalha.registrarUsoItem(&quot;RECOMPENSA (REQ 05)&quot;,</span>
-<span class="fc" id="L229">          vencedor.getNome() + &quot; ganhou &quot; + itemRecompensa.getNome() + &quot; para a Grande Final&quot;);</span>
+<span class="fc bfc" id="L232" title="All 2 branches covered.">    if (adicionou) {</span>
+<span class="fc" id="L233">      registroBatalha.registrarUsoItem(&quot;RECOMPENSA (REQ 05)&quot;,</span>
+<span class="fc" id="L234">          vencedor.getNome() + &quot; ganhou &quot; + itemRecompensa.getNome() + &quot; para a Grande Final&quot;);</span>
     } else {
-<span class="fc" id="L231">      registroBatalha.registrarUsoItem(&quot;RECOMPENSA (REQ 05)&quot;, &quot;Mochila de &quot; + vencedor.getNome()</span>
-<span class="fc" id="L232">          + &quot; está cheia! O item &quot; + itemRecompensa.getNome() + &quot; foi descartado&quot;);</span>
+<span class="fc" id="L236">      registroBatalha.registrarUsoItem(&quot;RECOMPENSA (REQ 05)&quot;, &quot;Mochila de &quot; + vencedor.getNome()</span>
+<span class="fc" id="L237">          + &quot; está cheia! O item &quot; + itemRecompensa.getNome() + &quot; foi descartado&quot;);</span>
     }
-<span class="fc" id="L234">  }</span>
+<span class="fc" id="L239">  }</span>
 
   /**
    * Resultado de uma partida.
@@ -239,7 +244,7 @@ public class GerenciadorTorneio {
    * @param nomeTreinador nome do treinador vencedor.
    * @param pokesal Pokésal vencedor.
    */
-<span class="fc" id="L242">  public record ResultadoPartida(String nomeTreinador, PokeSal pokesal) {</span>
+<span class="fc" id="L247">  public record ResultadoPartida(String nomeTreinador, PokeSal pokesal) {</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

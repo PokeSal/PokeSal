@@ -19,7 +19,7 @@ Integrantes:
 
 Este relatório consolida a evolução da qualidade estática e da cobertura de código do projeto PokeSal entre a Fase 02 (baseline) e a Fase 03 (entrega final). A análise foi realizada por meio do SonarQube Community Edition integrado ao ciclo de vida do Apache Maven (`mvn clean verify sonar:sonar`), com extração automatizada de métricas de cobertura via JaCoCo (`target/site/jacoco/jacoco.xml`) e validação de regras de estilo com o Checkstyle (`google_checks.xml`).
 
-Na Fase 03, o projeto obteve aprovação formal no Quality Gate (status Passed), alcançando 83,6% de cobertura no Overall Code e 84,9% no New Code, superando o piso regulamentar de 70% estipulado para a disciplina, com 0 Bugs, 0 Vulnerabilidades e 0,0% de código duplicado.
+Na Fase 03, o projeto obteve aprovação formal no Quality Gate (status Passed) com 27 testes unitários aprovados, alcançando 84,1% de cobertura no Overall Code e 85,6% no New Code (além de 86% de instruções e 81% de branches no relatório detalhado do JaCoCo), superando o piso regulamentar de 70% estipulado para a disciplina, com 0 Bugs, 0 Vulnerabilidades e 0,0% de código duplicado.
 
 ---
 
@@ -35,7 +35,7 @@ A tabela abaixo compara o estado geral da base de código (Overall Code) entre a
 | Vulnerabilidades | 0 (Rating A) | 0 (Rating A) | 0 | Segurança máxima (Rating A) |
 | Security Hotspots Revisados | 100% (Rating A) | 100% (Rating A) | 0% | 1 hotspot auditado e classificado como seguro |
 | Code Smells | 60 (Rating A) | 85 (Rating A) | +25 (+41,7%) | Manutenibilidade máxima mantida (Rating A) |
-| Cobertura (JaCoCo) | 0,0% | 83,6% | +83,6% | Cobertura expressiva, superando a meta de 70% |
+| Cobertura (JaCoCo) | 0,0% | 84,1% | +84,1% | Cobertura expressiva, superando a meta de 70% |
 | Duplicações | 0,0% | 0,0% | 0,0% | Ausência de código redundante |
 
 ---
@@ -49,14 +49,14 @@ Durante a integração contínua na Fase 03, a primeira análise gerou reprovaç
 | Quality Gate | Failed | Passed | Correção dos bloqueadores de New Code |
 | New Bugs | 2 (Rating D) | 0 (Rating A) | Ajustes em verificação defensiva e asserção de teste |
 | New Hotspots Revisados | 0,0% (Rating E) | 100% (Rating A) | Revisão técnica de segurança no painel do SonarQube |
-| New Code Smells | 77 (Rating A) | 77 (Rating A) | Débito técnico estável em 4h18min (< 5% do teto A) |
-| Cobertura em Linhas Novas | 85,2% (428 LOC) | 84,9% (431 LOC) | Cobertura mantida com folga sobre a meta de 70% |
-| Cobertura Geral | 83,8% | 83,6% | Variação natural pela inclusão do código defensivo |
+| New Code Smells | 77 (Rating A) | 77 (Rating A) | Débito técnico estável (< 5% do teto A) |
+| Cobertura em Linhas Novas | 85,2% (428 LOC) | 85,6% (432 LOC) | Cobertura mantida com folga sobre a meta de 70% |
+| Cobertura Geral | 83,8% | 84,1% | Elevação após inclusão do novo teste de métricas |
 
 ### Detalhamento das correções realizadas:
 
 - GerenciadorTorneio.java (Possível NullPointerException): o SonarQube apontava que o atributo vencedorBatalha poderia ser nulo no encerramento da partida. Foi adicionada uma verificação defensiva com retorno imediato de fallback caso a batalha não possua vencedor definido (`if (vencedorBatalha == null) return new ResultadoPartida(null, null);`), além de tratamento de nulidade para o nome do perdedor.
-- CoberturaJaCoCoTest.java (Comparação de tipo primitivo com nulo): a asserção `assertNotNull(geradorReal.testarChance(0.5))` comparava o retorno de um tipo primitivo boolean com null. A validação foi substituída por uma asserção booleana direta com `assertTrue`, eliminando a inconformidade no teste.
+- CoberturaJaCoCoTest.java (Comparação de tipo primitivo com nulo): a asserção `assertNotNull(geradorReal.testarChance(0.5))` comparava o retorno de um tipo primitivo boolean com null. A validação foi substituída por asserções booleanas determinísticas (`assertTrue(geradorReal.testarChance(1.0))` e `assertFalse(geradorReal.testarChance(0.0))`), eliminando a inconformidade no teste.
 - Main.java (Uso de gerador pseudoaleatório – regra java:S2245): o SonarQube gerou um Security Hotspot pelo uso de `new Random()`. A equipe revisou o apontamento diretamente na interface do SonarQube e o classificou como Safe (seguro), já que a aleatoriedade é usada apenas para mecânicas de jogo no terminal (iniciativa e dano), sem qualquer finalidade criptográfica ou de segurança.
 
 ---
@@ -71,7 +71,7 @@ A única métrica que apresentou aumento numérico em relação à Fase 02 foi a
 
 ---
 
-## 5. Evidências Visuais da Análise no SonarQube
+## 5. Evidências Visuais da Análise no SonarQube e JaCoCo
 
 As imagens abaixo registram os resultados obtidos nas análises locais:
 
@@ -80,10 +80,19 @@ Evidência da reprovação inicial com 2 bugs em New Code e hotspot pendente de 
 
 ![SonarQube Fase 03 - Antes das Correções](../sonar/sonaroverviewfase03antes.png)
 
-### Painel Geral da Fase 03 – Final Aprovado (Quality Gate Passed)
-Evidência da aprovação final com Quality Gate verde, 0 bugs, 0 vulnerabilidades, hotspots revisados e 83,6% de cobertura:
+### Painel Geral da Fase 03 – Final Aprovado (Overall Code e New Code)
+Evidência da aprovação final com Quality Gate verde, 0 bugs, 0 vulnerabilidades, hotspots revisados, 84,1% de cobertura geral e 85,6% em código novo:
 
-![SonarQube Fase 03 - Final Aprovado](../sonar/sonaroverviewfase03depois.png)
+![SonarQube Fase 03 - Overall Code Final](../sonar/sonarQubeGeralOverrallCode.png)
+
+![SonarQube Fase 03 - New Code Final](../sonar/sonarQubeGeralNewCode.png)
+
+### Cobertura Detalhada do JaCoCo e Execução JUnit (27/27 Testes)
+Relatório final de cobertura por pacote (86% de instruções e 81% de branches) e aprovação integral da suíte JUnit 5:
+
+![Relatório de Cobertura JaCoCo](../sonar/JaCoCo.png)
+
+![Execução JUnit Fase 03](../sonar/resultadoJUnitFase03.png)
 
 ### Evidências da Fase 02 e Execução de Testes
 Registros históricos do baseline da Fase 02 e validação no JUnit:

@@ -59,7 +59,7 @@ Ao término do torneio, o RepositorioResultados compila os dados de todas as par
 - O consumo total de suprimentos (soma de todos os itens utilizados ao longo do torneio).
 
 ### 5.2 Justificativa e Dependência Externa Mockável
-Depende da interface RepositorioResultados e de sua persistência em memória, permitindo verificar e auditar o cálculo das métricas acumuladas via testes unitários isolados com Mockito.
+Depende da interface RepositorioResultados e de sua persistência em memória, permitindo verificar e auditar o cálculo das métricas acumuladas via testes unitários isolados com Mockito. Escolhemos esse requisito para trazer um panorama geral do torneio quando ele acabar, para incrementar as informações acerca do torneio, em vez de só declarar o campeão e pronto.
 
 ---
 
@@ -74,4 +74,4 @@ Ao vencer uma partida semifinal, o Pokésal vencedor recebe um item de cura sort
 Caso a mochila já esteja em sua capacidade máxima de 3 itens, o item sorteado é descartado e um aviso é registrado no log.
 
 ### 6.2 Justificativa e Dependência Externa Mockável
-Depende da interface GeradorAleatorio para determinar o item recebido e da interface RegistroBatalha para o log da premiação, permitindo testar via Mockito todos os ramos de probabilidade e descarte com determinismo.
+Depende da interface GeradorAleatorio para determinar o item recebido e da interface RegistroBatalha para o log da premiação, permitindo testar via Mockito todos os ramos de probabilidade e descarte com determinismo. A escolha desse requisito foi para tentar balancear e trazer uma sobrevida aos PokeSais que podem sair com uma vida muito baixa da batalha anterior.

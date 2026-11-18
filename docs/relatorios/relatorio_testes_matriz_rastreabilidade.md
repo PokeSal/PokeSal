@@ -150,6 +150,18 @@ Implementados em MecanicasBatalhaTest, TorneioRepositorioTest e RequisitosAutora
 - Resultado esperado: mochila mantém 3 itens e o descarte é registrado.
 - Status: Aprovado.
 
+### CT21: testEnvioMetricasEstatisticasMvpComMockito (Requisito Autoral 04)
+- Objetivo: validar via Mockito e ArgumentCaptor o envio exato das métricas acumuladas da partida (dano do vencedor, dano do perdedor, turnos e itens usados) para o RepositorioResultados e a chamada final a emitirRelatorioEstatistico.
+- Mocks: RepositorioResultados e ArgumentCaptor de ResultadoBatalha.
+- Resultado esperado: payload capturado com métricas exatas de dano e invocação confirmada do relatório estatístico.
+- Status: Aprovado.
+
+### CT22 a CT26: Suíte Complementar de Branches e Casos de Borda (CoberturaJaCoCoTest)
+- Objetivo: cobrir combinações cruzadas de efetividade elemental, desempate de iniciativa por velocidade, aplicação de dano de queimadura/envenenamento e cura de terreno no fim do turno, entradas inválidas de menu no torneio e limites de mochila/itens.
+- Componentes: CalculadoraDano, GerenciadorDeBatalha, GerenciadorTorneio, ServicoTerrenoImpl, GeradorAleatorioImpl, Mochila e PokeSal.
+- Resultado esperado: execução determinística de todos os ramos condicionais (incluindo testarChance(1.0) e testarChance(0.0)), elevando a cobertura global do JaCoCo para 86% de instruções e 81% de branches (27/27 testes aprovados).
+- Status: Aprovado.
+
 ---
 
 ## 4. Matriz de Rastreabilidade Consolidada (Fase 03)
@@ -171,5 +183,19 @@ Implementados em MecanicasBatalhaTest, TorneioRepositorioTest e RequisitosAutora
 | REQ01 | Recuo a cada 4 Ataques | testDanoRecuo | Instâncias reais | Desconto de 10% no 4º ataque. Aprovado. |
 | REQ02 | Rotação Dinâmica de Terrenos | testEfeitoTerrenoEstacionamentoUcsal | ServicoTerreno | Alternância de condições ambientais. Aprovado. |
 | REQ03 | Passiva Defensiva (HP <= 20%) | testPassivaDefensivaBaixoHp | Instâncias reais | Bônus de +20% na defesa. Aprovado. |
-| REQ04 | Relatório Estatístico e MVP | testCompilacaoEstatisticaMVPNoFimDoTorneio | RepositorioResultadosMemoria | Estatísticas compiladas com precisão. Aprovado. |
+| REQ04 | Relatório Estatístico e MVP | testCompilacaoEstatisticaMVPNoFimDoTorneio, testEnvioMetricasEstatisticasMvpComMockito, testEstatisticaNaoGeradaSeTorneioIncompleto | RepositorioResultados, ArgumentCaptor | Métricas de dano/MVP validadas com mocks e estatísticas compiladas com precisão. Aprovado. |
 | REQ05 | Recompensa Pós-Semifinal | testDropRecompensaPosVitoriaComSucesso | GeradorAleatorio, RegistroBatalha | Item entregue ao vencedor. Aprovado. |
+
+---
+
+## 5. Consolidação da Execução e Cobertura (JaCoCo)
+
+Na execução final da suíte automatizada via Maven (`mvn clean verify`), todos os **27 testes unitários** foram aprovados com **0 falhas e 0 erros**, atingindo **86% de cobertura de instruções** e **81% de cobertura de branches** no relatório oficial do JaCoCo (`docs/jacoco/index.html`):
+
+| Pacote | Cobertura de Instruções | Cobertura de Branches | Meta do Edital (Linhas / Branches) |
+| --- | --- | --- | --- |
+| br.edu.ucsal.pokesal.engine | 94% | 83% | >= 80% / >= 70% (Atingida) |
+| br.edu.ucsal.pokesal.model | 97% | 84% | >= 80% / >= 70% (Atingida) |
+| br.edu.ucsal.pokesal.repository | 99% | 83% | >= 80% / >= 70% (Atingida) |
+| br.edu.ucsal.pokesal.service | 100% | 85% | >= 80% / >= 70% (Atingida) |
+| **Total Global do Projeto** | **86%** | **81%** | **Aprovado com folga** |

@@ -26,9 +26,11 @@ Integrantes:
 - Elaboração, condução e coleta de assinaturas da Ata de Reunião Nº 02.
 - Apoio na revisão estática de código e checagem de regras de negócio.
 
-### Fase 03
+### Fase 03 (Arivaldo Teixeira Moraes Neto)
+- Refatoração da geração de aleatoriedade: criação da interface GeradorAleatorio e sua implementação GeradorAleatorioImpl, removendo instâncias estáticas e acoplamentos diretos com Random nas regras de negócio.
+- Implementação das mecânicas de precisão de golpe (chance de erro com dano zero) e acerto crítico (multiplicador 1.5x com 6,25% de chance) na CalculadoraDano.
 - Elaboração e revisão do documento de justificativa dos mocks (docs/justificativa_mocks.md), documentando a razão de cada colaborador mockado e o uso de argument matchers (any vs eq).
-- Mapeamento e catalogação dos defeitos corrigidos durante os testes no documento de registro de bugs (docs/registro_bugs_fase03).
+- Mapeamento e catalogação dos defeitos corrigidos durante os testes no documento de registro de bugs (docs/registro_bugs_fase03.md).
 - Organização e registro das atas de reunião da Fase 03.
 
 ---
@@ -36,20 +38,23 @@ Integrantes:
 ## 2. Cauã de Oliveira Lopes
 
 ### Fase 01
-- Configuração do repositório Git, estrutura de pastas Maven, checkstyle e documentação Javadoc.
-- Implementação da lógica de cálculo de dano elemental e terreno na CalculadoraDano.
-- Implementação do fluxo de console, menus de seleção e turnos na classe Main.
+- Configuração do repositório Git, estrutura Maven, Checkstyle (`google_checks.xml`) e documentação Javadoc.
+- Implementação da lógica de cálculo de dano elemental e modificadores de terreno na `CalculadoraDano`.
+- Implementação do fluxo interativo de console, menus de seleção de treinadores/Pokésais e controle de turnos na classe `Main`.
 
 ### Fase 02
-- Execução do checklist de teste estático manual (relatorio_teste_estatico.md).
-- Execução do SonarScanner e correção dos bugs de confiabilidade apontados pelo SonarQube.
-- Elaboração da matriz de rastreabilidade de testes e documentação de transparência de IA (AI_DECLARATION.md).
+- Execução completa do checklist de teste estático manual (`relatorio_teste_estatico.md`).
+- Configuração e execução do SonarScanner, com correção dos apontamentos iniciais de confiabilidade e manutenibilidade.
+- Elaboração da matriz de rastreabilidade de testes e documentação de transparência de uso de IA (`AI_DECLARATION.md` e registro de prompts).
 
 ### Fase 03
-- Refatoração da suíte de testes com Mockito: aplicação de @InjectMocks na CalculadoraDano, configuração de retornos em sequência (thenReturn), verificação com atLeastOnce() e validação da ordem completa de eventos com InOrder.
-- Correção do teste de chaveamento do torneio com combates e iniciativa orientados por mocks e teste de batalha não finalizada com verify never.
-- Ajuste no ServicoTerrenoImpl para cobrir os três terrenos (Asfalto Quente, Canteiro Central e Poça de Chuva) por faixas de horário do Clock.
-- Desenvolvimento de testes para elevação da cobertura de branches do GerenciadorDeBatalha acima de 70%.
+- **Arquitetura e Desacoplamento:** Refatoração estrutural de `GerenciadorTorneio`, `GerenciadorDeBatalha` e `CalculadoraDano` para injeção de dependências via construtor (`Clock`, `GeradorAleatorio`, `ServicoTerreno`, `RegistroBatalha` e `RepositorioResultados`), eliminando dependências ocultas e acoplamentos estáticos.
+- **Implementação dos Requisitos Autorais 04 e 05:** Desenvolvimento do `ResultadoBatalha` (record) e da lógica de compilação estatística e cálculo de MVP no `RepositorioResultadosMemoria` (Requisito 04), além do sistema de recompensa pós-semifinal com sorteio probabilístico e validação de capacidade da mochila em `GerenciadorTorneio` e `PokeSal` (Requisito 05).
+- **Engenharia de Testes Unitários com Mockito (27 testes):**
+  - Construção e refatoração das suítes `MecanicasBatalhaTest`, `TorneioRepositorioTest`, `RequisitosAutoraisTest` e `CoberturaJaCoCoTest`.
+  - Aplicação de `@InjectMocks`, `@Mock`, `@Captor` (`ArgumentCaptor<ResultadoBatalha>`), retornos encadeados (`thenReturn`), simulação de falhas (`doThrow`), verificações negativas (`verify(..., never())`), `atLeastOnce()`, `times(3)` e auditoria estrita de ordem cronológica com `InOrder` (`ataque -> dano -> status -> terreno -> item`).
+- **Depuração e Correção de Defeitos:** Identificação e correção de falhas críticas descobertas pelos testes e pela análise estática, incluindo o reset do limite de itens da `Mochila` entre semifinais e final, correção das faixas horárias de `ServicoTerrenoImpl` (habilitando o `Canteiro Central`), ajuste na ordem de log da passiva defensiva em `GerenciadorDeBatalha`, tratamento de nulidade em `GerenciadorTorneio` e eliminação de teste não determinístico em `CoberturaJaCoCoTest`.
+- **Qualidade Estática, Cobertura e Documentação:** Execução do pipeline Maven + JaCoCo + SonarQube (atingindo Quality Gate `Passed`, `84,1%` de cobertura geral no SonarQube e `86%` de instruções / `81%` de branches no JaCoCo), atualização do relatório comparativo (`relatorio_comparativo_sonar.md`), matriz de rastreabilidade, registro de bugs e rastreabilidade de prompts de IA.
 
 ---
 

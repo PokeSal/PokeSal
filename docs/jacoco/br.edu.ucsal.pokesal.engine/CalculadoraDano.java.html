@@ -121,7 +121,7 @@ public class CalculadoraDano {
   public double calcularMultiplicadorTerreno(PokeSal atacante, Terreno terreno) {
 <span class="fc bfc" id="L122" title="All 4 branches covered.">    if (terreno == Terreno.ASFALTO_QUENTE &amp;&amp; atacante.getTipo() == TipoElemental.FOGO) {</span>
 <span class="fc" id="L123">      return ConstantesJogo.BONUS_ASFALTO_QUENTE;</span>
-<span class="pc bpc" id="L124" title="1 of 4 branches missed.">    } else if (terreno == Terreno.POCA_CHUVA &amp;&amp; atacante.getTipo() == TipoElemental.AGUA) {</span>
+<span class="fc bfc" id="L124" title="All 4 branches covered.">    } else if (terreno == Terreno.POCA_CHUVA &amp;&amp; atacante.getTipo() == TipoElemental.AGUA) {</span>
 <span class="fc" id="L125">      return ConstantesJogo.BONUS_POCA_CHUVA;</span>
     } else {
 <span class="fc" id="L127">      return ConstantesJogo.MULT_NEUTRO;</span>

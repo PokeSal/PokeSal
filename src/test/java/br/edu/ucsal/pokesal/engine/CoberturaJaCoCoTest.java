@@ -207,7 +207,8 @@ public class CoberturaJaCoCoTest {
 
     assertTrue(geradorReal.gerarNumero(1, 10) >= 1);
     assertTrue(geradorReal.gerarDouble() >= 0.0);
-    assertTrue(geradorReal.testarChance(0.5) || !geradorReal.testarChance(0.5));
+    assertTrue(geradorReal.testarChance(1.0));
+    assertFalse(geradorReal.testarChance(0.0));
 
     registroConsole.registrarAtaque("CharSal", "BulbaSal");
     registroConsole.registrarDano("BulbaSal", 15, true, false);
