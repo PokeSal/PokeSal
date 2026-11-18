@@ -83,19 +83,19 @@ Evidência da reprovação inicial com 2 bugs em New Code e hotspot pendente de 
 ### Painel Geral da Fase 03 – Final Aprovado (Overall Code e New Code)
 Evidência da aprovação final com Quality Gate verde, 0 bugs, 0 vulnerabilidades, hotspots revisados, 84,1% de cobertura geral e 85,6% em código novo:
 
-![SonarQube Fase 03 - Overall Code Final](../sonar/sonarQubeGeralOverrallCode.png)
+![SonarQube Fase 03 - Overall Code Final](../sonar/sonarQubeGeralOverrallCodeFase03.png)
 
-![SonarQube Fase 03 - New Code Final](../sonar/sonarQubeGeralNewCode.png)
+![SonarQube Fase 03 - New Code Final](../sonar/sonarQubeGeralNewCodeFase03.png)
 
 ### Cobertura Detalhada do JaCoCo e Execução JUnit (27/27 Testes)
 Relatório final de cobertura por pacote (86% de instruções e 81% de branches) e aprovação integral da suíte JUnit 5:
 
-![Relatório de Cobertura JaCoCo](../sonar/JaCoCo.png)
+![Relatório de Cobertura JaCoCo](../jacoco/JaCoCo.png)
 
-![Execução JUnit Fase 03](../sonar/resultadoJUnitFase03.png)
+![Execução JUnit Fase 03](../resultadoJUnitFase03.png)
 
-### Evidências da Fase 02 e Execução de Testes
-Registros históricos do baseline da Fase 02 e validação no JUnit:
+### Evidências da Fase 02
+Registros históricos do baseline da Fase 02 no SonarQube:
 
 ![SonarQube Fase 02 - Overview Antes](../sonar/sonar_overview_antes.png)
 
@@ -106,5 +106,3 @@ Registros históricos do baseline da Fase 02 e validação no JUnit:
 ![SonarQube Fase 02 - Bugs](../sonar/sonar_issues_bugs_antes.png)
 
 ![SonarQube Fase 02 - Issues](../sonar/sonar_issues_depois.png)
-
-![Resultado JUnit](../sonar/resultado_junit.png)
