@@ -67,7 +67,6 @@ Integrantes:
 
 ### Fase 02
 - Implementação dos testes automatizados em JUnit 5 (CalculadoraDanoTest), cobrindo efetividade, terrenos, limites de mochila e requisitos autorais.
-- Acompanhamento das métricas de cobertura no JaCoCo.
 
 ### Fase 03
 - Implementação e validação da suíte de testes dos requisitos autorais com Mockito (RequisitosAutoraisTest.java), cobrindo o relatório estatístico e o drop de recompensas da mochila.
